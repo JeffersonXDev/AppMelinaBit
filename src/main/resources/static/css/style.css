@@ -1,0 +1,148 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative; /* Importante para o posicionamento da div de fundo */
+    overflow: hidden; /* Evita barras de rolagem desnecessárias */
+	position: absolute; /* Posição absoluta para cobrir a tela */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Manda a div para trás de todo o conteúdo */
+	background-image: url(img/fundo05.jpg); /* O caminho da sua imagem */
+	background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* Overlay de cor para melhorar o contraste */
+    background-color: var(--color-marrom-claro);
+    background-blend-mode: multiply;
+}
+
+/* Estilos de containers (login) */
+.login-container {
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+    text-align: center;
+    position: relative; /* Garante que o container esteja acima da div de fundo */
+    z-index: 10;
+    max-width: 500px;
+}
+/* Estilos de containers (login, cards) */
+.login-container, .card {
+	background-color: rgba(255, 255, 255, 0.5);
+	    padding: 30px;
+	    border-radius: 8px;
+	    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+    text-align: center;
+    z-index: 10; /* Garante que o container de login fique na frente da imagem */
+}
+
+/* Títulos e textos */
+h2 {
+    color:#000000; /* Títulos em caramelo suave */
+    margin-bottom: 25px;
+	font-weight:bold;
+	font-size:20px;
+	
+	}
+	
+label {
+	color: #000000;
+	font-weight: bold;
+	font-size:20px;
+	padding: 50px;	  
+	font:40px; 
+	font-weight: bold;
+}
+input[type="text"],
+input[type="password"] {
+	width: calc(80%);
+	margin: 10px;
+    padding: 10px;
+    border: 10px #1d1c23; /* Borda em tom marrom intermediário */
+    border-radius: 10px;
+    font-size: 20px;
+    color: #1d1c23; /* Texto digitado em cinza escuro para contraste */
+}
+input:focus {
+    border-color: #1d1c23;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(55,61,53)	; /* Um brilho suave e dourado no foco */
+}
+/* Estilos de botões */
+.btn {
+	font-weight: bold;
+	padding: 5px;
+	cursor: pointer;
+	font-size: 15px;
+	width: 25%;
+	text-decoration: none;
+	box-sizing: border-box;
+	align-items: center;	
+}
+
+/* Botão principal de Entrar */
+.btn.btn-entrar {
+	background-color: rgba(255, 255, 255, 1);
+   	margin-top: 20px;
+	border-radius: 10px;
+	border: 10px #1d1c23
+}
+
+.btn.btn-entrar:hover {
+    background-color: rgba(255, 215, 0, 0.9);	
+}
+
+/* Botão secundário de Cadastrar */
+.btn.btn-cadastrar {
+	background-color: rgba(255, 255, 255, 0);
+		font-weight: bold;
+		padding: 6px;
+		cursor: pointer;
+		font-size: 15px;
+		text-decoration: none;
+		color: #000000;
+		border-radius: 10px;
+		align-items: ;
+		margin:30px;
+    
+}
+
+.btn.btn-cadastrar:hover {
+    background-color: rgba(255, 215, 0, 0.9);	
+	border-radius: 10px;	
+	padding: 6px;
+}
+
+/* Link de recuperação de senha */
+.btn.btn-esqueceu {
+	background-color: rgba(255, 255, 255, 0);
+			font-weight: bold;
+			padding: 6px;
+			cursor: pointer;
+			font-size: 15px;
+			text-decoration: none;
+			color: #000000;
+			border-radius: 10px;
+			align-items: ;
+			margin:30px;
+}
+
+.btn.btn-esqueceu:hover {
+	background-color: rgba(255, 215, 0, 0.9);	
+		border-radius: 10px;	
+		padding: 6px;
+	}
+
+/* Divisor */
+.divider {
+    height: 3px;
+    background-color: var(--color-marrom-suave);
+    margin: 20px 0;
+}
