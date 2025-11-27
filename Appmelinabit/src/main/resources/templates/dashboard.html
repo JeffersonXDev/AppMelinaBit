@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dashboard - MelinaBit, Seu Gerenciamento de Apiários!</title>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/dashbord.css}">
+</head>
+
+<body>
+	<div class="dashboard-container">
+
+		<main class="main-content">
+			<header class="dashboard-header">
+				<h1>Dashboard da Administração</h1>
+			</header>
+			<section class="dashboard-grid">
+				<div class="widget online-users">
+					<h2>Usuários Online</h2>
+					<div class="data-display">
+						<span id="onlineCount">0</span>
+					</div>
+				</div>
+
+				<div class="widget new-users">
+					<h2>Últimos Cadastros</h2>
+					<ul id="latestUsersList" class="user-list">
+					</ul>
+				</div>
+
+				<div class="widget revenue">
+					<h2>Receita Mensal</h2>
+					<div class="data-display">
+						<span id="monthlyRevenue">R$ 0,00</span>
+					</div>
+				</div>
+			</section>
+
+			<section class="user-management">
+				<h2>Gerenciar Usuários</h2>
+				<table id="usersTable">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Nome</th>
+							<th>Email</th>
+							<th>Status</th>
+							<th>Ações</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td><span class="status-ativa"></span></td>
+							<td class="action-buttons">
+								<button class="btn-block" data-id="" data-status="">Bloquear</button>
+								<button class="btn-delete" data-id="">Excluir</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+		</main>
+	</div>
+	<script src="css/script_dashboard.js"></script>
+</body>
+
+</html>
