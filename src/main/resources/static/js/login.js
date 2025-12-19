@@ -38,3 +38,4 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         errorMessage.textContent = 'Não foi possível conectar ao servidor. Tente novamente mais tarde.';
     }
 });
+

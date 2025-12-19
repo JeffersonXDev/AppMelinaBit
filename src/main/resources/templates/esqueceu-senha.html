@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Senha - MelinaBit</title>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+    <div class="login-container">
+        <h2 class="title">Recuperar Senha</h2>
+        <p>Informe seu e-mail para receber as instruções de recuperação de senha.</p>
+        
+        <form th:action="@{/esqueceu-senha}" method="post">
+            <div class="input-group">
+                <input type="email" id="email" name="email" placeholder="E-mail" required>
+            </div>
+            <button type="submit" class="btn btn-enviar">Enviar</button>
+        </form>
+		
+		<div class="form-link">
+						<p><a th:href="@{/login}">Voltar para o Login. </a></p>
+		</div>
+		<div>
+			<div th:if="${mensagemSucesso}" class="alert alert-success">
+			    <p th:utext="${mensagemSucesso}"></p> 
+			</div>
+			
+		    <div th:if="${mensagemErro}" class="alert alert-danger">
+		        <p th:text="${mensagemErro}"></p>
+		    </div>
+		</div>
+
+		<form method="post" action="/esqueceu-senha">
+		    </form>
+    </div>
+</body>
+</html>

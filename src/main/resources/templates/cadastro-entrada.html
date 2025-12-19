@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cadastro de Entrada de Material - MelinaBit</title>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/cadastro.css}">
+</head>
+<body class="allow-scroll">
+	<div class="form-wrapper">
+		<div class="form-container">
+			<h2>Cadastro de Compras</h2>
+	        <form th:action="@{/gerenciar/entrada}" th:object="${movimentacao}" method="post">
+				
+		<div class="form-group"> 
+            <label for="dataCompra">Data da Compra:</label>
+            <input type="date" id="dataCompra" th:field="*{dataCompra}"> 
+        </div>
+
+		<div class="form-group">
+                <label for="fornecedor">Fornecedor/Origem:</label>
+                    <select id="fornecedor" th:field="*{fornecedor.id}" required> 
+                    <option value="">Selecione o Fornecedor</option>
+                    <option th:each="f : ${fornecedores}" 
+                    th:value="${f.id}" 
+                    th:text="${f.nomeFornecedor}">Nome do Fornecedor
+                    </option>
+                    </select>
+        </div>
+
+		<div class="form-group">
+            <label for="apiario">Local de Destino (Apiário):</label>
+            <select id="apiario" th:field="*{apiario.id}" required>
+                <option value="">Selecione o Apiário</option>
+                <option th:each="a : ${apiarios}"
+                        th:value="${a.id}"
+                        th:text="${a.nome}">Nome do Apiário
+                </option>
+            </select>
+        </div>
+
+		<div class="form-group">
+	            <label for="nome">Nome do Item/Material:</label>
+	            <input type="text" id="nome" th:field="*{nome}" required>
+        </div>
+
+		<div class="form-group">
+            <label for="quantidade">Quantidade:</label>
+            <input type="number" id="quantidade" th:field="*{quantidade}" step="0.01" min="0" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="unidadeMedida">Unidade de Medida:</label>
+            <input type="text" id="unidadeMedida" th:field="*{unidadeMedida}" placeholder="Ex: kg, unidade, litro">
+        </div>
+
+        <div class="form-group">
+            <label for="valorCustoUnitario">Valor de Custo (Unitário):</label>
+            <input type="number" 
+                   id="valorCustoUnitario" 
+                   name="valorCustoUnitario" 
+                   step="0.01" min="0" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="descricao">Observações:</label>
+            <textarea id="descricao" class="descr" th:field="*{descricao}"></textarea>
+        </div>
+        
+		<button type="submit" class="btn btn-primary">Cadastrar Material</button>
+		                
+					</form>
+
+					<div class="form-link">
+										<p><a th:href="@{/dashboard}">Cadastrar outro Fornecedor</a> ou <a th:href="@{/dashboard}">Voltar</a></p>	
+					</div>
+				</div>
+			</div>
+
+		    <script th:src="@{/js/script.js}"></script>
+		</body>
+
+		</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cadastro - MelinaBit, Seu Gerenciamento de Apiários!</title>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+
+<body>
+	<div class="login-container">
+		<h2 class="title">Criar Nova Senha</h2>
+
+		<div th:if="${param.erro}" class="alert alert-danger">
+			<span th:if="${param.erro == 'tokenInvalido'}">O link de redefinição de senha é inválido ou expirou.</span>
+			<span th:if="${param.erro == 'senhasNaoCoincidem'}">As senhas não coincidem.</span>
+		</div>
+
+		<form th:action="@{/redefinir-senha}" method="post">
+
+			<input type="hidden" name="token" th:value="${param.token}">
+
+			<div class="input-group">
+				<input type="password" id="novaSenha" name="novaSenha" placeholder="Nova Senha" required>
+			</div>
+			<div class="input-group">
+				<input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Confirmar Senha" required>
+			</div>
+
+			<button type="submit" class="btn btn-redefinir">Redefinir Senha</button>
+		</form>
+		<div class="form-link">
+			<p><a th:href="@{/login}">Voltar para o Login</a></p>
+		</div>
+	</div>
+</body>
+
+</html>

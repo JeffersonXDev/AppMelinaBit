@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dashboard - MelinaBit, Seu Gerenciamento de Apiários!</title>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/dashbord.css}">
+	
+</head>
+
+<body>
+	<div class="dashboard-container">
+<header>
+        <h1>Bem-vindo(a), <span sec:authentication="name">Usuário</span>, à sua Central de Gerenciamento!</h1>
+		
+              		<form th:action="@{/logout}" method="post" >
+					<button class="btn btn-sair"type="submit" >Sair</button>
+			</form>
+  
+    </header>
+	<section class="dashboard-grid">
+				<div class="widget online-users">
+				<h2>Venda de Mel:</h2>
+				<div class="data-display">
+					<span id="onlineCount">R$</span>
+				</div>
+			</div>
+
+				<div class="widget online-users">
+					<h2>Venda de Própolis:</h2>
+					<div class="data-display">
+						<span id="onlineCount">R$</span>
+					</div>
+				 </div>
+				<div class="widget online-users">
+					<h2>Venda de Pólen:</h2>
+					<div class="data-display">
+						<span id="onlineCount">R$</span>
+					</div>
+				</div>
+				<div class="widget online-users">
+					<h2>Venda de Cera:</h2>
+					<div class="data-display">
+						<span id="onlineCount">R$</span>
+					</div>
+				</div>
+				<div class="widget online-users">
+								<h2> Mel em Estoque:</h2>
+								<div class="data-display">
+									<span id="onlineCount"></span>
+								</div>
+							</div>
+
+								<div class="widget online-users">
+									<h2>Própolis em Estoque:</h2>
+									<div class="data-display">
+										<span id="onlineCount"></span>
+									</div>
+								 </div>
+								<div class="widget online-users">
+									<h2> Pólen em Estoque:</h2>
+									<div class="data-display">
+										<span id="onlineCount"></span>
+									</div>
+								</div>
+								<div class="widget online-users">
+									<h2>Cera em Estoque:</h2>
+									<div class="data-display">
+										<span id="onlineCount"></span>
+									</div>
+								</div>
+								<div class="widget online-users">
+												<h2>Apiarios Ativos:</h2>
+												<div class="data-display">
+													<span id="onlineCount"></span>
+												</div>
+												</div>
+												
+												<div class="widget online-users">
+													<h2>Quantidades de Colmeias:</h2>
+													<div class="data-display">
+														<span id="onlineCount"></span>
+													</div>
+											
+											</div>
+				</section>
+
+				<section class="user-management">
+					<h2>Cadastrar:</h2>
+					<table class="usersTable">
+						<tbody>
+							<tr>
+								<td><a th:href="@{/gerenciar/cadastro-apiarios}" class="btn btn-cadastrar">Apiários:</a></td>
+				                <td><a th:href="@{/gerenciar/clientes}" class="btn btn-cadastrar">Clientes: </a></td>								
+				                <td><a th:href="@{/gerenciar/fornecedores}" class="btn btn-cadastrar">Fornecedores: </a></td>								                
+				                <td><a th:href="@{/gerenciar/entrada}" class="btn btn-cadastrar">Produtos e Material Apícola: </a></td>
+				                <td><a th:href="@{/gerenciar/venda}" class="btn btn-cadastrar">Venda de Produtos: </a></td>	
+				                <td><a th:href="@{/gerenciar/manejo}" class="btn btn-cadastrar">Visita e Manejo no Apiário: </a></td>							
+							</tr>
+						</tbody>
+					</table>
+				</section>
+			</main>
+		</div>
+	</body>
+
+	</html>
+
+
+    

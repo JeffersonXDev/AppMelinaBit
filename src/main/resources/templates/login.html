@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Gerenciamento de Apiário</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Login - MelinaBit, Seu Gerenciamento de Apiários!</title>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 <body>
 	<div class="login-container">
@@ -24,11 +25,12 @@
 
 				    <div class="divider"></div>     
 				    
-				    <a href="#" th:href="@{/cadastro}" class="btn btn-cadastrar">Cadastrar</a>
-				    <a href="#" th:href="@{/esqueceu-senha}"  class="btn btn-esqueceu">Esqueceu a senha?</a>
+				    <a href="http://localhost:8080/cadastro" th:href="@{/cadastro}" class="btn btn-cadastrar">Cadastrar</a>
+				    <a href="http://localhost:8080/esqueceu-senha" th:href="@{/esqueceu-senha}"  class="btn btn-esqueceu">Esqueceu a senha?</a>
 
 				    <p th:if="${param.error}" class="error-message">Usuário ou senha inválidos.</p>
 				</form>
+				<script th:src="@{/js/login.js}"></script>
 		    </div>
 </body>
 </html>
