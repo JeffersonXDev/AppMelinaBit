@@ -42,11 +42,7 @@ public class FornecedorService {
         
         return fornecedorRepository.save(fornecedor);
     }
-    
-    /**
-     * Retorna a lista de fornecedores cadastrados **apenas** pelo usuário logado.
-     * Método utilizado pelo Controller para popular a lista de seleção.
-     */
+
     public List<Fornecedor> buscarTodos() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         

@@ -16,7 +16,6 @@ public class CadastroController {
     @Autowired
     private UsuarioService usuarioService;
 
-    // Garante que o objeto Usuario esteja no Model para o formulário
     @GetMapping("/cadastro")
     public String exibirPaginaCadastro(Model model) {
         // Se você usar th:object="${usuario}" no HTML, precisa adicionar isso
@@ -26,14 +25,12 @@ public class CadastroController {
         return "cadastro";
     }
 
-    // --- O PROCESSO DE VALIDAÇÃO ESTÁ AQUI ---
     @PostMapping("/cadastro")
     public String salvarNovoUsuario(
             @ModelAttribute Usuario usuario,
             @RequestParam("confirmarSenha") String confirmarSenha, // <--- RECEBE O CAMPO EXTRA
             Model model) {
-        
-        // 1. VALIDAÇÃO DE SENHA NO SERVIDOR
+
         if (!usuario.getSenha().equals(confirmarSenha)) {
             // Adiciona a mensagem de erro ao Model
             model.addAttribute("erroSenha", "A senha e a confirmação de senha não conferem.");
@@ -45,10 +42,8 @@ public class CadastroController {
             return "cadastro"; 
         }
 
-        // 2. PROCESSO DE SALVAR (Se a validação acima passar)
         usuario.setNivel("ROLE_USER");
-        
-        // Se a senha for criptografada no Service, ela deve ser feita após esta validação
+
         usuarioService.salvarUsuario(usuario); 
         
         return "redirect:/login"; 

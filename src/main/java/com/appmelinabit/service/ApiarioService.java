@@ -21,11 +21,6 @@ public class ApiarioService {
     @Autowired 
     private UsuarioService usuarioService; // Utiliza o serviço de usuário já definido
 
-    /**
-     * Salva o Apiário e anexa o usuário logado (Lógica de segurança).
-     * @param apiario O objeto Apiario a ser salvo.
-     * @return O Apiário salvo.
-     */
     @Transactional
     public Apiario salvar(Apiario apiario) {
         
@@ -46,21 +41,11 @@ public class ApiarioService {
         return apiarioRepository.save(apiario);
     }
 
-    /**
-     * Retorna a lista de TODOS os Apiários. 
-     * Este é o método que deve ser chamado para o dropdown, assumindo que 
-     * o ManejoController está chamando apiarioService.findAll().
-     * @return Lista de todos os Apiários.
-     */
     public List<Apiario> findAll() { 
         return apiarioRepository.findAll();
     }
     
-    /**
-     * Retorna a lista de Apiários cadastrados pelo usuário logado.
-     * Recomendado para listagem na tela do usuário.
-     * @return Lista de Apiários filtrada pelo usuário.
-     */
+
     public List<Apiario> buscarApiariosDoUsuarioLogado() { 
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -79,12 +64,7 @@ public class ApiarioService {
         // Requer o método findByUsuario(Usuario) no ApiarioRepository
         return apiarioRepository.findByUsuario(usuarioLogado); 
     }
-    
-    /**
-     * Busca um Apiário específico por ID.
-     * @param idApiario O ID do Apiário a ser buscado.
-     * @return Um Optional contendo o Apiário, se encontrado.
-     */
+
     public Optional<Apiario> findById(Long idApiario) {
         return apiarioRepository.findById(idApiario);
     }

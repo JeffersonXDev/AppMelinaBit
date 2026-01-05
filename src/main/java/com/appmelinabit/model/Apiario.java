@@ -10,7 +10,7 @@ public class Apiario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_apiario")
-    private Integer idApiario; // CORRIGIDO: Tipo mudado de Long para Integer (int4 no PostgreSQL)
+    private Integer idApiario;
     
     @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "id_usuario", nullable = false) 
@@ -46,20 +46,16 @@ public class Apiario {
     @Column(name = "estado") 
     private String estado;
     
-    // Construtores
+
     public Apiario() {}
 
-    // --- MÉTODOS GETTERS E SETTERS ---
-    
-    // A chave primária deve ter o tipo Integer agora
     public Integer getIdApiario() {
         return idApiario;
     }
     public void setIdApiario(Integer idApiario) {
         this.idApiario = idApiario;
     }
-    
-    // Mantendo o getId/setId para compatibilidade
+
     public Integer getId() { 
         return idApiario;
     }

@@ -14,36 +14,27 @@ public class MovimentacaoEstoqueService {
 
     @Autowired
     private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
-    
-    // Serviço para buscar o objeto Usuario completo
+
     @Autowired 
     private UsuarioService usuarioService; 
 
-    @Transactional // Garante que tudo seja salvo ou nada seja salvo (atomicidade)
+    @Transactional
     public MovimentacaoEstoque salvar(MovimentacaoEstoque movimentacao) {
         
-        // **1. Obter e Anexar o Usuário Logado (Segurança)**
+
         anexarUsuarioLogado(movimentacao);
 
-        // **2. Validação e Regras de Negócio**
-        // Este é o local ideal para adicionar lógicas como:
-        // - Validar se id_cliente não é nulo se tipo_movimentacao for 'SAIDA'.
-        // - Validar se id_fornecedor não é nulo se tipo_movimentacao for 'ENTRADA'.
-        // - Calcular preço base ou custo se estiverem vazios.
         
-        // Exemplo de Validação Simples:
+
         if (movimentacao.getNome() == null || movimentacao.getNome().trim().isEmpty()) {
              throw new IllegalArgumentException("O nome do produto é obrigatório.");
         }
         
-        // **3. Persistir no Banco de Dados**
+
         return movimentacaoEstoqueRepository.save(movimentacao);
     }
 
-    /**
-     * Extrai e anexa o objeto Usuario completo à MovimentacaoEstoque.
-     * @param movimentacao O objeto MovimentacaoEstoque a ser atualizado.
-     */
+
     private void anexarUsuarioLogado(MovimentacaoEstoque movimentacao) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         
@@ -66,7 +57,7 @@ public class MovimentacaoEstoqueService {
     }
 
 	public void registrarVenda(MovimentacaoEstoque movimentacao) {
-		// TODO Auto-generated method stub
+
 		
 	}
 }

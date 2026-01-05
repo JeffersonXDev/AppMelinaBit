@@ -19,14 +19,13 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
         
-        String redirectUrl = "/dashboard"; // URL padrão para usuario_comum
+        String redirectUrl = "/dashboard";
         
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         
         for (GrantedAuthority authority : authorities) {
             
-            // NOTE: O Spring Security normalmente adiciona o prefixo "ROLE_"
-            // Verifique se o papel é "ROLE_ADMIN" (ou como você o definiu)
+
             if (authority.getAuthority().equals("ROLE_ADMIN") || authority.getAuthority().equals("ADMIN")) {
                 redirectUrl = "/admin/dashboard"; 
                 break;

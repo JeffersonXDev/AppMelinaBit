@@ -37,10 +37,6 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-    /**
-     * Retorna a lista de Clientes cadastrados pelo usuário logado.
-     * Método essencial para o Controller de Movimentação.
-     */
     public List<Cliente> buscarTodos() { // ⬅️ Implementação corrigida
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

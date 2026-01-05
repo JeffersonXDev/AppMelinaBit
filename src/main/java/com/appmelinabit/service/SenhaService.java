@@ -32,7 +32,7 @@ public class SenhaService {
     @Autowired
     private JavaMailSender mailSender;
 
-//---------------------------------------------------------
+
 
     @Transactional
     public void iniciarProcessoRedefinicao(String email) {
@@ -62,15 +62,8 @@ public class SenhaService {
         }
     }
 
-    // MÉTODO REMOVIDO/COMENTADO - A lógica de exclusão foi movida para 'iniciarProcessoRedefinicao'
-    /*
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void excluirTokenExistente(Usuario usuario) {
-        tokenRepository.findByUsuario(usuario)
-                .ifPresent(tokenRepository::delete);
-    }
-    */
-//---------------------------------------------------------
+
+
     
     private void enviarEmailRedefinicao(String email, String token) throws MessagingException {
         

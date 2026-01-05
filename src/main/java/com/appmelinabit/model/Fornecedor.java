@@ -11,12 +11,10 @@ public class Fornecedor {
     @Column(name = "id_fornecedor")
     private Long id;
 
-    // Chave Estrangeira
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario; 
-    
-    // Dados Cadastrais Existentes
+
     @Column(name = "nome_fornecedor", nullable = false)
     private String nomeFornecedor;
 
@@ -45,26 +43,21 @@ public class Fornecedor {
     @Column(name = "vendedor")
     private String vendedor; // Nome do contato/vendedor
 
-    // NOVOS CAMPOS DE COMPRA (Para ligar com o formulário):
     @Column(name = "material_comprado")
     private String materialComprado;
     
     @Column(name = "quantidade")
     private Integer quantidade;
-    
-    // CORRIGIDO: Mapeia para NUMERIC no PostgreSQL, resolvendo o erro de validação.
+
     @Column(name = "preco_pago")
     private BigDecimal precoPago; 
-    
-    // CORRIGIDO: Mapeia para NUMERIC no PostgreSQL, resolvendo o erro de validação.
+
     @Column(name = "valor_frete")
     private BigDecimal valorFrete; 
 
-    // --- Construtores (Opcionais, mas boas práticas) ---
     public Fornecedor() {
     }
 
-    // --- Getters e Setters (CRUCIAIS) ---
 
     public Long getId() {
         return id;
@@ -78,7 +71,6 @@ public class Fornecedor {
         return usuario;
     }
 
-    // Setter crucial para o Controller:
     public void setUsuario(Usuario usuarioLogado) {
         this.usuario = usuarioLogado;
     }

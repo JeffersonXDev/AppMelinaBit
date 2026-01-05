@@ -17,9 +17,9 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
     @Column(name = "id_usuario") 
-    private Integer idUsuario; // CORRIGIDO: Tipo mudado de Long para Integer (int4 no PostgreSQL)
+    private Integer idUsuario;
 
-    // CAMPOS DE DADOS GERAIS DO CADASTRO
+
     @Column(name = "nome")
     private String nome;
 
@@ -34,8 +34,7 @@ public class Usuario {
     
     @Column(name = "cpf") 
     private String cpf; 
-    
-    // CAMPOS DE ENDEREÇO (Solicitados pelo cadastro.html)
+
     @Column(name = "endereco")
     private String endereco;
 
@@ -48,9 +47,9 @@ public class Usuario {
     @Column(name = "estado")
     private String estado;
     
-    // CAMPOS DE ADMINISTRAÇÃO E LOG
+
     @Column(name = "id_apiario")
-    private Integer idApiario; // CORRIGIDO: Tipo mudado de Long para Integer
+    private Integer idApiario;
 
     @Column(name = "lgpd_aceito")
     private Boolean lgpdAceito = false;
@@ -71,17 +70,13 @@ public class Usuario {
     private LocalDateTime ultimoLogin;
     
     
-    // ==========================================================
-    // CONSTRUTORES
-    // ==========================================================
+
     
     public Usuario() {
-        // Construtor padrão (obrigatório para JPA)
+
     }
     
-    // ==========================================================
-    // GETTERS E SETTERS
-    // ==========================================================
+
 
     public Integer getIdUsuario() { // CORRIGIDO: Retorna Integer
         return idUsuario;

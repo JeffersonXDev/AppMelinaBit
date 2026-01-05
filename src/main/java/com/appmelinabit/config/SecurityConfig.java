@@ -19,9 +19,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Configuração de Autorização de URLs
+
             .authorizeHttpRequests(authorize -> authorize
-                // Páginas de acesso público
+
                 .requestMatchers(
                     "/login", 
                     "/esqueceu-senha", 
@@ -31,18 +31,18 @@ public class SecurityConfig {
                     "/js/**"
                 ).permitAll()
                 
-                // ✅ NOVO: Libera todas as rotas de gerenciamento para ADMIN e USER
+
                 .requestMatchers("/gerenciar/**").hasAnyRole("ADMIN", "USER") 
                 
-                // Restringe o acesso aos painéis com base no nivel
+
                 .requestMatchers("/admin/**").hasRole("ADMIN") 
                 .requestMatchers("/dashboard/**").hasAnyRole("ADMIN", "USER")
                 
-                // Qualquer outra requisição exige autenticação
+
                 .anyRequest().authenticated()
             )
             
-            // Configuração do Formulário de Login
+
             .formLogin(form -> form
                 .loginPage("/login") 
                 .failureUrl("/login?error=true")
@@ -50,20 +50,20 @@ public class SecurityConfig {
                 .successHandler(customSuccessHandler) 
             )
             
-            // Configuração de Logout
+
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true")
                 .permitAll()
             )
             
-            // Recomendações de segurança
+
             .csrf(csrf -> csrf.disable()); 
 
         return http.build();
     }
 
-    // Bean para o codificador de senha (obrigatório)
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

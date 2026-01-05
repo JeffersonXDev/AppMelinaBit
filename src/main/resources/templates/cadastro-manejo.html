@@ -20,13 +20,9 @@
 			
                 <div class="form-group">
                     <label for="apiarioId">Apiário:</label>
-                    <!-- 🎯 CORREÇÃO CRÍTICA NA LINHA 24: th:field deve apontar para o objeto 'apiario', não para 'apiario.idApiario'. 
-                         O Thymeleaf/Spring, com a propriedade 'apiario' sendo um objeto e as opções sendo IDs, 
-                         tentará encontrar um conversor para mapear o ID submetido para o objeto Apiario. 
-                         Isso resolve a exceção de leitura (NotReadablePropertyException) no template. -->
-                    <select id="apiarioId" th:field="*{apiario}" required> 
+                      <select id="apiarioId" th:field="*{apiario}" required>
                         <option value="">Selecione o Apiário</option>
-                        <!-- A iteração exige que a lista 'apiarios' seja passada pelo Controller -->
+
                         <option th:each="apiarioOp : ${apiarios}" 
                                 th:value="${apiarioOp.idApiario}" 
                                 th:text="${apiarioOp.nome}">
@@ -35,8 +31,7 @@
                 </div>
                 
                 <input type="hidden" th:field="*{idManejo}" />
-                <input type="hidden" th:field="*{usuario}" /> <!-- Garante que o campo usuário não falhe no binding se não for preenchido no controller -->
-
+                <input type="hidden" th:field="*{usuario}" />
                 <div class="form-group">
                     <label for="numeroColmeia">Número da Colmeia:</label>
                     <input type="text" id="numeroColmeia" th:field="*{numeroColmeia}" required 
@@ -141,8 +136,7 @@
 			</form>
 
 			<div class="form-link">
-				<!-- Link para a rota GET correta do Controller -->
-				<p><a th:href="@{/gerenciar/manejo}">Novo Manejo</a> ou <a th:href="@{/dashboard}">Voltar</a></p>	
+				<p><a th:href="@{/gerenciar/manejo}">Novo Manejo</a> ou <a th:href="@{/dashboard}">Voltar</a></p>
 			</div>
 		</div>
 	</div>

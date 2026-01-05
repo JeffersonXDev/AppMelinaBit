@@ -14,16 +14,13 @@
 	<div class="form-wrapper">
 		<div class="form-container">
 			<h2>Registro de Manejo de Colmeia:</h2>
-			
-			<!-- Ação correta: POST para /gerenciar/manejo -->
+
+
 			<form th:action="@{/gerenciar/manejo}" th:object="${manejo}" method="post">
 			
                 <div class="form-group">
                     <label for="apiarioId">Apiário:</label>
-                    <!-- 🎯 CORREÇÃO CRÍTICA NA LINHA 24: th:field deve apontar para o objeto 'apiario', não para 'apiario.idApiario'. 
-                         O Thymeleaf/Spring, com a propriedade 'apiario' sendo um objeto e as opções sendo IDs, 
-                         tentará encontrar um conversor para mapear o ID submetido para o objeto Apiario. 
-                         Isso resolve a exceção de leitura (NotReadablePropertyException) no template. -->
+
                     <select id="apiarioId" th:field="*{apiario}" required> 
                         <option value="">Selecione o Apiário</option>
                         <!-- A iteração exige que a lista 'apiarios' seja passada pelo Controller -->

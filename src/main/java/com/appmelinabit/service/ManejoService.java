@@ -24,9 +24,6 @@ public class ManejoService {
     @Autowired
     private UsuarioService usuarioService; 
 
-    /**
-     * Obtém o objeto Usuário completo do usuário logado.
-     */
     private Usuario getUsuarioLogado() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Usuario usuario = usuarioService.findByEmail(username);
@@ -36,10 +33,6 @@ public class ManejoService {
         return usuario;
     }
 
-    /**
-     * Salva ou atualiza um registro de Manejo.
-     * Resolve o erro de Type Mismatch convertendo Integer para Long.
-     */
     @Transactional
     public Manejo salvarManejo(Manejo manejo) {
         
@@ -67,11 +60,7 @@ public class ManejoService {
         // 3. Persiste a entidade completa
         return manejoRepository.save(manejo);
     }
-    
-    /**
-     * Lista todos os registros de Manejo do usuário logado.
-     * Resolve o erro de Type Mismatch convertendo o ID do Usuário para Long.
-     */
+
     public List<Manejo> buscarManejosDoUsuarioLogado() {
         // 🎯 SOLUÇÃO DO ERRO: Caso getIdUsuario() retorne Integer no seu modelo Usuario,
         // forçamos a conversão para Long para satisfazer o ManejoRepository.

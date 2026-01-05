@@ -23,9 +23,7 @@ public class HistoricoCompraFornecedorService {
     
     // Você pode precisar do ProdutoService, dependendo da sua lógica
 
-    /**
-     * Salva o registro de compra e anexa o usuário logado.
-     */
+
     public HistoricoCompraFornecedor salvar(HistoricoCompraFornecedor historico) {
         
         // 1. **Obter e Anexar o Usuário Logado**

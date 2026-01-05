@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
 	List<Cliente> findByUsuario(Usuario usuarioLogado);
-    // Você pode adicionar métodos personalizados aqui, se necessário.
+
 }

@@ -27,16 +27,11 @@ import java.util.Optional;
 @RequestMapping("/gerenciar")
 public class MovimentacaoEstoqueController {
 
-    // --- 1. INJEÇÕES DE DEPENDÊNCIA ---
     @Autowired private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
     @Autowired private ClienteRepository clienteRepository;
     @Autowired private ApiarioRepository apiarioRepository;
     @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private FornecedorRepository fornecedorRepository;
-    
-    // =========================================================
-    //                       MÉTODOS DE VENDA (SAÍDA)
-    // =========================================================
 
     /**
      * Lida com a requisição GET para exibir o formulário de Venda.
@@ -86,13 +81,6 @@ public class MovimentacaoEstoqueController {
         return "redirect:/dashboard";
     }
 
-    // =========================================================
-    //                  MÉTODOS DE COMPRA (ENTRADA)
-    // =========================================================
-
-    /**
-     * Lida com a requisição GET para exibir o formulário de Entrada.
-     */
     @GetMapping("/entrada")
     public String exibirFormularioEntrada(Model model) {
         model.addAttribute("movimentacao", new MovimentacaoEstoque());

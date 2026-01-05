@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class DashboardController {
 
-    @GetMapping("/dashboard") // Mapeamento exato da rota
+    @GetMapping("/dashboard")
     public String viewUserDashboard() {
         return "user-dashboard"; 
     }

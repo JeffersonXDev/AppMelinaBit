@@ -8,14 +8,14 @@ body {
 	width: 100%;
 	overflow-x: hidden;
 	font-family: Arial, sans-serif;
-	display: flex; /* Mantém o alinhamento central */
-	justify-content: center; /* Mantém o alinhamento central */
-	align-items: center; /* Mantém o alinhamento central vertical */
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	min-height: 100vh;
 	position: relative;
-	overflow: hidden; /* Mantém a rolagem bloqueada na maioria das páginas */
+	overflow: hidden;
 	z-index: -1;
-	background-image: url(/img/fundo05.jpg);
+	background-image: url(fundo05.jpg);
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -23,17 +23,8 @@ body {
 	background-blend-mode: multiply;
 }
 
-/* ---------------------------------------------------- */
-
-/* ESTILO PARA SOBRESCRITA: PERMITE ROLAGEM NA PÁGINA DE CADASTRO */
-/* ATENÇÃO: Adicione esta regra APÓS o CSS global do body */
 body.allow-scroll {
-    /* Remove a centralização vertical e o display flex */
-    display: block; 
-    
-    /* Permite a rolagem vertical (substituindo o 'overflow: hidden' de cima) */
-    overflow-y: auto !important; 
-    
-    /* Remove o alinhamento vertical forçado para que o conteúdo comece no topo */
+    display: block;
+    overflow-y: auto !important;
     align-items: flex-start; 
 }
