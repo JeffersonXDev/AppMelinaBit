@@ -15,7 +15,7 @@ body {
 	position: relative;
 	overflow: hidden; /* Mantém a rolagem bloqueada na maioria das páginas */
 	z-index: -1;
-	background-image: url(img/fundo05.jpg);
+	background-image: url(/img/fundo05.jpg);
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
