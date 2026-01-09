@@ -6,60 +6,77 @@
 	<title>Cadastro - MelinaBit, Seu Gerenciamento de Apiários!</title>
 	<link rel="stylesheet" th:href="@{/css/global.css}">
 	<link rel="stylesheet" th:href="@{/css/cadastro.css}">
-    </head>
+</head>
 
-	<body class="allow-scroll">
+<body class="allow-scroll">
 
-		<div class="form-wrapper">
-			<div class="form-container">
-				<h2>Cadastro de Apiários:</h2>
-				<form th:action="@{/gerenciar/cadastro-apiarios}" th:object="${apiario}" method="post">
-					
-	                <div th:if="${erro}" class="alert alert-danger">
-						<p th:text="${erro}"></p>
-					</div>
-	                
-	                <div class="form-group">
-						<label for="nome">Nome do Apiário:</label>
-						<input type="text" id="nome" th:field="*{nome}" required>
-					</div>
-
-					<div class="form-group">
-						<label for="dataInstalacao">Data da Instalação:</label>
-	                    <input type="date" id="dataInstalacao" th:field="*{dataInstalacao}">
-					</div>
-
-					<div class="form-group">
-						<label for="qntdColmeias">Quantidade de Colmeias:</label>
-	                    <input type="number" id="qntdColmeias" th:field="*{qntdColmeias}" required>
-					</div>
-
-					<div class="form-group">
-						<label for="endereco">Endereço:</label>
-						<input type="text" id="endereco" th:field="*{endereco}" required>
-					</div>
-
-					<div class="form-group">
-						<label for="numero">Número:</label>
-	                    <input type="text" id="numero" th:field="*{numero}" required> 
-					</div>
-
-					<div class="form-group">
-						<label for="cidade">Cidade:</label>
-						<input type="text" id="cidade" th:field="*{cidade}"> 
-					</div>
-	                
-					<div class="form-group">
-						<label for="estado">Estado:</label>
-						<input type="text" id="estado" th:field="*{estado}">
-					</div>
-	                
-					<button type="submit" class="btn btn-primary">Cadastrar</button>
-					</form>	                
-					<div class="form-link">
-					<p><a th:href="@{/dashboard}">Cadastrar outro Apíario </a> ou <a th:href="@{/dashboard}">Voltar</a></p>	
-					</div>
-			</div>
+<div class="form-wrapper">
+	<div class="form-container">
+		<h2>Cadastro de Apiários:</h2>
+		<div th:if="${mensagemSucesso}" class="alert alert-success" style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+			<strong th:text="${mensagemSucesso}"></strong>
+			<p>
+				<a th:href="@{/dashboard}">Voltar ao Painel</a>
+			</p>
 		</div>
-		</body>
-		</html>
+
+		<div th:if="${mensagemErro}" class="alert alert-danger" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+			<strong th:text="${mensagemErro}"></strong>
+			<p>
+				<a th:href="@{/dashboard}">Voltar ao Painel</a>
+			</p>
+		</div>
+
+		<form th:action="@{/gerenciar/cadastro-apiarios}" th:object="${apiario}" method="post">
+
+			<div th:if="${erro}" class="alert alert-danger">
+				<p th:text="${erro}"></p>
+			</div>
+
+			<div class="form-group">
+				<label for="nome">Nome do Apiário:</label>
+				<input type="text" id="nome" th:field="*{nome}" required>
+			</div>
+
+			<div class="form-group">
+				<label for="dataInstalacao">Data da Instalação:</label>
+				<input type="date" id="dataInstalacao" th:field="*{dataInstalacao}">
+			</div>
+
+			<div class="form-group">
+				<label for="qntdColmeias">Quantidade de Colmeias:</label>
+				<input type="number" id="qntdColmeias" th:field="*{qntdColmeias}" required>
+			</div>
+
+			<div class="form-group">
+				<label for="endereco">Endereço:</label>
+				<input type="text" id="endereco" th:field="*{endereco}" required>
+			</div>
+
+			<div class="form-group">
+				<label for="numero">Número:</label>
+				<input type="text" id="numero" th:field="*{numero}" required>
+			</div>
+
+			<div class="form-group">
+				<label for="cidade">Cidade:</label>
+				<input type="text" id="cidade" th:field="*{cidade}">
+			</div>
+
+			<div class="form-group">
+				<label for="estado">Estado:</label>
+				<input type="text" id="estado" th:field="*{estado}">
+			</div>
+
+			<button type="submit" class="btn btn-primary">Cadastrar</button>
+		</form>
+
+		<div class="form-link">
+			<p>
+				<a th:href="@{/dashboard}">Voltar ao Painel</a>
+			</p>
+		</div>
+	</div>
+</div>
+</body>
+</html>

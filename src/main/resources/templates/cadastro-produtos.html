@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cadastro de Produção - MelinaBit</title>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/cadastro.css}">
+</head>
+<body class="allow-scroll">
+<div class="form-wrapper">
+	<div class="form-container">
+		<h2>Lançar Produção (Almoxarifado)</h2>
+
+		<div th:if="${mensagemSucesso}" style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+			<strong th:text="${mensagemSucesso}"></strong>
+			<p>
+				<a th:href="@{/dashboard}">Voltar ao Painel</a>
+			</p>
+		</div>
+		<div th:if="${mensagemErro}" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+			<strong th:text="${mensagemErro}"></strong>
+			<p>
+				<a th:href="@{/dashboard}">Voltar ao Painel</a>
+			</p>
+		</div>
+
+		<form th:action="@{/gerenciar/salvar-producao}" th:object="${producao}" method="post">
+
+			<div class="form-group">
+				<label>Data da Colheita:</label>
+				<input type="date" th:field="*{dataColheita}" required>
+			</div>
+
+			<div class="form-group">
+				<label for="tipoProduto">Produto:</label>
+				<select id="tipoProduto" th:field="*{tipoProduto}" class="form-control" required style="width: 100%; padding: 8px;">
+					<option value="" disabled selected>-- Escolha o Produto --</option>
+					<option value="Mel">Mel</option>
+					<option value="Polen">Pólen</option>
+					<option value="Propolis">Própolis</option>
+					<option value="Cera">Cera</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="apiario">Origem (Apiário):</label>
+				<select id="apiario" th:field="*{apiario.id}" class="form-control" required style="width: 100%; padding: 8px;">
+					<option value="" disabled selected>-- Selecione o Apiário --</option>
+					<option th:each="a : ${apiarios}"
+							th:value="${a.id}"
+							th:text="${a.nome}"></option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="quantidade">Quantidade Produzida (kg):</label>
+				<input type="number" id="quantidade" th:field="*{quantidade}" step="0.01" min="0.1" placeholder="Ex: 10.5" required>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Registrar Produção</button>
+		</form>
+		<div class="form-link">
+			<p><a th:href="@{/dashboard}">Voltar ao Painel</a></p>
+		</div>
+	</div>
+</div>
+</body>
+</html>

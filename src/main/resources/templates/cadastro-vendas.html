@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cadastro de Vendas - MelinaBit</title>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/cadastro.css}">
+</head>
+
+<body class="allow-scroll">
+<div class="form-wrapper">
+	<div class="form-container">
+		<h2>Cadastro de Venda de Produtos</h2>
+
+		<div th:if="${mensagemSucesso}" style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+			<strong th:text="${mensagemSucesso}"></strong>
+			<p>
+				<a th:href="@{/dashboard}">Voltar ao Painel</a>
+			</p>
+		</div>
+		<div th:if="${mensagemErro}" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+			<strong th:text="${mensagemErro}"></strong>
+			<p>
+				<a th:href="@{/dashboard}">Voltar ao Painel</a>
+			</p>
+		</div>
+
+		<form th:action="@{/gerenciar/cadastro-vendas}" th:object="${movimentacao}" method="post">
+
+			<input type="hidden" th:field="*{tipoMovimentacao}">
+
+			<div class="form-group">
+				<label for="descricao">Nome Identificador da Venda:</label>
+				<input type="text" id="descricao" th:field="*{descricao}" placeholder="Ex: Venda Mel Lote 01" required>
+			</div>
+
+			<div class="form-group">
+				<label for="cliente">Cliente:</label>
+				<select id="cliente" th:field="*{cliente.id}" required>
+					<option value="">Selecione o Cliente</option>
+					<option th:each="cliente : ${clientes}"
+							th:value="${cliente.id}"
+							th:text="${cliente.nomeCliente}">Nome do Cliente</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="unidadeMedida">Produto:</label>
+				<select id="unidadeMedida" th:field="*{unidadeMedida}" onchange="atualizarNomeProduto(this)" required>
+					<option value="">Selecione o Tipo e Peso/Volume</option>
+					<optgroup label="Mel/Outros (Pesos - Gramas/Kilos)">
+						<option value="250g_mel">Frasco 250 Gramas</option>
+						<option value="500g_mel">Frasco 500 Gramas</option>
+						<option value="750g_mel">Frasco 750 Gramas</option>
+						<option value="1kg_mel">Frasco 1 Kilo</option>
+						<option value="10kg_balde">Balde 10 Kilos</option>
+						<option value="20kg_balde">Balde 20 Kilos</option>
+						<option value="30kg_balde">Balde 30 Kilos</option>
+					</optgroup>
+					<optgroup label="Pólen (Pesos - Gramas/Kilos)">
+						<option value="1kg_polen">Pólen 1 Kilo</option>
+						<option value="500g_polen">Pote de 500 Gramas</option>
+						<option value="250g_polen">Pote de 250 Gramas</option>
+						<option value="100g_polen">Pote de 100 Gramas</option>
+					</optgroup>
+					<optgroup label="Cera (Pesos - Gramas/Kilos)">
+						<option value="1kg_cera">Cera 1 Kilo</option>
+						<option value="500g_cera">Cera de 500 Gramas</option>
+						<option value="250g_cera">Cera de 250 Gramas</option>
+					</optgroup>
+					<optgroup label="Própolis (Volume - ML/Litros)">
+						<option value="1L_extrato">Frasco 1 Litro (L)</option>
+						<option value="500ml_extrato">Frasco 500ml</option>
+						<option value="250ml_extrato">Frasco 250ml</option>
+						<option value="100ml_extrato">Frasco 100ml</option>
+						<option value="30ml_extrato">Frasco 30ml</option>
+					</optgroup>
+				</select>
+				<input type="hidden" id="nomeProdutoOculto" th:field="*{nome}">
+			</div>
+
+
+			<div class="form-group">
+				<label for="quantidade">Quantidade de Itens:</label>
+				<input type="number" id="quantidade" th:field="*{quantidade}" min="1" required>
+			</div>
+
+			<div class="form-group">
+				<label for="valorUnitario">Preço Unitário de Venda (R$):</label>
+				<input type="number" id="valorUnitario" name="valorUnitario" step="0.01" min="0" required>
+			</div>
+
+			<div class="form-group">
+				<label for="valorFrete">Valor do Frete de Entrega (R$):</label>
+				<input type="number" id="valorFrete" name="valorFrete" step="0.01" min="0" 	 required>
+			</div>
+
+			<div class="form-group">
+				<label for="valorTotalVisual">Valor Total da Venda (R$):</label>
+				<input type="number" id="valorTotalVisual" readonly style="background-color: #f0f0f0;">
+				<input type="hidden" id="valorTotalReal" th:field="*{valorVenda}">
+				<small>Cálculo: (Qtd * Preço Unitário) + Frete</small>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Finalizar Venda</button>
+		</form>
+
+		<div class="form-link">
+			<p>
+				<a th:href="@{/dashboard}">Voltar ao Painel</a>
+			</p>
+		</div>
+	</div>
+</div>
+
+<script>
+	const inputQtd = document.getElementById('quantidade');
+	const inputUnitario = document.getElementById('valorUnitario');
+	const inputFrete = document.getElementById('valorFrete');
+	const inputTotal = document.getElementById('valorTotalVisual');
+
+	function calcularTotal() {
+		const qtd = parseFloat(inputQtd.value) || 0;
+		const unit = parseFloat(inputUnitario.value) || 0;
+		const frete = parseFloat(inputFrete.value) || 0;
+		const total = (qtd * unit) + frete;
+
+		inputTotal.value = total.toFixed(2);
+		document.getElementById('valorTotalReal').value = total.toFixed(2); // Atualiza o campo do Java
+	}
+
+	inputQtd.addEventListener('input', calcularTotal);
+	inputUnitario.addEventListener('input', calcularTotal);
+	inputFrete.addEventListener('input', calcularTotal);
+
+	function atualizarNomeProduto(select) {
+		const valor = select.value;
+		const campoNome = document.getElementById('nomeProdutoOculto');
+
+		if (valor.includes('mel')) campoNome.value = 'Mel';
+		else if (valor.includes('polen')) campoNome.value = 'Polen';
+		else if (valor.includes('extrato')) campoNome.value = 'Propolis';
+		else if (valor.includes('cera')) campoNome.value = 'Cera';
+		// Log para você testar no F12 do navegador se está funcionando
+		console.log("Categoria definida para o banco: " + campoNome.value);
+	}
+</script>
+
+</body>
+</html>

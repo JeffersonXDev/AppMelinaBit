@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cadastro de Entrada de Material - MelinaBit</title>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/cadastro.css}">
+</head>
+<body class="allow-scroll">
+<div class="form-wrapper">
+	<div class="form-container">
+		<h2>Cadastro de Materiais Apícolas</h2>
+
+		<div th:if="${mensagemSucesso}" class="alert alert-success">
+			<strong th:text="${mensagemSucesso}"></strong>
+			<p><a th:href="@{/dashboard}">Voltar ao Painel</a></p>
+		</div>
+
+		<form th:action="@{/gerenciar/salvar-material}" th:object="${material}" method="post">
+
+			<input type="hidden" th:field="*{tipoMovimentacao}" value="ENTRADA">
+
+			<div class="form-group">
+				<label>Data da Compra:</label>
+				<input type="date" th:field="*{dataCompra}" required>
+			</div>
+
+			<div class="form-group">
+				<label for="nomeMaterial">Nome do Material:</label>
+				<input type="text" id="nomeMaterial" th:field="*{nomeMaterial}" placeholder="Ex: Cera Alveolada, Arame, Caixas" required>
+			</div>
+
+			<div class="form-group">
+				<label for="quantidadeComprada">Quantidade Comprada:</label>
+				<input type="number" id="quantidadeComprada" th:field="*{quantidadeComprada}" step="0.01" min="0.1" required>
+			</div>
+
+			<div class="form-group">
+				<label for="valorUnitario">Valor Unitário (R$):</label>
+				<input type="number" id="valorUnitario" name="valorUnitario" step="0.01" min="0" required>
+			</div>
+
+			<div class="form-group">
+				<label for="valorFrete">Valor do Frete (R$):</label>
+				<input type="number" id="valorFrete" name="valorFrete" step="0.01" min="0" value="0.00">
+			</div>
+
+			<div class="form-group">
+				<label for="valorTotalVisual">Valor Total Pago (R$):</label>
+				<input type="number" id="valorTotalVisual" th:field="*{valorPago}" readonly style="background-color: #f0f0f0;">
+				<small>Cálculo automático: (Qtd * Unitário) + Frete</small>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Registrar Compra</button>
+		</form>
+
+		<div class="form-link">
+			<p><a th:href="@{/dashboard}">Voltar ao Painel</a></p>
+		</div>
+	</div>
+</div>
+
+<script>
+	// Ajustado para os novos IDs do HTML
+	const inputQtd = document.getElementById('quantidadeComprada');
+	const inputUnitario = document.getElementById('valorUnitario');
+	const inputFrete = document.getElementById('valorFrete');
+	const inputTotal = document.getElementById('valorTotalVisual');
+
+	function calcularTotal() {
+		const qtd = parseFloat(inputQtd.value) || 0;
+		const unit = parseFloat(inputUnitario.value) || 0;
+		const frete = parseFloat(inputFrete.value) || 0;
+		const total = (qtd * unit) + frete;
+		inputTotal.value = total.toFixed(2);
+	}
+
+	inputQtd.addEventListener('input', calcularTotal);
+	inputUnitario.addEventListener('input', calcularTotal);
+	inputFrete.addEventListener('input', calcularTotal);
+</script>
+</body>
+</html>

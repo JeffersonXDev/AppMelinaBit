@@ -1,7 +1,8 @@
 package com.appmelinabit.service;
 
 import com.appmelinabit.model.Apiario;
-import com.appmelinabit.model.Usuario; 
+import com.appmelinabit.model.Manejo;
+import com.appmelinabit.model.Usuario;
 import com.appmelinabit.repository.ApiarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,41 +18,37 @@ public class ApiarioService {
 
     @Autowired
     private ApiarioRepository apiarioRepository;
-    
-    @Autowired 
-    private UsuarioService usuarioService; // Utiliza o serviço de usuário já definido
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Transactional
     public Apiario salvar(Apiario apiario) {
-        
-        // 1. Obtém o nome de usuário (email) do contexto de segurança
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName(); 
-        
-        // 2. Busca o objeto Usuario completo usando o UsuarioService
+        String username = authentication.getName();
+
+        // Ajustado: UsuarioService agora retorna Optional ou Usuario direto?
+        // Se o seu UsuarioService.findByEmail retorna Usuario:
         Usuario usuarioLogado = usuarioService.findByEmail(username);
-        
+
         if (usuarioLogado != null) {
-            // 3. Associa o Apiário ao usuário logado
-            apiario.setUsuario(usuarioLogado); // Requer o método setUsuario na Entidade Apiario
+            apiario.setUsuario(usuarioLogado);
         } else {
             throw new RuntimeException("Usuário logado não encontrado no sistema.");
         }
-        
+
         return apiarioRepository.save(apiario);
     }
 
-    public List<Apiario> findAll() { 
+    public List<Apiario> findAll() {
         return apiarioRepository.findAll();
     }
-    
 
-    public List<Apiario> buscarApiariosDoUsuarioLogado() { 
-        
+    public List<Apiario> buscarApiariosDoUsuarioLogado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
+
         if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
-            return List.of(); 
+            return List.of();
         }
 
         String username = authentication.getName();
@@ -60,12 +57,16 @@ public class ApiarioService {
         if (usuarioLogado == null) {
             return List.of();
         }
-        
-        // Requer o método findByUsuario(Usuario) no ApiarioRepository
-        return apiarioRepository.findByUsuario(usuarioLogado); 
+
+        return apiarioRepository.findByUsuario(usuarioLogado);
     }
 
-    public Optional<Apiario> findById(Long idApiario) {
+    // CORREÇÃO AQUI: Mudado de Long para Integer
+    public Optional<Apiario> findById(Integer idApiario) {
         return apiarioRepository.findById(idApiario);
+    }
+
+    public void salvarManejo(Manejo manejo) {
+
     }
 }

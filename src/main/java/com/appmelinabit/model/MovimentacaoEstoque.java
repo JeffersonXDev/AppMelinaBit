@@ -2,203 +2,100 @@ package com.appmelinabit.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.math.BigDecimal; 
-import jakarta.validation.constraints.DecimalMin;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "movimentacao_estoque")
 public class MovimentacaoEstoque {
 
-    // 1. CHAVE PRIMÁRIA
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_movimentacao") 
-    private Long id; 
+    @Column(name = "id_movimentacao")
+    private Integer id; // Padronizado como Integer
 
-    // 2. CHAVES ESTRANGEIRAS (Many-to-One)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario", nullable = false)
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_fornecedor")
-    private Fornecedor fornecedor; 
-    
+    private Fornecedor fornecedor;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_apiario")
     private Apiario apiario;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente")
-    private Cliente cliente; 
-    
-    // 3. DADOS DO PRODUTO/MOVIMENTAÇÃO
+    private Cliente cliente; // Removida a duplicação que havia aqui
+
     @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(name = "descricao")
     private String descricao;
-
-    @Column(name = "quantidade", nullable = false)
     private Integer quantidade;
-    
-    @Column(name = "unidade_medida")
     private String unidadeMedida;
-    
-    // 4. VALORES E CUSTOS
-    @Column(name = "valor_custo")
-    private BigDecimal valorCusto; 
-    
-    @Column(name = "valor_venda")
-    private BigDecimal valorVenda; 
-    
-    @Column(name = "preco_base")
-    private BigDecimal precoBase; 
-    
-    @Column(name = "valor_compra")
-    private BigDecimal valorCompra; 
-    
-    @Column(name = "valor_frete", precision = 10, scale = 2)
-    @DecimalMin(value = "0.00", message = "O frete deve ser R$ 0,00 ou maior.")
-    private BigDecimal valorFrete;
-    
-    // 5. DATAS
-    @Column(name = "data_compra")
-    private LocalDate dataCompra;
+    private String tipoMovimentacao;
 
-    @Column(name = "data_saida")
+    private BigDecimal valorCusto;
+    private BigDecimal valorVenda;
+    private BigDecimal valorCompra;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal valorFrete;
+
+    private LocalDate dataCompra;
     private LocalDate dataSaida;
 
-    // --- CONSTRUTOR PADRÃO ---
-    public MovimentacaoEstoque() {
-    }
+    public MovimentacaoEstoque() {}
 
-    // --- GETTERS E SETTERS COMPLETOS ---
+    // --- GETTERS E SETTERS CORRIGIDOS ---
 
-    public Long getId() {
-        return id;
-    }
+    public Integer getId() { return id; } // Ajustado para Integer
+    public void setId(Integer id) { this.id = id; } // Ajustado para Integer
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
+    public Fornecedor getFornecedor() { return fornecedor; }
+    public void setFornecedor(Fornecedor fornecedor) { this.fornecedor = fornecedor; }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+    public Apiario getApiario() { return apiario; }
+    public void setApiario(Apiario apiario) { this.apiario = apiario; }
 
-    public Fornecedor getFornecedor() {
-        return fornecedor;
-    }
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
 
-    public void setFornecedor(Fornecedor fornecedor) {
-        this.fornecedor = fornecedor;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public Apiario getApiario() {
-        return apiario;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public void setApiario(Apiario apiario) {
-        this.apiario = apiario;
-    }
+    public Integer getQuantidade() { return quantidade; }
+    public void setQuantidade(Integer quantidade) { this.quantidade = quantidade; }
 
-    public Cliente getCliente() {
-        return cliente;
-    }
+    public String getUnidadeMedida() { return unidadeMedida; }
+    public void setUnidadeMedida(String unidadeMedida) { this.unidadeMedida = unidadeMedida; }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
+    public String getTipoMovimentacao() { return tipoMovimentacao; }
+    public void setTipoMovimentacao(String tipoMovimentacao) { this.tipoMovimentacao = tipoMovimentacao; }
 
-    public String getNome() {
-        return nome;
-    }
+    public BigDecimal getValorCusto() { return valorCusto; }
+    public void setValorCusto(BigDecimal valorCusto) { this.valorCusto = valorCusto; }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public BigDecimal getValorVenda() { return valorVenda; }
+    public void setValorVenda(BigDecimal valorVenda) { this.valorVenda = valorVenda; }
 
-    public String getDescricao() {
-        return descricao;
-    }
+    public BigDecimal getValorCompra() { return valorCompra; }
+    public void setValorCompra(BigDecimal valorCompra) { this.valorCompra = valorCompra; }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+    public BigDecimal getValorFrete() { return valorFrete; }
+    public void setValorFrete(BigDecimal valorFrete) { this.valorFrete = valorFrete; }
 
-    public Integer getQuantidade() {
-        return quantidade;
-    }
+    public LocalDate getDataCompra() { return dataCompra; }
+    public void setDataCompra(LocalDate dataCompra) { this.dataCompra = dataCompra; }
 
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public String getUnidadeMedida() {
-        return unidadeMedida;
-    }
-
-    public void setUnidadeMedida(String unidadeMedida) {
-        this.unidadeMedida = unidadeMedida;
-    }
-
-    public BigDecimal getValorCusto() {
-        return valorCusto;
-    }
-
-    public void setValorCusto(BigDecimal valorCusto) {
-        this.valorCusto = valorCusto;
-    }
-
-    public BigDecimal getValorVenda() {
-        return valorVenda;
-    }
-
-    public void setValorVenda(BigDecimal valorVenda) {
-        this.valorVenda = valorVenda;
-    }
-
-    public BigDecimal getPrecoBase() {
-        return precoBase;
-    }
-
-    public void setPrecoBase(BigDecimal precoBase) {
-        this.precoBase = precoBase;
-    }
-
-    public BigDecimal getValorCompra() {
-        return valorCompra;
-    }
-
-    public void setValorCompra(BigDecimal valorCompra) {
-        this.valorCompra = valorCompra;
-    }
-
-    public LocalDate getDataCompra() {
-        return dataCompra;
-    }
-
-    public void setDataCompra(LocalDate dataCompra) {
-        this.dataCompra = dataCompra;
-    }
-
-    public LocalDate getDataSaida() {
-        return dataSaida;
-    }
-
-    public void setDataSaida(LocalDate dataSaida) {
-        this.dataSaida = dataSaida;
-    }
-    public BigDecimal getValorFrete() {
-        return valorFrete;
-    }
-
-    public void setValorFrete(BigDecimal valorFrete) {
-        this.valorFrete = valorFrete;
-    }
+    public LocalDate getDataSaida() { return dataSaida; }
+    public void setDataSaida(LocalDate dataSaida) { this.dataSaida = dataSaida; }
 }

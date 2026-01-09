@@ -1,142 +1,154 @@
 package com.appmelinabit.controller;
 
-import com.appmelinabit.model.MovimentacaoEstoque;
-import com.appmelinabit.model.Usuario;
-// ... (outros imports omitidos por brevidade)
-import com.appmelinabit.repository.MovimentacaoEstoqueRepository;
-import com.appmelinabit.repository.ClienteRepository;
-import com.appmelinabit.repository.ApiarioRepository;
-import com.appmelinabit.repository.UsuarioRepository;
-import com.appmelinabit.repository.FornecedorRepository; 
-
+import com.appmelinabit.model.*;
+import com.appmelinabit.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.List;
 
 @Controller
 @RequestMapping("/gerenciar")
 public class MovimentacaoEstoqueController {
 
-    @Autowired private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
-    @Autowired private ClienteRepository clienteRepository;
-    @Autowired private ApiarioRepository apiarioRepository;
-    @Autowired private UsuarioRepository usuarioRepository;
-    @Autowired private FornecedorRepository fornecedorRepository;
+    @Autowired
+    private ProducaoRepository producaoRepository;
+    @Autowired
+    private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
+    @Autowired
+    private MaterialApicolaRepository materialRepo;
+    @Autowired
+    private ClienteRepository clienteRepository;
+    @Autowired
+    private FornecedorRepository fornecedorRepository;
+    @Autowired
+    private ApiarioRepository apiarioRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-    /**
-     * Lida com a requisição GET para exibir o formulário de Venda.
-     */
-    @GetMapping("/venda")
-    public String exibirFormularioVenda(Model model) {
-        model.addAttribute("movimentacao", new MovimentacaoEstoque());
-        model.addAttribute("clientes", clienteRepository.findAll());
-        model.addAttribute("apiarios", apiarioRepository.findAll());
-        return "cadastro-venda";
+    // --- MÉTODO AUXILIAR (Fora dos outros métodos) ---
+    private Usuario buscarUsuarioLogado(UserDetails userDetails) {
+        return usuarioRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
-    @PostMapping("/venda")
-    public String cadastrarVenda(
-        MovimentacaoEstoque movimentacao,
-        @RequestParam("valorVendaUnitario") BigDecimal valorVendaUnitario,
-        @RequestParam(value = "valorFrete", required = false, defaultValue = "0.00") BigDecimal valorFrete) 
-    {
-        movimentacao.setDataSaida(LocalDate.now());
-        BigDecimal quantidade = new BigDecimal(movimentacao.getQuantidade());
+    // --- 1. CADASTRO DE PRODUTOS (PRODUÇÃO PRÓPRIA) ---
 
-        BigDecimal valorVendaSubtotal = valorVendaUnitario.multiply(quantidade);
-        BigDecimal valorVendaTotal = valorVendaSubtotal.add(valorFrete);
-        
-        movimentacao.setValorVenda(valorVendaTotal);
-        movimentacao.setValorFrete(valorFrete); 
-        
-        movimentacao.setDataCompra(null);
-        movimentacao.setFornecedor(null);
-        movimentacao.setValorCusto(null);
+    @GetMapping("/cadastro-produtos")
+    public String exibirCadastroProdutos(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Usuario usuario = buscarUsuarioLogado(userDetails);
 
-        configurarUsuarioLogado(movimentacao);
-
-        if (movimentacao.getCliente() != null && movimentacao.getCliente().getId() != null) {
-            clienteRepository.findById(movimentacao.getCliente().getId())
-                .ifPresent(movimentacao::setCliente);
-        }
-        if (movimentacao.getApiario() != null && movimentacao.getApiario().getId() != null) {
-             // CORREÇÃO DE TIPO: Converte o ID do Apiário (que pode vir como Integer) para Long, 
-             // pois o findById do repositório ApiarioRepository espera Long.
-             apiarioRepository.findById(movimentacao.getApiario().getId().longValue())
-                .ifPresent(movimentacao::setApiario);
+        if (!model.containsAttribute("producao")) {
+            model.addAttribute("producao", new Producao());
         }
 
-        movimentacaoEstoqueRepository.save(movimentacao);
+        // Nome da lista deve ser 'apiarios' para bater com o th:each acima
+        model.addAttribute("apiarios", apiarioRepository.findByUsuario(usuario));
 
-        return "redirect:/dashboard";
+        return "cadastro-produtos";
     }
 
-    @GetMapping("/entrada")
-    public String exibirFormularioEntrada(Model model) {
-        model.addAttribute("movimentacao", new MovimentacaoEstoque());
-        model.addAttribute("fornecedores", fornecedorRepository.findAll());
-        model.addAttribute("apiarios", apiarioRepository.findAll());
-        return "cadastro-compra";
+    @PostMapping("/salvar-producao")
+    public String salvarProducao(@ModelAttribute("producao") Producao producao,
+                                 @AuthenticationPrincipal UserDetails userDetails,
+                                 RedirectAttributes attributes) {
+        try {
+            Usuario usuario = buscarUsuarioLogado(userDetails);
+            producao.setUsuario(usuario);
+
+            // 1. SALVA NA TABELA PRODUÇÃO (Onde você vê o detalhe por apiário)
+            producaoRepository.save(producao);
+
+            // 2. SALVA NA TABELA MOVIMENTAÇÃO (Onde o Dashboard lê o estoque disponível)
+            MovimentacaoEstoque mov = new MovimentacaoEstoque();
+            mov.setUsuario(usuario);
+            mov.setApiario(producao.getApiario());
+            mov.setNome(producao.getTipoProduto());
+            mov.setQuantidade(producao.getQuantidade().intValue());
+            mov.setDataCompra(producao.getDataColheita()); // Data que entra no gráfico
+            mov.setTipoMovimentacao("ENTRADA");
+
+            movimentacaoEstoqueRepository.save(mov);
+
+            attributes.addFlashAttribute("mensagemSucesso", "Produção e estoque registrados!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("mensagemErro", "Erro ao salvar: " + e.getMessage());
+        }
+        return "redirect:/gerenciar/cadastro-produtos";
     }
 
-    @PostMapping("/entrada")
-    public String cadastrarCompra(
-        MovimentacaoEstoque movimentacao,
-        @RequestParam("valorCustoUnitario") BigDecimal valorCustoUnitario,
-        @RequestParam(value = "valorFrete", required = false, defaultValue = "0.00") BigDecimal valorFrete) 
-    {
-        movimentacao.setDataCompra(LocalDate.now());
-        
-        movimentacao.setValorFrete(valorFrete); 
-        
-        BigDecimal quantidade = new BigDecimal(movimentacao.getQuantidade());
-        BigDecimal valorCustoSubtotal = valorCustoUnitario.multiply(quantidade);
-        BigDecimal valorCustoTotal = valorCustoSubtotal.add(valorFrete);
-        
-        movimentacao.setValorCusto(valorCustoTotal);
+    // --- 2. CADASTRO DE COMPRAS (ALMOXARIFADO/INSUMOS) ---
 
-        movimentacao.setDataSaida(null);
-        movimentacao.setCliente(null);
-        movimentacao.setValorVenda(null);
+    @GetMapping("/cadastro-compras")
+    public String abrirCadastro(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Usuario usuario = buscarUsuarioLogado(userDetails);
 
-        configurarUsuarioLogado(movimentacao);
+        MaterialApicola material = new MaterialApicola();
+        material.setTipoMovimentacao("ENTRADA");
+        material.setQuantidadeEmUso(0.0);
 
-        if (movimentacao.getFornecedor() != null && movimentacao.getFornecedor().getId() != null) {
-            fornecedorRepository.findById(movimentacao.getFornecedor().getId())
-                .ifPresent(movimentacao::setFornecedor);
-        }
-        if (movimentacao.getApiario() != null && movimentacao.getApiario().getId() != null) {
-             // CORREÇÃO DE TIPO: Converte o ID do Apiário (que pode vir como Integer) para Long, 
-             // pois o findById do repositório ApiarioRepository espera Long.
-             apiarioRepository.findById(movimentacao.getApiario().getId().longValue())
-                .ifPresent(movimentacao::setApiario);
-        }
+        model.addAttribute("material", material);
+        model.addAttribute("fornecedores", fornecedorRepository.findByUsuario(usuario));
 
-        movimentacaoEstoqueRepository.save(movimentacao);
-
-        return "redirect:/dashboard";
+        return "cadastro-compras";
     }
-    
-    // Método auxiliar para configurar o usuário logado
-    private void configurarUsuarioLogado(MovimentacaoEstoque movimentacao) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.isAuthenticated()) {
-            String principalName = authentication.getName();
+    @PostMapping("/salvar-material")
+    public String salvarMaterial(@ModelAttribute("material") MaterialApicola material,
+                                 @AuthenticationPrincipal UserDetails userDetails,
+                                 RedirectAttributes attributes) {
+        try {
+            Usuario usuario = buscarUsuarioLogado(userDetails);
+            material.setUsuario(usuario);
 
-            Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(principalName);
+            if (material.getQuantidadeEmUso() == null) material.setQuantidadeEmUso(0.0);
 
-            usuarioOptional.ifPresent(movimentacao::setUsuario);
+            materialRepo.save(material);
+            attributes.addFlashAttribute("mensagemSucesso", "Material registrado com sucesso!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("mensagemErro", "Erro: " + e.getMessage());
         }
+        return "redirect:/gerenciar/cadastro-compras";
+    }
+
+    // --- 3. CADASTRO DE VENDAS (SAÍDA DE ESTOQUE) ---
+
+    @GetMapping("/cadastro-vendas")
+    public String exibirFormularioVenda(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Usuario usuario = buscarUsuarioLogado(userDetails);
+
+        if (!model.containsAttribute("movimentacao")) {
+            MovimentacaoEstoque mov = new MovimentacaoEstoque();
+            mov.setTipoMovimentacao("SAIDA");
+            model.addAttribute("movimentacao", mov);
+        }
+
+        model.addAttribute("clientes", clienteRepository.findByUsuario(usuario));
+        model.addAttribute("apiarios", apiarioRepository.findByUsuario(usuario));
+        return "cadastro-vendas";
+    }
+
+    @PostMapping("/cadastro-vendas")
+    public String salvarVenda(@ModelAttribute("movimentacao") MovimentacaoEstoque mov,
+                              @AuthenticationPrincipal UserDetails userDetails,
+                              RedirectAttributes attributes) {
+        try {
+            Usuario usuario = buscarUsuarioLogado(userDetails);
+            mov.setUsuario(usuario);
+
+            if (mov.getDataSaida() == null) mov.setDataSaida(LocalDate.now());
+
+            movimentacaoEstoqueRepository.save(mov);
+            attributes.addFlashAttribute("mensagemSucesso", "Venda registrada!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("mensagemErro", "Erro: " + e.getMessage());
+        }
+        return "redirect:/gerenciar/cadastro-vendas";
     }
 }

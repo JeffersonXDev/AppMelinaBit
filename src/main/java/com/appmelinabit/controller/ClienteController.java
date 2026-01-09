@@ -1,16 +1,16 @@
 package com.appmelinabit.controller;
-import com.appmelinabit.model.Apiario;
-import com.appmelinabit.model.Cliente;
-import com.appmelinabit.service.ApiarioService;
-import com.appmelinabit.service.ClienteService;
 
+import com.appmelinabit.model.Cliente;
+import com.appmelinabit.model.Usuario;
+import com.appmelinabit.repository.UsuarioRepository;
+import com.appmelinabit.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/gerenciar")
@@ -19,25 +19,38 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    // MÉTODO GET: Exibir o Formulário (Mapeia para /gerenciar/clientes)
-    @GetMapping("/clientes")
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @GetMapping("/cadastro-clientes")
     public String viewCadastroClientes(Model model) {
-        model.addAttribute("cliente", new Cliente()); 
-        return "cadastro-clientes"; // Nome do template
+        // Se não houver um cliente (vindo de um erro de validação), cria um novo
+        if (!model.containsAttribute("cliente")) {
+            model.addAttribute("cliente", new Cliente());
+        }
+        return "cadastro-clientes";
     }
-    
-    // MÉTODO POST: Processar e Salvar o Formulário
-    @PostMapping("/clientes")
-    public String salvarCliente(@ModelAttribute("cliente") Cliente cliente, Model model) {
-        
+
+    @PostMapping("/cadastro-clientes")
+    public String salvarCliente(@ModelAttribute("cliente") Cliente cliente,
+                                RedirectAttributes attributes) {
         try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Usuario usuario = usuarioRepository.findByEmail(auth.getName()).orElseThrow();
+
+            cliente.setUsuario(usuario);
             clienteService.salvar(cliente);
-            // Redireciona para o dashboard ou lista de clientes
-            return "redirect:/dashboard?success=ClienteSalvo"; 
+
+            // Adiciona a mensagem que sobrevive ao redirecionamento
+            attributes.addFlashAttribute("mensagemSucesso", "Cliente cadastrado com sucesso!");
+
+            // REDIRECIONA PARA A ROTA CORRETA (com /gerenciar)
+            return "redirect:/gerenciar/cadastro-clientes";
+
         } catch (Exception e) {
-            model.addAttribute("erro", "Erro ao salvar o cliente: " + e.getMessage());
-            model.addAttribute("cliente", cliente); 
-            return "cadastro-clientes"; 
+            attributes.addFlashAttribute("mensagemErro", "Erro ao salvar o cliente: " + e.getMessage());
+            attributes.addFlashAttribute("cliente", cliente);
+            return "redirect:/gerenciar/cadastro-clientes";
         }
     }
 }

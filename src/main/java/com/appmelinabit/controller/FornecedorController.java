@@ -1,9 +1,9 @@
 package com.appmelinabit.controller;
 
 import com.appmelinabit.model.Fornecedor;
-import com.appmelinabit.model.Usuario; // Assumindo que você tem uma classe Usuario
+import com.appmelinabit.model.Usuario;
 import com.appmelinabit.service.FornecedorService;
-import com.appmelinabit.service.UsuarioService; // Assumindo que você tem um serviço para buscar o usuário
+import com.appmelinabit.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal; // Para pegar o usuário logado
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/gerenciar")
@@ -22,55 +22,47 @@ public class FornecedorController {
     @Autowired
     private FornecedorService fornecedorService;
 
-    @Autowired 
-    private UsuarioService usuarioService; 
+    @Autowired
+    private UsuarioService usuarioService;
 
-    @GetMapping("/fornecedores")
+    // AJUSTE: Mapeado para /gerenciar/cadastro-fornecedores conforme o Dashboard
+    @GetMapping("/cadastro-fornecedores")
     public String viewCadastroFornecedor(Model model) {
-
-        model.addAttribute("fornecedor", new Fornecedor()); 
-
-        return "cadastro-fornecedores"; // Nome do template HTML
+        model.addAttribute("fornecedor", new Fornecedor());
+        return "cadastro-fornecedores";
     }
 
-    @PostMapping("/fornecedores")
+    // AJUSTE: Mantendo a mesma rota para o POST
+    @PostMapping("/cadastro-fornecedores")
     public String salvarFornecedor(
-        @ModelAttribute("fornecedor") Fornecedor fornecedor, 
-        Principal principal, // Injeta o usuário logado do Spring Security
-        Model model, 
-        RedirectAttributes attributes) {
-        
-        if (principal == null) {
+            @ModelAttribute("fornecedor") Fornecedor fornecedor,
+            Principal principal,
+            RedirectAttributes attributes) { // Removi o 'Model model' pois usaremos apenas redirect
 
-            attributes.addFlashAttribute("erro", "Sessão expirada. Faça login novamente.");
-            return "redirect:/login"; 
+        if (principal == null) {
+            return "redirect:/login";
         }
 
         try {
-
             String emailUsuarioLogado = principal.getName();
-
             Usuario usuarioLogado = usuarioService.findByEmail(emailUsuarioLogado);
-            
+
             if (usuarioLogado == null) {
-                 throw new IllegalStateException("Usuário logado não encontrado no banco de dados.");
+                throw new IllegalStateException("Usuário logado não encontrado.");
             }
 
-
             fornecedor.setUsuario(usuarioLogado);
-            
-            // 4. Salva o Fornecedor com a associação
             fornecedorService.salvar(fornecedor);
-            
+
+            // Mensagem que aparecerá após o redirecionamento (Formulário Limpo)
             attributes.addFlashAttribute("mensagemSucesso", "Fornecedor cadastrado com sucesso!");
 
-            return "redirect:/gerenciar/fornecedores/lista"; 
-            
-        } catch (Exception e) {
+            return "redirect:/gerenciar/cadastro-fornecedores";
 
-            model.addAttribute("erro", "Erro ao cadastrar fornecedor: " + e.getMessage());
-            model.addAttribute("fornecedor", fornecedor); // Mantém os dados preenchidos
-            return "cadastro-fornecedores"; 
+        } catch (Exception e) {
+            // Para erro, também usamos RedirectAttributes para evitar o reenvio do formulário (F5)
+            attributes.addFlashAttribute("mensagemErro", "Erro ao cadastrar fornecedor: " + e.getMessage());
+            return "redirect:/gerenciar/cadastro-fornecedores";
         }
     }
 }

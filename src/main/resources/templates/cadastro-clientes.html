@@ -13,12 +13,21 @@
 	    <div class="form-wrapper">
 	        <div class="form-container">
 	            <h2>Cadastro de Clientes:</h2>
-	            <form th:action="@{/gerenciar/clientes}" th:object="${cliente}" method="post">
-	                
+				<div th:if="${mensagemSucesso}" class="alert alert-success" style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+					<strong th:text="${mensagemSucesso}"></strong>
+					<a th:href="@{/dashboard}">Voltar ao Painel</a>
+				</div>
+
+				<div th:if="${mensagemErro}" class="alert alert-danger" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+					<strong th:text="${mensagemErro}"></strong>
+					<a th:href="@{/dashboard}">Voltar ao Painel</a>
+				</div>
+	            <form th:action="@{/gerenciar/cadastro-clientes}" th:object="${cliente}" method="post">
+
 	                <div th:if="${erro}" class="alert alert-danger">
 	                    <p th:text="${erro}"></p>
 	                </div>
-	                
+
 	                <div class="form-group">
 	                    <label for="nome">Nome do Cliente:</label>
 	                    <input type="text" id="nome" th:field="*{nomeCliente}" required>
@@ -31,9 +40,9 @@
 
 	                <div class="form-group">
 	                    <label for="numero">Número:</label>
-	                    <input type="text" id="numero" th:field="*{numero}" required> 
+	                    <input type="text" id="numero" th:field="*{numero}" required>
 	                </div>
-	                
+
 	                <div class="form-group">
 	                    <label for="telefone">Telefone:</label>
 	                    <input type="text" id="telefone" th:field="*{telefone}" required>
@@ -41,25 +50,27 @@
 
 	                <div class="form-group">
 	                    <label for="email">E-Mail:</label>
-	                    <input type="text" id="email" th:field="*{email}" required> 
+	                    <input type="text" id="email" th:field="*{email}" required>
 	                </div>
 
 	                <div class="form-group">
 	                    <label for="cidade">Cidade:</label>
-	                    <input type="text" id="cidade" th:field="*{cidade}"> 
+	                    <input type="text" id="cidade" th:field="*{cidade}">
 	                </div>
-	                
+
 	                <div class="form-group">
 	                    <label for="estado">Estado:</label>
 	                    <input type="text" id="estado" th:field="*{estado}">
 	                </div>
-	            
+
 	                <button type="submit" class="btn btn-primary">Cadastrar</button>
 	            </form>
 					<div class="form-link">
-					<p><a th:href="@{/dashboard}">Cadastrar outro Cliente </a> ou <a th:href="@{/dashboard}">Voltar</a></p>	
+					<p>
+						<a th:href="@{/dashboard}">Voltar ao Painel</a>
+					</p>
 					</div>
-					
+
 			</div>
 		</div>
 		</body>

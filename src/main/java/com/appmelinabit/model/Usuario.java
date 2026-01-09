@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime; 
 
 @Entity 
-@Table(name = "usuario") 
+@Table(name = "usuarios")
 public class Usuario {
 
     // CHAVE PRIMÁRIA
@@ -19,7 +19,7 @@ public class Usuario {
     @Column(name = "id_usuario") 
     private Integer idUsuario;
 
-    
+
     @Column(name = "nome")
     private String nome;
 

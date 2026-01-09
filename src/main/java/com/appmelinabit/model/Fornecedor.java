@@ -9,7 +9,7 @@ public class Fornecedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_fornecedor")
-    private Long id;
+    private Integer id; // MUDADO de Long para Integer
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
@@ -57,13 +57,11 @@ public class Fornecedor {
 
     public Fornecedor() {
     }
-
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

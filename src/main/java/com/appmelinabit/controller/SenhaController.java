@@ -30,7 +30,7 @@ public class SenhaController {
                                  Model model) {
         if (senhaService.redefinirSenha(token, novaSenha).isPresent()) {
             model.addAttribute("mensagem", "Senha redefinida com sucesso!");
-            return "sucesso-redefinicao"; // Você pode criar uma página de sucesso
+            return "sucesso-redefinicao";
         }
         model.addAttribute("mensagem", "Erro ao redefinir a senha. Tente novamente.");
         return "erro-redefinicao";

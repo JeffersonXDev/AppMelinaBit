@@ -17,12 +17,12 @@ public class ManejoService {
 
     @Autowired
     private ManejoRepository manejoRepository;
-    
+
     @Autowired
-    private ApiarioService apiarioService; 
-    
+    private ApiarioService apiarioService;
+
     @Autowired
-    private UsuarioService usuarioService; 
+    private UsuarioService usuarioService;
 
     private Usuario getUsuarioLogado() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -35,38 +35,36 @@ public class ManejoService {
 
     @Transactional
     public Manejo salvarManejo(Manejo manejo) {
-        
         // 1. Associa o usuário logado ao Manejo
         Usuario usuarioLogado = getUsuarioLogado();
         manejo.setUsuario(usuarioLogado);
-        
-        // 2. Garante que o Apiário referenciado é válido e pertence ao usuário
+
+        // 2. Garante que o Apiário referenciado é válido
         if (manejo.getApiario() != null && manejo.getApiario().getIdApiario() != null) {
-            
-            // Convertendo explicitamente Integer para Long para a busca no serviço de Apiário
-            Long idApiario = manejo.getApiario().getIdApiario().longValue();
-            
+
+            // CORREÇÃO: Usamos o ID como Integer diretamente, sem .longValue()
+            Integer idApiario = manejo.getApiario().getIdApiario();
+
             Optional<Apiario> apiarioOpt = apiarioService.findById(idApiario);
-            
+
             if (apiarioOpt.isEmpty()) {
-                throw new IllegalArgumentException("Apiário inválido ou você não tem permissão para usá-lo.");
+                throw new IllegalArgumentException("Apiário inválido.");
             }
-            
-            manejo.setApiario(apiarioOpt.get()); 
+
+            manejo.setApiario(apiarioOpt.get());
         } else {
-             throw new IllegalArgumentException("O Apiário é obrigatório para o registro de manejo.");
+            throw new IllegalArgumentException("O Apiário é obrigatório.");
         }
-        
-        // 3. Persiste a entidade completa
+
         return manejoRepository.save(manejo);
     }
 
     public List<Manejo> buscarManejosDoUsuarioLogado() {
-        // 🎯 SOLUÇÃO DO ERRO: Caso getIdUsuario() retorne Integer no seu modelo Usuario,
-        // forçamos a conversão para Long para satisfazer o ManejoRepository.
+        // CORREÇÃO: Buscamos o ID como Integer
         Usuario usuario = getUsuarioLogado();
-        Long idUsuario = usuario.getIdUsuario().longValue();
-        
-        return manejoRepository.findByUsuarioIdUsuario(idUsuario);
+        Integer idUsuario = usuario.getIdUsuario();
+
+        // O método no Repository deve ser findByUsuario_IdUsuario
+        return manejoRepository.findByUsuario_IdUsuario(idUsuario);
     }
 }

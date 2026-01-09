@@ -5,13 +5,13 @@ import java.time.LocalDate;
 
 // Entidade principal para o registro de Manejo
 @Entity
-@Table(name = "manejo")
+@Table(name = "manejos")
 public class Manejo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_manejo")
-    private Long idManejo;
+    private Integer idManejo; // MUDADO de Long para Integer
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
@@ -19,7 +19,7 @@ public class Manejo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_apiario", nullable = false)
-    private Apiario apiario; // Mapeia o objeto Apiario, o que é crucial para o formulário
+    private Apiario apiario;
 
     @Column(name = "numero_colmeia")
     private String numeroColmeia;
@@ -33,7 +33,8 @@ public class Manejo {
     @Column(name = "crias_operculadas")
     private Integer criasOperculadas;
     private Integer polen;
-    private Integer necta;
+    private Integer nectar;
+    private Integer propolis;
     private Integer mel;
     @Column(name = "cera_nova")
     private Integer ceraNova;
@@ -63,8 +64,8 @@ public class Manejo {
 
     // Getters e Setters para todos os campos (necessários para o Thymeleaf/Spring Binding)
 
-    public Long getIdManejo() { return idManejo; }
-    public void setIdManejo(Long idManejo) { this.idManejo = idManejo; }
+    public Integer getIdManejo() { return idManejo; }
+    public void setIdManejo(Integer idManejo) { this.idManejo = idManejo; }
 
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
@@ -90,8 +91,11 @@ public class Manejo {
     public Integer getPolen() { return polen; }
     public void setPolen(Integer polen) { this.polen = polen; }
 
-    public Integer getNecta() { return necta; }
-    public void setNecta(Integer necta) { this.necta = necta; }
+    public Integer getNectar() { return nectar; }
+    public void setNectar(Integer nectar) { this.nectar = nectar; }
+
+    public Integer getPropolis() {return propolis;}
+    public void setPropolis(Integer propolis) {this.propolis = propolis;}
 
     public Integer getMel() { return mel; }
     public void setMel(Integer mel) { this.mel = mel; }

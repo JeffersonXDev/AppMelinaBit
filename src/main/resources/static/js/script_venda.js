@@ -1,67 +1,36 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // --- Seletores Comuns e Específicos ---
-    
-    // Campo Comum: Quantidade
-    const quantidadeInput = document.getElementById('quantidade');
+    // --- FUNÇÃO DE CÁLCULO CORE ---
+    function calcularTotal(qtdId, unitarioId, freteId, totalId) {
+        const qtdEl = document.getElementById(qtdId);
+        const unitEl = document.getElementById(unitarioId);
+        const freteEl = document.getElementById(freteId);
+        const totalEl = document.getElementById(totalId);
 
-    // Campos de Venda (Saída)
-    const valorUnitarioVendaInput = document.getElementById('valorVendaUnitario');
-    const valorFreteVendaInput = document.getElementById('valorFreteUnitario'); // ID usado no seu HTML de Venda
-    const valorTotalVendaInput = document.getElementById('valorTotalVenda');
+        // Só executa se todos os elementos daquela página existirem
+        if (qtdEl && unitEl && freteEl && totalEl) {
+            const atualizar = () => {
+                const Q = parseFloat(qtdEl.value) || 0;
+                const VU = parseFloat(unitEl.value) || 0;
+                const F = parseFloat(freteEl.value) || 0;
+                const resultado = (Q * VU) + F;
+                totalEl.value = resultado.toFixed(2);
+            };
 
-    // Campos de Compra (Entrada) - IDs presumidos
-    const valorUnitarioCustoInput = document.getElementById('valorCustoUnitario'); 
-    const valorFreteCompraInput = document.getElementById('valorFrete'); // ID sugerido para o HTML de Compra
-    const valorTotalCustoInput = document.getElementById('valorTotalCusto'); 
+            // Escuta mudanças em qualquer um dos 3 campos
+            [qtdEl, unitEl, freteEl].forEach(el => el.addEventListener('input', atualizar));
 
-    // --- Função de Cálculo Genérica ---
-    function calcularValorTotal(quantidade, valorUnitario, valorFrete) {
-        const Q = parseFloat(quantidade) || 0;
-        const VU = parseFloat(valorUnitario) || 0;
-        const F = parseFloat(valorFrete) || 0;
-        
-        const subtotal = Q * VU;
-        return (subtotal + F).toFixed(2);
-    }
-    
-    // --- Lógica para Venda (Se os campos de Venda existirem) ---
-    if (valorUnitarioVendaInput && valorFreteVendaInput && valorTotalVendaInput) {
-        
-        function calcularVenda() {
-            const quantidade = quantidadeInput.value;
-            const valorUnitario = valorUnitarioVendaInput.value;
-            const valorFrete = valorFreteVendaInput.value;
-            
-            valorTotalVendaInput.value = calcularValorTotal(quantidade, valorUnitario, valorFrete);
+            // Cálculo inicial
+            atualizar();
         }
-
-        // Adiciona listeners para os campos de Venda
-        quantidadeInput.addEventListener('input', calcularVenda);
-        valorUnitarioVendaInput.addEventListener('input', calcularVenda);
-        valorFreteVendaInput.addEventListener('input', calcularVenda);
-        
-        // Executa o cálculo inicial
-        calcularVenda();
     }
 
-    // --- Lógica para Compra (Se os campos de Compra existirem) ---
-    if (valorUnitarioCustoInput && valorFreteCompraInput && valorTotalCustoInput) {
-        
-        function calcularCompra() {
-            const quantidade = quantidadeInput.value;
-            const valorUnitario = valorUnitarioCustoInput.value;
-            const valorFrete = valorFreteCompraInput.value;
-            
-            valorTotalCustoInput.value = calcularValorTotal(quantidade, valorUnitario, valorFrete);
-        }
+    // --- EXECUÇÃO PARA PÁGINA DE VENDA ---
+    // IDs baseados no seu HTML de Venda
+    calcularTotal('quantidade', 'valorVendaUnitario', 'valorFreteUnitario', 'valorVenda');
 
-        // Adiciona listeners para os campos de Compra
-        quantidadeInput.addEventListener('input', calcularCompra);
-        valorUnitarioCustoInput.addEventListener('input', calcularCompra);
-        valorFreteCompraInput.addEventListener('input', calcularCompra);
-        
-        // Executa o cálculo inicial
-        calcularCompra();
-    }
+    // --- EXECUÇÃO PARA PÁGINA DE COMPRA ---
+    // IDs baseados no seu HTML de Compra (vinculado ao HistoricoCompraFornecedor)
+    calcularTotal('quantidadeComprado', 'valorCustoUnitario', 'valorFreteUnitario', 'precoPago');
+
 });

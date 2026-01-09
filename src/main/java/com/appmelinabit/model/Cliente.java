@@ -10,18 +10,18 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cliente")
-    private Long id;
+    private Integer id; // CORRIGIDO: Agora é Integer
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario; 
+    private Usuario usuario;
 
     @Column(name = "nome_cliente", nullable = false)
     private String nomeCliente;
 
     @Column(name = "endereco")
     private String endereco;
-    
+
     @Column(name = "numero")
     private String numero;
 
@@ -30,10 +30,10 @@ public class Cliente {
 
     @Column(name = "estado")
     private String estado;
-    
+
     @Column(name = "uf", length = 2)
-    private String uf; 
-    
+    private String uf;
+
     @Column(name = "data_compra")
     private LocalDate dataCompra;
 
@@ -46,9 +46,8 @@ public class Cliente {
     public Cliente() {
     }
 
-    // Construtor com todos os argumentos (AllArgsConstructor - Ajuste se necessário, mas geralmente não é usado com ID auto-gerado)
-    // Você pode omitir este construtor se não precisar dele explicitamente.
-    public Cliente(Long id, Usuario usuario, String nomeCliente, String endereco, String numero, String cidade, String estado, String uf, LocalDate dataCompra, String telefone, String email) {
+    // Construtor CORRIGIDO para aceitar Integer
+    public Cliente(Integer id, Usuario usuario, String nomeCliente, String endereco, String numero, String cidade, String estado, String uf, LocalDate dataCompra, String telefone, String email) {
         this.id = id;
         this.usuario = usuario;
         this.nomeCliente = nomeCliente;
@@ -62,11 +61,12 @@ public class Cliente {
         this.email = email;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Getters e Setters CORRIGIDOS para Integer
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public Usuario getUsuario() { return usuario; }
-	public void setUsuario(Usuario usuarioLogado) { this.usuario = usuarioLogado; }
+    public void setUsuario(Usuario usuarioLogado) { this.usuario = usuarioLogado; }
 
     public String getNomeCliente() { return nomeCliente; }
     public void setNomeCliente(String nomeCliente) { this.nomeCliente = nomeCliente; }
