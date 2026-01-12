@@ -12,7 +12,7 @@
 	<header>
 		<h1>Bem-vindo(a), <span sec:authentication="name">Usuário</span>!</h1>
 		<form th:action="@{/logout}" method="post">
-			<button class="btn btn-sair" type="submit">Sair</button>
+			<button class="btn-sair" type="submit">Sair</button>
 		</form>
 	</header>
 
@@ -33,7 +33,7 @@
 		</section>
 
 		<section class="user-management">
-			<h2>Ações de Gerenciamento:</h2>
+			<h2>Ações de Cadastros:</h2>
 			<table class="usersTable">
 				<tbody>
 				<tr>
@@ -47,6 +47,24 @@
 				</tr>
 				</tbody>
 			</table>
+		</section>
+
+		<section class="user-management">
+			<h2>Ações de Gerenciamento:</h2>
+			<table class="usersTable">
+				<tbody>
+				<tr>
+					<td><a th:href="@{/gerenciar/lista-apiarios}" class="btn btn-gerenciar">Apiários</a></td>
+					<td><a th:href="@{/gerenciar/lista-produtos}" class="btn btn-gerenciar">Estoque</a></td>
+					<td><a th:href="@{/gerenciar/lista-clientes}" class="btn btn-gerenciar">Clientes</a></td>
+					<td><a th:href="@{/gerenciar/lista-fornecedores}" class="btn btn-gerenciar">Fornecedores</a></td>
+					<td><a th:href="@{/gerenciar/lista-compras}" class="btn btn-gerenciar">Compras Insumos</a></td>
+					<td><a th:href="@{/gerenciar/lista-vendas}" class="btn btn-gerenciar">Venda Produtos</a></td>
+					<td><a th:href="@{/gerenciar/lista-manejos}" class="btn btn-gerenciar">Manejo</a></td>
+				</tr>
+				</tbody>
+			</table>
+		</section>
 		</section>
 	</main>
 </div>

@@ -1,5 +1,17 @@
-/* Começo Dashbord Admin */
+
+html, body {
+	height: auto !important;
+	min-height: 100%;
+	overflow-y: auto !important; /* Força a barra de rolagem vertical */
+	margin: 0;
+	padding: 0;
+}/* Começo Dashbord Admin */
+
 .dashboard-container {
+	display: block; /* Garante que as seções fiquem uma abaixo da outra */
+	height: auto !important;
+	min-height: 100vh;
+	overflow: visible; /* Garante que nada dentro dele seja cortado */
 	position: relative;
 	z-index: 10;
 	width: 100%;
@@ -126,9 +138,12 @@
 
 /* Estilos para a tabela */
 .usersTable {
-	width: 100%;
 	border-collapse: collapse;
 	margin-top: 10px;
+	display: table;
+	width: 100%;
+	table-layout: fixed; /* Força os botões a dividirem o espaço */
+	word-wrap: break-word;
 }
 
 .usersTable th,
@@ -143,14 +158,6 @@
 	background-color: #f2f2f2;
 	color: #4A3A2C;
 	border-radius: 10px;
-}
-
-.usersTable tbody tr:hover {
-	background-color: white;
-	border-radius: 10px 20px 30px 40px;
-	padding: 30px;
-
-
 }
 
 /* Estilos para os botões de ação */
@@ -170,6 +177,19 @@
 }
 
 /* Estilo para o botão de bloquear */
+
+.btn {
+	font-weight: bold;
+	cursor: pointer;
+	font-size: 14px;
+	text-decoration: none;
+	box-sizing: border-box;
+	text-align: center;
+	border-radius: 10px;
+	transition: 0.3s;
+	width: 100% !important; /* Faz o botão preencher a célula da tabela */
+	display: block;
+}
 .btn-block {
 	background-color: #f0ad4e;
 	color: white;
@@ -204,34 +224,56 @@
 	font-weight: bold;
 }
 .btn.btn-sair {
-	background-color: rgba(255, 255, 255, 1);
-	font-weight: bold;
-	padding: 6px;
-	cursor: pointer;
-	font-size: 15px;
-	text-decoration: none;
-	color: #000000;
-	border-radius: 10px;
-	margin: 30px;
+	background-color: #ffffff;
+	color: #4A3A2C;
+	border: 1px solid #ddd; /* Removido os 50px que quebravam o layout */
+	width: 30%;
+	padding: 12px 5px;
+	margin: 5px 0;
 }
 
 .btn.btn-sair:hover {
-	background-color: rgba(255, 215, 0, 0.9);
+	background-color: #ffd700; /* Destaque Mel ao passar o mouse */
+	border-color: #4A3A2C;
+	border: 1px solid #ddd;
 	border-radius: 10px;
-	padding: 6px;
 }
 .btn.btn-cadastrar {
-
-	background-color: rgba(255, 255, 255, 1);
-	margin-top: 20px;
-	border-radius: 10px;
-	border: 50px #1d1c23;
-	width: 25%;
-	padding: 10px 20px
+	background-color: #ffffff;
+	color: #4A3A2C;
+	border: 1px solid #ddd; /* Removido os 50px que quebravam o layout */
+	width: 100%;
+	padding: 12px 5px;
+	margin: 5px 0;
 }
 
-.btn.btn-cadastrar:hover {
-	background-color: rgba(255, 215, 0, 0.9);
+.btn.btn-gerenciar {
+	background-color: #f8f9fa;
+	color: #2c3e50;
+	border: 1px solid #ced4da;
+	width: 100%;
+	padding: 12px 5px;
+	margin: 5px 0;
+}
+
+.btn.btn-cadastrar:hover,
+.btn.btn-gerenciar:hover {
+	background-color: #ffd700; /* Destaque Mel ao passar o mouse */
+	border-color: #4A3A2C;
+	border: 1px solid #ddd;
+}
+
+/* Garante que a tabela não "esconda" o conteúdo */
+.usersTable {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 10px 0; /* Espaçamento entre os botões */
+	table-layout: fixed;    /* Garante colunas de tamanhos iguais */
+}
+
+.usersTable td {
+	border: none; /* Remove as bordas de tabela padrão */
+	padding: 0;
 }
 a {
 	color: #4A3A2C;

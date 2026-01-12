@@ -12,16 +12,17 @@
 	<div class="form-container">
 		<h2>Lançar Produção (Almoxarifado)</h2>
 
-		<div th:if="${mensagemSucesso}" style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+		<div th:if="${mensagemSucesso}" class="alert alert-success" style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
 			<strong th:text="${mensagemSucesso}"></strong>
 			<p>
-				<a th:href="@{/dashboard}">Voltar ao Painel</a>
+				<a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a>
 			</p>
 		</div>
-		<div th:if="${mensagemErro}" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+
+		<div th:if="${mensagemErro}" class="alert alert-danger" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
 			<strong th:text="${mensagemErro}"></strong>
 			<p>
-				<a th:href="@{/dashboard}">Voltar ao Painel</a>
+				<a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a>
 			</p>
 		</div>
 
@@ -61,7 +62,9 @@
 			<button type="submit" class="btn btn-primary">Registrar Produção</button>
 		</form>
 		<div class="form-link">
-			<p><a th:href="@{/dashboard}">Voltar ao Painel</a></p>
+			<p>
+				<a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a>
+			</p>
 		</div>
 	</div>
 </div>
