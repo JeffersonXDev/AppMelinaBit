@@ -60,6 +60,11 @@
 				<input type="number" id="valorTotalVisual" th:field="*{valorPago}" readonly style="background-color: #f0f0f0;">
 				<small>Cálculo automático: (Qtd * Unitário) + Frete</small>
 			</div>
+			<div class="form-group">
+				<label for="obs">Observações:</label>
+				<textarea id="obs" th:field="*{obs}" rows="4" class="obs"
+						  placeholder="Digite aqui informações adicionais sobre a compra..."></textarea>
+			</div>
 
 			<button type="submit" class="btn btn-primary">Registrar Compra</button>
 		</form>

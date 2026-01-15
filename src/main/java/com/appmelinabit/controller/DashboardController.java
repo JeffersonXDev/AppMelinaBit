@@ -20,9 +20,9 @@ public class DashboardController {
     private final ProducaoRepository producaoRepo;
 
     public DashboardController(MovimentacaoEstoqueRepository movimentacaoRepo,
-                               ApiarioRepository apiarioRepo,
-                               UsuarioRepository usuarioRepo,
-                               ProducaoRepository producaoRepo) {
+    ApiarioRepository apiarioRepo,
+    UsuarioRepository usuarioRepo,
+    ProducaoRepository producaoRepo) {
         this.movimentacaoRepo = movimentacaoRepo;
         this.apiarioRepo = apiarioRepo;
         this.usuarioRepo = usuarioRepo;

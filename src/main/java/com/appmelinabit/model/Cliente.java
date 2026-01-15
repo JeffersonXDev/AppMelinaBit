@@ -43,6 +43,9 @@ public class Cliente {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "obs")
+    private String obs;
+
     public Cliente() {
     }
 
@@ -94,4 +97,11 @@ public class Cliente {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public String getObs() {
+        return obs;
+    }
+    public void setObs(String obs) {
+        this.obs = obs;
+    }
 }

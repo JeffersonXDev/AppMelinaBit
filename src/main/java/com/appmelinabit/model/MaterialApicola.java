@@ -34,6 +34,9 @@ public class MaterialApicola {
     @Column(name = "tipo_movimentacao") // Campo útil para filtros, caso exista no banco
     private String tipoMovimentacao;
 
+    @Column(name = "obs")
+    private String obs;
+
     public MaterialApicola() {}
 
     // --- GETTERS E SETTERS ---
@@ -61,4 +64,11 @@ public class MaterialApicola {
 
     public String getTipoMovimentacao() { return tipoMovimentacao; }
     public void setTipoMovimentacao(String tipoMovimentacao) { this.tipoMovimentacao = tipoMovimentacao; }
+
+    public String getObs() {
+        return obs;
+    }
+    public void setObs(String obs) {
+        this.obs = obs;
+    }
 }

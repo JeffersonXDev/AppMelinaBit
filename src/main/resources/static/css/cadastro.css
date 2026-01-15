@@ -61,6 +61,21 @@
 	border-color: #f0ad4e;
 	outline: none;
 }
+.form-group textarea.obs {
+	width: 100%;
+	padding: 10px;
+	border-radius: 8px; /* Aumentei para combinar com os inputs */
+	border: 1px solid #ddd;
+	font-family: inherit;
+	box-sizing: border-box; /* Importante para não passar da largura da caixa */
+	resize: vertical; /* Permite ao usuário aumentar a altura, mas não a largura */
+	min-height: 100px;
+}
+
+.form-group textarea.obs:focus {
+	border-color: #f0ad4e;
+	outline: none;
+}
 
 .btn-primary {
 	margin-top: 15px;

@@ -20,6 +20,9 @@ public class Producao {
     @JoinColumn(name = "id_apiario")
     private Apiario apiario;
 
+    @Column(name = "obs")
+    private String obs;
+
     // Aqui usamos o nome do produto (Mel, Cera, etc.)
     // Pode ser uma String agora para simplificar ou o Model Produto
     private String tipoProduto;
@@ -46,4 +49,11 @@ public class Producao {
 
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    public String getObs() {
+        return obs;
+    }
+    public void setObs(String obs) {
+        this.obs = obs;
+    }
 }

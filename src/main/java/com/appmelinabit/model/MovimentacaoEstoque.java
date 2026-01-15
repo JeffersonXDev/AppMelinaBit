@@ -27,7 +27,10 @@ public class MovimentacaoEstoque {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente")
-    private Cliente cliente; // Removida a duplicação que havia aqui
+    private Cliente cliente;
+
+    @Column(name = "obs")
+    private String obs;
 
     @Column(name = "nome", nullable = false)
     private String nome;
@@ -98,4 +101,11 @@ public class MovimentacaoEstoque {
 
     public LocalDate getDataSaida() { return dataSaida; }
     public void setDataSaida(LocalDate dataSaida) { this.dataSaida = dataSaida; }
+
+    public String getObs() {
+        return obs;
+    }
+    public void setObs(String obs) {
+        this.obs = obs;
+    }
 }

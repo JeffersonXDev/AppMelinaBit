@@ -63,6 +63,12 @@
 	                    <input type="text" id="estado" th:field="*{estado}">
 	                </div>
 
+					<div class="form-group">
+						<label for="obs">Observações:</label>
+						<textarea id="obs" th:field="*{obs}" rows="4" class="obs"
+								  placeholder="Digite aqui informações adicionais sobre o cliente..."></textarea>
+					</div>
+
 	                <button type="submit" class="btn btn-primary">Cadastrar</button>
 	            </form>
 					<div class="form-link">

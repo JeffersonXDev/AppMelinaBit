@@ -53,7 +53,10 @@ public class Fornecedor {
     private BigDecimal precoPago; 
 
     @Column(name = "valor_frete")
-    private BigDecimal valorFrete; 
+    private BigDecimal valorFrete;
+
+    @Column(name = "obs")
+    private String obs;
 
     public Fornecedor() {
     }
@@ -177,6 +180,13 @@ public class Fornecedor {
 
     public void setValorFrete(BigDecimal valorFrete) {
         this.valorFrete = valorFrete;
+    }
+
+    public String getObs() {
+        return obs;
+    }
+    public void setObs(String obs) {
+        this.obs = obs;
     }
 
 }

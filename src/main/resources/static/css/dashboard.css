@@ -124,7 +124,7 @@ html, body {
 
 .widget h2 {
 	font-size: 18px;
-	color: #4A3A2C;
+	color: #000000;
 	margin-bottom: 15px;
 }
 
@@ -223,16 +223,25 @@ html, body {
 	/* Vermelho */
 	font-weight: bold;
 }
-.btn.btn-sair {
+.btn-sair {
 	background-color: #ffffff;
-	color: #4A3A2C;
-	border: 1px solid #ddd; /* Removido os 50px que quebravam o layout */
-	width: 30%;
-	padding: 12px 5px;
-	margin: 5px 0;
+	font-weight: bold;
+	padding: 12px; /* Aumentado levemente para melhor clique */
+	cursor: pointer;
+	font-size: 15px;
+	text-decoration: none;
+	color: #000000;
+	border-radius: 10px;
+	border: 1px solid #ddd;
+	/* Centralização Chave */
+	display: block;      /* Mudado de flex para block */
+	width: 200px;        /* Tamanho fixo solicitado */
+	margin: 20px auto;   /* Centraliza horizontalmente */
+	text-align: center;
+	transition: 0.3s;
 }
 
-.btn.btn-sair:hover {
+.btn-sair:hover {
 	background-color: #ffd700; /* Destaque Mel ao passar o mouse */
 	border-color: #4A3A2C;
 	border: 1px solid #ddd;
@@ -240,7 +249,7 @@ html, body {
 }
 .btn.btn-cadastrar {
 	background-color: #ffffff;
-	color: #4A3A2C;
+	color: #000000;
 	border: 1px solid #ddd; /* Removido os 50px que quebravam o layout */
 	width: 100%;
 	padding: 12px 5px;
@@ -248,8 +257,8 @@ html, body {
 }
 
 .btn.btn-gerenciar {
-	background-color: #f8f9fa;
-	color: #2c3e50;
+	background-color: #ffffff;
+	color: #000000;
 	border: 1px solid #ced4da;
 	width: 100%;
 	padding: 12px 5px;
@@ -259,7 +268,7 @@ html, body {
 .btn.btn-cadastrar:hover,
 .btn.btn-gerenciar:hover {
 	background-color: #ffd700; /* Destaque Mel ao passar o mouse */
-	border-color: #4A3A2C;
+	border-color: #000000;
 	border: 1px solid #ddd;
 }
 
@@ -276,7 +285,7 @@ html, body {
 	padding: 0;
 }
 a {
-	color: #4A3A2C;
+	color: #000000;
 	padding: 10px 20px;
 	text-decoration: none;
 	border-radius: 5px;

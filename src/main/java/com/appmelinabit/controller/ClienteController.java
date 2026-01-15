@@ -42,7 +42,7 @@ public class ClienteController {
             clienteService.salvar(cliente);
 
             // Adiciona a mensagem que sobrevive ao redirecionamento
-            attributes.addFlashAttribute("mensagemSucesso", "Cliente cadastrado com sucesso!");
+            attributes.addFlashAttribute("mensagemSucesso", "Cliente Cadastrado!");
 
             // REDIRECIONA PARA A ROTA CORRETA (com /gerenciar)
             return "redirect:/gerenciar/cadastro-clientes";

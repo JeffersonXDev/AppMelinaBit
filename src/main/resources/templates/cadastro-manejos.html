@@ -110,8 +110,6 @@
 
         <h3>Avaliação Rápida (Sim/Não)</h3>
 
-
-
         <div class="form-group">
 
             <label for="polen">Entrada de Polén?</label>
@@ -142,9 +140,7 @@
 
         </div>
 
-
-
-        <div class="form-group">
+            <div class="form-group">
 
             <label for="propolis">Possui Própolis?</label>
 
@@ -158,7 +154,17 @@
 
         </div>
 
+            <div class="form-group">
 
+                <label for="rainha">Rainha Nova?</label>
+
+                <select id="rainha" th:field="*{rainhaNova}">
+                    <option th:value="true">Sim</option>
+                    <option th:value="false">Não</option>
+
+                </select>
+
+            </div>
 
         <div class="form-group">
 
@@ -262,13 +268,11 @@
 
 
 
-        <div class="form-group obs-container">
-
-            <label for="obs">Observações Detalhadas:</label>
-
-            <textarea id="obs" th:field="*{obs}" placeholder="Ex: Melgueiras cheias, trocar rainha, etc."></textarea>
-
-        </div>
+            <div class="form-group">
+                <label for="obs">Observações:</label>
+                <textarea id="obs" th:field="*{obs}" rows="4" class="obs"
+                          placeholder="Digite aqui informações adicionais sobre o manejo..."></textarea>
+            </div>
 
         <button type="submit" class="btn btn-primary">Salvar Registro de Manejo</button>
         </form>

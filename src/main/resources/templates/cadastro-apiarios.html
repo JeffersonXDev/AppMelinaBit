@@ -49,6 +49,24 @@
 			</div>
 
 			<div class="form-group">
+				<label for="terraTerceiros">Esta em Terras de Terceiros?</label>
+				<select id="terraTerceiros" th:field="*{terraTerceiros}">
+					<option th:value="true">Sim</option>
+					<option th:value="false">Não</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="nomeResponsavel">Nome Responsavel Pela Terra:</label>
+				<input type="text" id="nomeResponsavel" th:field="*{nomeResponsavel}" required>
+			</div>
+
+			<div class="form-group">
+				<label for="telefoneResponsavel">Telefone Responsável Pela Terra:</label>
+				<input type="text" id="telefoneResponsavel" th:field="*{telefoneResponsavel}" required>
+			</div>
+
+			<div class="form-group">
 				<label for="endereco">Endereço:</label>
 				<input type="text" id="endereco" th:field="*{endereco}" required>
 			</div>
@@ -66,6 +84,12 @@
 			<div class="form-group">
 				<label for="estado">Estado:</label>
 				<input type="text" id="estado" th:field="*{estado}">
+			</div>
+
+			<div class="form-group">
+				<label for="obs">Observações:</label>
+				<textarea id="obs" th:field="*{obs}" rows="4" class="obs"
+						  placeholder="Digite aqui informações adicionais sobre o apiário..."></textarea>
 			</div>
 
 			<button type="submit" class="btn btn-primary">Cadastrar</button>

@@ -22,13 +22,21 @@ public class ApiarioService {
     @Autowired
     private UsuarioService usuarioService;
 
+    // Adicionado para resolver o erro do Controller
+    public List<Apiario> listarTodos() {
+        return apiarioRepository.findAll();
+    }
+
+    // Adicionado para resolver o erro de pesquisa do Controller
+    public List<Apiario> buscarPorNomeOuCidade(String keyword) {
+        return apiarioRepository.findByNomeContainingIgnoreCaseOrCidadeContainingIgnoreCase(keyword, keyword);
+    }
+
     @Transactional
     public Apiario salvar(Apiario apiario) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        // Ajustado: UsuarioService agora retorna Optional ou Usuario direto?
-        // Se o seu UsuarioService.findByEmail retorna Usuario:
         Usuario usuarioLogado = usuarioService.findByEmail(username);
 
         if (usuarioLogado != null) {
@@ -38,10 +46,6 @@ public class ApiarioService {
         }
 
         return apiarioRepository.save(apiario);
-    }
-
-    public List<Apiario> findAll() {
-        return apiarioRepository.findAll();
     }
 
     public List<Apiario> buscarApiariosDoUsuarioLogado() {
@@ -61,12 +65,22 @@ public class ApiarioService {
         return apiarioRepository.findByUsuario(usuarioLogado);
     }
 
-    // CORREÇÃO AQUI: Mudado de Long para Integer
     public Optional<Apiario> findById(Integer idApiario) {
         return apiarioRepository.findById(idApiario);
     }
 
-    public void salvarManejo(Manejo manejo) {
+    // Método para busca direta (utilizado no Editar do Controller)
+    public Apiario buscarPorId(Integer id) {
+        return apiarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Apiário não encontrado com o ID: " + id));
+    }
 
+    @Transactional
+    public void excluir(Integer id) {
+        apiarioRepository.deleteById(id);
+    }
+
+    public void salvarManejo(Manejo manejo) {
+        // Implementação futura
     }
 }

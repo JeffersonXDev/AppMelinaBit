@@ -30,16 +30,16 @@ public class Manejo {
     // Detalhes da Colmeia
     private Integer quadros;
     private Integer ovo;
-    @Column(name = "crias_operculadas")
     private Integer criasOperculadas;
     private Integer polen;
     private Integer nectar;
     private Integer propolis;
     private Integer mel;
-    @Column(name = "cera_nova")
     private Integer ceraNova;
     
     // Status da Rainha/Postura
+    @Column(name = "rainha_nova")
+    private Boolean rainhaNova; // Identificação ou ano
     @Column(name = "posturas_boas")
     private Boolean posturasBoas;
     @Column(name = "crias_uniformes")
@@ -50,13 +50,12 @@ public class Manejo {
     private Float xarope; // Usando Float para números decimais
     @Column(name = "bife_proteico")
     private Integer bifeProteico;
-    @Column(name = "rainha_nova")
-    private String rainhaNova; // Identificação ou ano
 
     // Outras Observações
     private String melgueiras;
     @Column(name = "inimigos_naturais")
     private String inimigosNaturais;
+    @Column(name = "obs")
     private String obs;
 
     // Construtor padrão necessário pelo JPA
@@ -118,8 +117,8 @@ public class Manejo {
     public Integer getBifeProteico() { return bifeProteico; }
     public void setBifeProteico(Integer bifeProteico) { this.bifeProteico = bifeProteico; }
 
-    public String getRainhaNova() { return rainhaNova; }
-    public void setRainhaNova(String rainhaNova) { this.rainhaNova = rainhaNova; }
+    public Boolean getRainhaNova() { return rainhaNova; }
+    public void setRainhaNova(Boolean rainhaNova) { this.rainhaNova = rainhaNova; }
 
     public String getMelgueiras() { return melgueiras; }
     public void setMelgueiras(String melgueiras) { this.melgueiras = melgueiras; }
