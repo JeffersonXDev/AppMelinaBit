@@ -45,7 +45,7 @@
         <div class="form-group">
             <label for="apiarioId">Apiário:</label>
 
-            <select id="apiarioId" th:field="*{apiario}" required>
+            <select id="apiarioId" th:field="*{apiario}" required class="form-group-select">
 
                 <option value="">Selecione o Apiário</option>
 
@@ -114,7 +114,7 @@
 
             <label for="polen">Entrada de Polén?</label>
 
-            <select id="polen" th:field="*{polen}">
+            <select id="polen" th:field="*{polen}" class="form-group-select">
 
                 <option value="1">Sim</option>
 
@@ -130,7 +130,7 @@
 
             <label for="nectar">Entrada de Néctar?</label>
 
-            <select id="nectar" th:field="*{nectar}">
+            <select id="nectar" th:field="*{nectar}" class="form-group-select">
 
                 <option value="1">Sim</option>
 
@@ -144,7 +144,7 @@
 
             <label for="propolis">Possui Própolis?</label>
 
-            <select id="propolis" th:field="*{propolis}">
+            <select id="propolis" th:field="*{propolis}" class="form-group-select">
 
                 <option value="1">Sim</option>
 
@@ -158,7 +158,7 @@
 
                 <label for="rainha">Rainha Nova?</label>
 
-                <select id="rainha" th:field="*{rainhaNova}">
+                <select id="rainha" th:field="*{rainhaNova}" class="form-group-select">
                     <option th:value="true">Sim</option>
                     <option th:value="false">Não</option>
 
@@ -170,7 +170,7 @@
 
             <label for="posturasBoas">Posturas estão boas?</label>
 
-            <select id="posturasBoas" th:field="*{posturasBoas}">
+            <select id="posturasBoas" th:field="*{posturasBoas}" class="form-group-select">
 
                 <option value="true">Sim</option>
 
@@ -186,7 +186,7 @@
 
             <label for="criasUniformes">Crias estão uniformes?</label>
 
-            <select id="criasUniformes" th:field="*{criasUniformes}">
+            <select id="criasUniformes" th:field="*{criasUniformes}" class="form-group-select">
 
                 <option value="true">Sim</option>
 
@@ -202,7 +202,7 @@
 
             <label for="inimigosNaturais">Viu Inimigos Naturais?</label>
 
-            <select id="inimigosNaturais" th:field="*{inimigosNaturais}">
+            <select id="inimigosNaturais" th:field="*{inimigosNaturais}" class="form-group-select">
 
                 <option value="Não">Não</option>
 
@@ -224,7 +224,7 @@
 
             <label for="alimentador">Alimentador Aplicado?</label>
 
-            <select id="alimentador" th:field="*{alimentador}">
+            <select id="alimentador" th:field="*{alimentador}" class="form-group-select">
 
                 <option value="1">Sim</option>
 

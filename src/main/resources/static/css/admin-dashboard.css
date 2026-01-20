@@ -1,0 +1,123 @@
+/* Wrapper e Box - Identidade MelinaBit */
+.manager-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	min-height: 100vh;
+	box-sizing: border-box;
+}
+
+.manager-box {
+	background-color: rgba(255, 255, 255, 0.8);
+	padding: 25px;
+	border-radius: 15px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	max-width: 1000px;
+	width: 95%;
+	margin: 0 auto;
+}
+
+.manager-box h2 {
+	color: #000;
+	margin-bottom: 20px;
+	font-size: 1.8em;
+	text-align: center;
+}
+
+/* --- Métricas Compactas (Total Usuários / Receita) --- */
+.manager-stats-row {
+	display: flex;
+	gap: 12px;
+	margin-bottom: 20px;
+	justify-content: center;
+}
+
+.manager-card {
+	flex: 0 1 180px; /* Largura reduzida para não esticar */
+	background-color: #ffffff;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid #ddd;
+	text-align: center;
+}
+
+.manager-card label {
+	font-weight: bold;
+	font-size: 0.7em;
+	color: #4A3A2C;
+	text-transform: uppercase;
+	display: block;
+}
+
+.manager-card span {
+	font-size: 1.1em;
+	font-weight: bold;
+	color: #000;
+}
+
+/* --- Tabela Manager --- */
+.manager-table-scroll {
+	overflow-x: auto;
+	margin-top: 15px;
+}
+
+.manager-table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed; /* Previne que a tabela exploda */
+}
+
+.manager-table thead {
+	background-color: #f2f2f2;
+}
+
+.manager-table th, .manager-table td {
+	text-align: center;
+	padding: 10px;
+	border-bottom: 1px solid rgba(0,0,0,0.05);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 0.9em;
+}
+
+/* --- Botões com Identidade MelinaBit --- */
+.manager-btn-action {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	width: 80px;
+	height: 28px;
+	font-size: 12px;
+	font-weight: 600;
+	text-decoration: none;
+	border-radius: 6px;
+	border: 1px solid rgba(0,0,0,0.1);
+	transition: all 0.3s ease;
+}
+
+.manager-btn-status { background-color: #e3f7e5; color: #28a745; }
+.manager-btn-delete { background-color: #fceaea; color: #dc3545; }
+
+.manager-btn-status:hover, .manager-btn-delete:hover {
+	background-color: #ffd700; /* Destaque Mel */
+	color: #000;
+	transform: translateY(-2px);
+}
+
+.manager-btn-back {
+	background-color: #ffffff;
+	font-weight: bold;
+	padding: 10px;
+	width: 160px;
+	display: block;
+	margin: 20px auto 0;
+	text-align: center;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	text-decoration: none;
+	color: #000;
+}
+
+.manager-btn-back:hover { background-color: #ffd700; border-color: #000; }

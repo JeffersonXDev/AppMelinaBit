@@ -37,5 +37,26 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         console.error('Erro de rede ou servidor:', error);
         errorMessage.textContent = 'Não foi possível conectar ao servidor. Tente novamente mais tarde.';
     }
+        function preencherUF() {
+        // Remove acentos e padroniza para busca
+        const estadoInput = document.getElementById('estado').value
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+        .trim().toLowerCase();
+
+        const ufInput = document.getElementById('uf');
+
+        const estadosUf = {
+        "acre": "AC", "alagoas": "AL", "amapa": "AP", "amazonas": "AM",
+        "bahia": "BA", "ceara": "CE", "distrito federal": "DF", "espirito santo": "ES",
+        "goias": "GO", "maranhao": "MA", "mato grosso": "MT", "mato grosso do sul": "MS",
+        "minas gerais": "MG", "para": "PA", "paraiba": "PB", "parana": "PR",
+        "pernambuco": "PE", "piaui": "PI", "rio de janeiro": "RJ", "rio grande do norte": "RN",
+        "rio grande do sul": "RS", "rondonia": "RO", "roraima": "RR", "santa catarina": "SC",
+        "sao paulo": "SP", "sergipe": "SE", "tocantins": "TO"
+    };
+
+        // Preenche se encontrar no mapa, senão limpa
+        ufInput.value = estadosUf[estadoInput] || "";
+    }
 });
 

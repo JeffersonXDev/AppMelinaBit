@@ -1,9 +1,10 @@
 package com.appmelinabit.service;
+
 import com.appmelinabit.model.Fornecedor;
 import com.appmelinabit.model.Usuario;
 import com.appmelinabit.repository.FornecedorRepository;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder; // Import Correto
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -13,52 +14,60 @@ public class FornecedorService {
     private final FornecedorRepository fornecedorRepository;
     private final UsuarioService usuarioService;
 
-    // Injeção de Dependência por Construtor
     public FornecedorService(FornecedorRepository fornecedorRepository, UsuarioService usuarioService) {
         this.fornecedorRepository = fornecedorRepository;
         this.usuarioService = usuarioService;
     }
 
-    /**
-     * Salva o Fornecedor e anexa o usuário logado (segurança).
-     */
+    // =========================================================================
+    // BLOCO 1: PERSISTÊNCIA E SEGURANÇA
+    // =========================================================================
+
     public Fornecedor salvar(Fornecedor fornecedor) {
-        // 🛠️ CORREÇÃO 1: Adicionar .getAuthentication() para obter o objeto Authentication
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
             throw new IllegalStateException("Operação negada: Nenhum usuário autenticado encontrado.");
-        }
-        
-        String username = authentication.getName(); 
-        Usuario usuarioLogado = usuarioService.findByEmail(username);
-        
-        if (usuarioLogado != null) {
-            // Requer o método setUsuario na Entidade Fornecedor
-            fornecedor.setUsuario(usuarioLogado); 
-        } else {
-            throw new RuntimeException("Usuário logado (" + username + ") não encontrado no sistema de usuários.");
-        }
-        
-        return fornecedorRepository.save(fornecedor);
-    }
-
-    public List<Fornecedor> buscarTodos() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
-        // Verifica autenticação
-        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
-            return List.of(); 
         }
 
         String username = authentication.getName();
         Usuario usuarioLogado = usuarioService.findByEmail(username);
 
-        if (usuarioLogado == null) {
-            return List.of();
+        if (usuarioLogado != null) {
+            fornecedor.setUsuario(usuarioLogado);
+        } else {
+            throw new RuntimeException("Usuário logado não encontrado.");
         }
-        
-        // Requer o método findByUsuario(Usuario) no FornecedorRepository
-        return fornecedorRepository.findByUsuario(usuarioLogado); 
+
+        return fornecedorRepository.save(fornecedor);
+    }
+
+    // =========================================================================
+    // BLOCO 2: CONSULTAS (LISTAGEM E BUSCA POR KEYWORD)
+    // =========================================================================
+
+    public List<Fornecedor> listarPorUsuario(Usuario usuario) {
+        return fornecedorRepository.findByUsuario(usuario);
+    }
+
+    public List<Fornecedor> buscarPorKeyword(String keyword, Usuario usuario) {
+        // Requer o método buscarFornecedores com @Query no Repository
+        return fornecedorRepository.buscarFornecedores(keyword, usuario);
+    }
+
+    public Fornecedor buscarPorId(Integer id) {
+        return fornecedorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado com o ID: " + id));
+    }
+
+    // =========================================================================
+    // BLOCO 3: EXCLUSÃO
+    // =========================================================================
+
+    public void excluir(Integer id) {
+        if (!fornecedorRepository.existsById(id)) {
+            throw new RuntimeException("Não é possível excluir: Fornecedor inexistente.");
+        }
+        fornecedorRepository.deleteById(id);
     }
 }

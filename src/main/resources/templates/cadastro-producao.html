@@ -10,32 +10,28 @@
 <body class="allow-scroll">
 <div class="form-wrapper">
 	<div class="form-container">
-		<h2>Lançar Produção (Almoxarifado)</h2>
+		<h2>Cadastrar Produção.</h2>
 
 		<div th:if="${mensagemSucesso}" class="alert alert-success" style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
 			<strong th:text="${mensagemSucesso}"></strong>
-			<p>
-				<a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a>
-			</p>
+			<p><a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a></p>
 		</div>
 
 		<div th:if="${mensagemErro}" class="alert alert-danger" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
 			<strong th:text="${mensagemErro}"></strong>
-			<p>
-				<a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a>
-			</p>
+			<p><a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a></p>
 		</div>
 
-		<form th:action="@{/gerenciar/salvar-producao}" th:object="${producao}" method="post">
+		<form th:action="@{/gerenciar/cadastro-producao}" th:object="${movimentacao}" method="post">
 
 			<div class="form-group">
 				<label>Data da Colheita:</label>
-				<input type="date" th:field="*{dataColheita}" required>
+				<input type="date" th:field="*{dataEntrada}" required>
 			</div>
 
 			<div class="form-group">
 				<label for="tipoProduto">Produto:</label>
-				<select id="tipoProduto" th:field="*{tipoProduto}" class="form-control" required style="width: 100%; padding: 8px;">
+				<select id="tipoProduto" th:field="*{nome}" class="form-group-select">
 					<option value="" disabled selected>-- Escolha o Produto --</option>
 					<option value="Mel">Mel</option>
 					<option value="Polen">Pólen</option>
@@ -46,17 +42,30 @@
 
 			<div class="form-group">
 				<label for="apiario">Origem (Apiário):</label>
-				<select id="apiario" th:field="*{apiario.id}" class="form-control" required style="width: 100%; padding: 8px;">
+				<select id="apiario" th:field="*{apiario.idApiario}" class="form-group-select">
 					<option value="" disabled selected>-- Selecione o Apiário --</option>
 					<option th:each="a : ${apiarios}"
-							th:value="${a.id}"
+							th:value="${a.idApiario}"
 							th:text="${a.nome}"></option>
 				</select>
 			</div>
 
-			<div class="form-group">
-				<label for="quantidade">Quantidade Produzida (kg):</label>
-				<input type="number" id="quantidade" th:field="*{quantidade}" step="0.01" min="0.1" placeholder="Ex: 10.5" required>
+			<div class="form-group" style="display: flex; gap: 10px; align-items: flex-end;">
+				<div style="flex: 2;">
+					<label for="quantidade">Quantidade Produzida:</label>
+					<input type="number" id="quantidade" th:field="*{quantidade}" step="0.01" min="0.1" placeholder="Ex: 10.5" required style="width: 100%;">
+				</div>
+
+				<div style="flex: 1;">
+					<label for="unidadeMedida">Unidade:</label>
+					<select id="unidadeMedida" th:field="*{unidadeMedida}" class="form-group-select">
+						<option value="kg">Quilo (Kg)</option>
+						<option value="g">Grama (g) </option>
+						<option value="L">Litros (L)</option>
+						<option value="ml">Mililitros (ml)</option>
+						<option value="Un">Unidades (Un)</option>
+					</select>
+				</div>
 			</div>
 
 			<div class="form-group">
@@ -67,6 +76,7 @@
 
 			<button type="submit" class="btn btn-primary">Registrar Produção</button>
 		</form>
+
 		<div class="form-link">
 			<p>
 				<a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Gerenciamento de Vendas - MelinaBit</title>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/gerenciar.css}">
+</head>
+<body class="allow-scroll">
+
+<div class="manage-apiary-wrapper">
+	<div class="manage-apiary-box">
+		<h3>Gerenciamento de Vendas</h3>
+
+		<div th:if="${mensagemSucesso}" class="manage-apiary-alert manage-apiary-success" th:text="${mensagemSucesso}"></div>
+		<div th:if="${mensagemErro}" class="manage-apiary-alert manage-apiary-danger" th:text="${mensagemErro}"></div>
+
+		<form th:action="@{/gerenciar/gerenciar-vendas}" method="get" class="manage-apiary-search">
+			<input type="text" name="keyword" th:value="${keyword}" placeholder="Pesquisar por cliente ou identificador..." class="manage-apiary-input-search">
+			<button type="submit" class="manage-apiary-btn-save" style="width: 150px; margin: 0;">Pesquisar</button>
+		</form>
+
+		<hr>
+
+		<form th:action="@{/gerenciar/salvar}" th:object="${movimentacao}" method="post">
+			<input type="hidden" th:field="*{idMovimentacao}">
+			<input type="hidden" th:field="*{tipoMovimentacao}">
+			<input type="hidden" th:field="*{nome}"> <input type="hidden" th:if="*{cliente != null}" th:field="*{cliente.id}">
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Identificador da Venda:</label>
+					<input type="text" th:field="*{descricao}" required>
+				</div>
+				<div class="manage-apiary-field">
+					<label>Cliente:</label>
+					<input type="text" th:field="*{cliente.nomeCliente}" readonly style="background-color: #f0f0f0;">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Produto/Embalagem:</label>
+					<input type="text" th:field="*{unidadeMedida}" required>
+				</div>
+			</div>
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Quantidade:</label>
+					<input type="number" th:field="*{quantidade}" min="1" required>
+				</div>
+				<div class="manage-apiary-field">
+					<label>Preço Unitário (R$):</label>
+					<input type="number" th:field="*{precoBase}" step="0.01">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Valor do Frete (R$):</label>
+					<input type="number" th:field="*{valorFrete}" step="0.01">
+				</div>
+			</div>
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Valor Total da Venda (R$):</label>
+					<input type="number" th:field="*{valorVenda}" step="0.01" style="font-weight: bold; border: 2px solid #ccc;">
+				</div>
+				<div class="manage-apiary-field" style="grid-column: span 2;">
+					<label>Observações:</label>
+					<textarea th:field="*{obs}" rows="2" class="manage-apiary-field-obs"></textarea>
+				</div>
+			</div>
+
+			<div class="manage-apiary-field">
+				<button type="submit" class="manage-apiary-btn-save"
+						th:text="${movimentacao.idMovimentacao != null ? 'Atualizar Venda' : 'Salvar Registro'}">
+				</button>
+			</div>
+		</form>
+
+		<hr>
+
+		<h3>Histórico de Vendas</h3>
+		<div class="manage-apiary-table-scroll">
+			<table class="manage-apiary-table">
+				<thead>
+				<tr>
+					<th>Data</th>
+					<th>Identificador</th>
+					<th>Cliente</th>
+					<th>Qtd</th>
+					<th>Total (R$)</th>
+					<th>Ações</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="v : ${vendas}">
+					<td th:text="${v.dataCadastro != null ? #temporals.format(v.dataCadastro, 'dd/MM/yyyy') : '-'}"></td>
+					<td th:text="${v.descricao}"></td>
+					<td th:text="${v.cliente != null ? v.cliente.nomeCliente : 'N/A'}"></td>
+					<td th:text="${v.quantidade + ' (' + v.unidadeMedida + ')'}"></td>
+					<td th:text="${'R$ ' + #numbers.formatDecimal(v.valorVenda, 1, 'POINT', 2, 'COMMA')}"></td>
+					<td>
+						<a th:href="@{/gerenciar/gerenciar-vendas/editar/{id}(id=${v.idMovimentacao})}" class="manage-apiary-btn-edit">Corrigir</a>
+						<a th:href="@{/gerenciar/excluir-estoque/{id}(id=${v.idMovimentacao})}" class="manage-apiary-btn-delete" onclick="return confirm('Excluir esta venda?')">Excluir</a>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="manage-apiary-field" style="margin-top: 20px;">
+			<a th:href="@{/dashboard}" class="manage-apiary-btn-save">Voltar ao Painel</a>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

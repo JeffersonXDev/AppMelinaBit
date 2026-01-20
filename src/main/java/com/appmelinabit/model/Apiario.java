@@ -57,6 +57,9 @@ public class Apiario {
     @Column(name = "estado")
     private String estado;
 
+    @Column(name = "uf", length = 2)
+    private String uf;
+
     // Getters e Setters permanecem os mesmos...
     public Integer getIdApiario() { return idApiario; }
     public void setIdApiario(Integer idApiario) { this.idApiario = idApiario; }
@@ -88,6 +91,9 @@ public class Apiario {
     public void setCidade(String cidade) { this.cidade = cidade; }
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
+    public String getUf() {return uf;}
+
+    public void setUf(String uf) {this.uf = uf;}
 
     public Apiario() {}
 }

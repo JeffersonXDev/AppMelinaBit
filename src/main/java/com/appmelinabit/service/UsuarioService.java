@@ -3,11 +3,11 @@ package com.appmelinabit.service;
 import com.appmelinabit.model.Usuario;
 import com.appmelinabit.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // Adicionado
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate; // Adicionado
 import java.util.List;
 import java.util.Optional;
 
@@ -18,24 +18,38 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder; // Adicionado
+    private BCryptPasswordEncoder passwordEncoder;
 
+    // 1. Busca o usuário que está autenticado na sessão atual
+    public Usuario buscarUsuarioLogado() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário logado não encontrado no banco."));
+    }
+
+    // 2. Salva ou atualiza um usuário (com criptografia de senha)
     @Transactional
     public Usuario salvarUsuario(Usuario usuario) {
-        // 1. Criptografa a senha
         if (usuario.getSenha() != null && !usuario.getSenha().isEmpty()) {
             usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         }
-
-        // 2. CORREÇÃO DO ERRO DE TIPO:
-        // Se no Model for LocalDateTime, use LocalDateTime.now()
         if (usuario.getIdUsuario() == null && usuario.getDataCadastro() == null) {
             usuario.setDataCadastro(java.time.LocalDateTime.now());
         }
-
         return usuarioRepository.save(usuario);
     }
 
+    // 3. Altera o status da conta (Ativo/Inativo) - RESOLVE O ERRO DE COMPILAÇÃO
+    @Transactional
+    public Usuario alterarStatusConta(Integer id, String status) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
+
+        usuario.setStatusConta(status);
+        return usuarioRepository.save(usuario);
+    }
+
+    // 4. Métodos de busca e listagem
     public Usuario findByEmail(String email) {
         return usuarioRepository.findByEmail(email).orElse(null);
     }
@@ -52,15 +66,7 @@ public class UsuarioService {
         return usuarioRepository.findById(id);
     }
 
-    @Transactional
-    public Usuario alterarStatusConta(Integer id, String status) {
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
-
-        usuario.setStatusConta(status);
-        return usuarioRepository.save(usuario);
-    }
-
+    // 5. Exclusão
     @Transactional
     public void excluirUsuario(Integer id) {
         if (usuarioRepository.existsById(id)) {

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Gerenciar Insumos - MelinaBit</title>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/gerenciar.css}">
+</head>
+<body class="allow-scroll">
+
+<div class="manage-apiary-wrapper">
+	<div class="manage-apiary-box">
+		<h3>Gerenciamento de Insumos</h3>
+
+		<div th:if="${mensagemSucesso}" class="manage-apiary-alert manage-apiary-success" th:text="${mensagemSucesso}"></div>
+		<div th:if="${mensagemErro}" class="manage-apiary-alert manage-apiary-danger" th:text="${mensagemErro}"></div>
+
+		<form th:action="@{/gerenciar/gerenciar-insumos}" method="get" class="manage-apiary-search">
+			<input type="text" name="keyword" th:value="${keyword}" placeholder="Pesquisar por fornecedor, material ou cidade..." class="manage-apiary-input-search">
+			<button type="submit" class="manage-apiary-btn-save" style="width: 150px; margin: 0;">Pesquisar</button>
+		</form>
+
+		<hr>
+
+		<form th:action="@{/gerenciar/gerenciar-insumos/salvar}" th:object="${movimentacao}" method="post">
+			<input type="hidden" th:field="*{idMovimentacao}">
+			<input type="hidden" th:field="*{tipoMovimentacao}">
+
+			<input type="hidden" name="idFornecedor" th:value="${movimentacao.fornecedor != null ? movimentacao.fornecedor.id : ''}">
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Fornecedor:</label>
+					<input type="text" th:value="${movimentacao.fornecedor != null ? movimentacao.fornecedor.nomeFornecedor : 'Vazio (Selecione na lista abaixo)'}"
+						   readonly style="background-color: #f0f0f0; cursor: not-allowed;">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Data da Entrada:</label>
+					<input type="date" th:field="*{dataEntrada}" required>
+				</div>
+				<div class="manage-apiary-field">
+					<label>Nome do Insumo:</label>
+					<input type="text" th:field="*{nome}" placeholder="Ex: Cera Alveolada" required>
+				</div>
+			</div>
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Quantidade:</label>
+					<input type="number" id="quantidade" th:field="*{quantidade}" step="1" min="1" required>
+				</div>
+				<div class="manage-apiary-field">
+					<label>Valor Unitário (R$):</label>
+					<input type="number" id="valorUnitario" name="valorUnitario" step="0.01" min="0"
+						   th:value="${movimentacao.idMovimentacao != null and movimentacao.quantidade > 0 ? (movimentacao.valorCompra - (movimentacao.valorFrete != null ? movimentacao.valorFrete : 0)) / movimentacao.quantidade : ''}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Valor do Frete (R$):</label>
+					<input type="number" id="valorFrete" th:field="*{valorFrete}" step="0.01" min="0">
+				</div>
+			</div>
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Valor Total Pago (R$):</label>
+					<input type="number" id="valorTotalVisual" th:field="*{valorCompra}" readonly style="background-color: #f0f0f0; cursor: not-allowed;">
+					<small>Cálculo: (Qtd * Unit) + Frete</small>
+				</div>
+				<div class="manage-apiary-field" th:if="*{dataCadastro != null}">
+					<label>Data Cadastro:</label>
+					<input type="text" th:value="${#temporals.format(movimentacao.dataCadastro, 'dd/MM/yyyy HH:mm')}"
+						   readonly style="background-color: #f0f0f0; cursor: not-allowed;">
+				</div>
+			</div>
+
+			<div class="manage-apiary-field">
+				<label>Observações:</label>
+				<textarea th:field="*{obs}" rows="2" class="manage-apiary-field-obs"></textarea>
+			</div>
+
+			<div class="manage-apiary-field">
+				<button type="submit" class="manage-apiary-btn-save"
+						th:text="${movimentacao.idMovimentacao != null ? 'Atualizar Insumo' : 'Salvar Insumo'}">
+				</button>
+			</div>
+		</form>
+
+		<hr>
+
+		<h3>Lista de Materiais em Estoque</h3>
+		<div class="manage-apiary-table-scroll">
+			<table class="manage-apiary-table">
+				<thead>
+				<tr>
+					<th>Fornecedor</th>
+					<th>Material</th>
+					<th>Qtd</th>
+					<th>Total</th>
+					<th>Ações</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="item : ${insumos}">
+					<td th:text="${item.fornecedor != null ? item.fornecedor.nomeFornecedor : 'Sem Fornecedor'}"></td>
+					<td th:text="${item.nome}"></td>
+					<td th:text="${item.quantidade != null ? #numbers.formatInteger(item.quantidade, 1, 'POINT') : '0'}"></td>
+					<td th:text="${item.valorCompra != null ? 'R$ ' + #numbers.formatInteger(item.valorCompra, 1, 'POINT') : 'R$ 0'}"></td>
+					<td>
+						<a th:href="@{/gerenciar/gerenciar-insumos/editar/{id}(id=${item.idMovimentacao})}"
+						   class="manage-apiary-btn-edit">Editar</a>
+						<a th:href="@{/gerenciar/excluir-estoque/{id}(id=${item.idMovimentacao})}"
+						   class="manage-apiary-btn-delete"
+						   onclick="return confirm('Deseja realmente excluir este registro?')">Excluir</a>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="manage-apiary-field" style="margin-top: 20px;">
+			<a th:href="@{/dashboard}" class="manage-apiary-btn-save">Voltar ao Painel</a>
+		</div>
+	</div>
+</div>
+</body>
+</html>

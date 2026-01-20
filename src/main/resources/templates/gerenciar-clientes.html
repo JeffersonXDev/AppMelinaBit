@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Gerenciar Clientes - MelinaBit</title>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/gerenciar.css}">
+</head>
+<body class="allow-scroll">
+
+<div class="manage-apiary-wrapper">
+	<div class="manage-apiary-box">
+		<h3>Gerenciamento Geral de Clientes</h3>
+
+		<div th:if="${mensagemSucesso}" class="manage-apiary-alert manage-apiary-success" th:text="${mensagemSucesso}"></div>
+		<div th:if="${mensagemErro}" class="manage-apiary-alert manage-apiary-danger" th:text="${mensagemErro}"></div>
+
+		<form th:action="@{/gerenciar/gerenciar-clientes}" method="get" class="manage-apiary-search">
+			<input type="text" name="keyword" th:value="${keyword}" placeholder="Pesquisar por nome, cidade, email ou Estado..." class="manage-apiary-input-search">
+			<button type="submit" class="manage-apiary-btn-save" style="width: 150px; margin: 0;">Pesquisar</button>
+		</form>
+
+		<hr>
+
+		<form th:action="@{/gerenciar/gerenciar-clientes}" th:object="${cliente}" method="post">
+			<input type="hidden" th:field="*{id}">
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Nome do Cliente:</label>
+					<input type="text" th:field="*{nomeCliente}" required>
+				</div>
+				<div class="manage-apiary-field">
+					<label>Email:</label>
+					<input type="email" th:field="*{email}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Telefone:</label>
+					<input type="text" th:field="*{telefone}">
+				</div>
+			</div>
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Endereço:</label>
+					<input type="text" th:field="*{endereco}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Número:</label>
+					<input type="text" th:field="*{numero}">
+				</div>
+				<div class="manage-apiary-field" th:if="*{dataCadastro != null}">
+					<label>Data Cadastro:</label>
+					<input type="text" th:value="${#temporals.format(cliente.dataCadastro, 'dd/MM/yyyy HH:mm')}"
+						   readonly style="background-color: #f0f0f0; cursor: not-allowed;">
+				</div>
+			</div>
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Cidade:</label>
+					<input type="text" th:field="*{cidade}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Estado:</label>
+					<input type="text" th:field="*{estado}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>UF:</label>
+					<input type="text" th:field="*{uf}" maxlength="2">
+				</div>
+			</div>
+
+			<div class="manage-apiary-field">
+				<label>Observações:</label>
+				<textarea th:field="*{obs}" rows="2" class="manage-apiary-field-obs"></textarea>
+			</div>
+
+			<div class="manage-apiary-field">
+				<button type="submit" class="manage-apiary-btn-save"
+						th:text="${cliente.id != null ? 'Atualizar Cliente' : 'Salvar Cliente'}" >
+				</button>
+			</div>
+		</form>
+
+		<hr>
+
+		<h3>Lista de Clientes</h3>
+		<div class="manage-apiary-table-scroll">
+			<table class="manage-apiary-table">
+				<thead>
+				<tr>
+					<th>Nome</th>
+					<th>Cidade/Estado</th>
+					<th>Telefone</th>
+					<th>Data</th>
+					<th>Ações</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="c : ${clientes}">
+					<td th:text="${c.nomeCliente}"></td>
+					<td th:text="${c.cidade} + '/' + ${c.uf}"></td>
+					<td th:text="${c.telefone}"></td>
+					<td th:text="${c.dataCadastro != null ? #temporals.format(c.dataCadastro, 'dd/MM/yyyy') : '-'}"></td>
+					<td>
+						<a th:href="@{/gerenciar/gerenciar-clientes/editar/{id}(id=${c.id})}"
+						   class="manage-apiary-btn-edit">Editar</a>
+
+						<a th:href="@{/gerenciar/gerenciar-clientes/excluir/{id}(id=${c.id})}"
+						   class="manage-apiary-btn-delete"
+						   onclick="return confirm('Deseja realmente excluir este cliente?')">Excluir</a>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="manage-apiary-field" style="margin-top: 20px;">
+			<a th:href="@{/dashboard}" class="manage-apiary-btn-save">Voltar ao Painel</a>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

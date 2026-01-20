@@ -2,6 +2,7 @@ package com.appmelinabit.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "clientes")
@@ -10,69 +11,53 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cliente")
-    private Integer id; // CORRIGIDO: Agora é Integer
+    private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
-
-    @Column(name = "nome_cliente", nullable = false)
+    @Column(name = "nome_cliente")
     private String nomeCliente;
 
-    @Column(name = "endereco")
-    private String endereco;
-
-    @Column(name = "numero")
-    private String numero;
-
-    @Column(name = "cidade")
-    private String cidade;
-
-    @Column(name = "estado")
-    private String estado;
-
-    @Column(name = "uf", length = 2)
-    private String uf;
-
-    @Column(name = "data_compra")
-    private LocalDate dataCompra;
-
-    @Column(name = "telefone")
-    private String telefone;
-
-    @Column(name = "email")
     private String email;
-
-    @Column(name = "obs")
+    private String telefone;
+    private String endereco;
+    private String numero;
+    private String cidade;
+    private String estado;
+    private String uf;
     private String obs;
 
-    public Cliente() {
+    @Column(name = "data_compra")
+    private LocalDate dataCompra; // Data de cadastro ou primeira compra
+
+    @Column(name = "data_cadastro", updatable = false)
+    private LocalDateTime dataCadastro;
+
+    // Este método garante que a data será inserida automaticamente antes de salvar
+    @PrePersist
+    protected void onCreate() {
+        this.dataCadastro = LocalDateTime.now();
     }
 
-    // Construtor CORRIGIDO para aceitar Integer
-    public Cliente(Integer id, Usuario usuario, String nomeCliente, String endereco, String numero, String cidade, String estado, String uf, LocalDate dataCompra, String telefone, String email) {
-        this.id = id;
-        this.usuario = usuario;
-        this.nomeCliente = nomeCliente;
-        this.endereco = endereco;
-        this.numero = numero;
-        this.cidade = cidade;
-        this.estado = estado;
-        this.uf = uf;
-        this.dataCompra = dataCompra;
-        this.telefone = telefone;
-        this.email = email;
-    }
+    // --- CONSTRUTOR ---
+    public Cliente() {}
 
-    // Getters e Setters CORRIGIDOS para Integer
+    // --- GETTERS E SETTERS ---
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
     public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuarioLogado) { this.usuario = usuarioLogado; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
     public String getNomeCliente() { return nomeCliente; }
     public void setNomeCliente(String nomeCliente) { this.nomeCliente = nomeCliente; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
 
     public String getEndereco() { return endereco; }
     public void setEndereco(String endereco) { this.endereco = endereco; }
@@ -89,19 +74,12 @@ public class Cliente {
     public String getUf() { return uf; }
     public void setUf(String uf) { this.uf = uf; }
 
+    public String getObs() { return obs; }
+    public void setObs(String obs) { this.obs = obs; }
+
     public LocalDate getDataCompra() { return dataCompra; }
     public void setDataCompra(LocalDate dataCompra) { this.dataCompra = dataCompra; }
 
-    public String getTelefone() { return telefone; }
-    public void setTelefone(String telefone) { this.telefone = telefone; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getObs() {
-        return obs;
-    }
-    public void setObs(String obs) {
-        this.obs = obs;
-    }
+    public LocalDateTime getDataCadastro() { return dataCadastro; }
+    public void setDataCadastro(LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
 }

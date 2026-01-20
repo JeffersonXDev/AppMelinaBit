@@ -17,138 +17,175 @@ import java.util.List;
 @RequestMapping("/gerenciar")
 public class MovimentacaoEstoqueController {
 
-    @Autowired
-    private ProducaoRepository producaoRepository;
-    @Autowired
-    private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
-    @Autowired
-    private MaterialApicolaRepository materialRepo;
-    @Autowired
-    private ClienteRepository clienteRepository;
-    @Autowired
-    private FornecedorRepository fornecedorRepository;
-    @Autowired
-    private ApiarioRepository apiarioRepository;
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    @Autowired private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
+    @Autowired private ClienteRepository clienteRepository;
+    @Autowired private FornecedorRepository fornecedorRepository;
+    @Autowired private ApiarioRepository apiarioRepository;
+    @Autowired private UsuarioRepository usuarioRepository;
 
-    // --- MÉTODO AUXILIAR (Fora dos outros métodos) ---
     private Usuario buscarUsuarioLogado(UserDetails userDetails) {
         return usuarioRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
-    // --- 1. CADASTRO DE PRODUTOS (PRODUÇÃO PRÓPRIA) ---
-
-    @GetMapping("/cadastro-produtos")
-    public String exibirCadastroProdutos(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        Usuario usuario = buscarUsuarioLogado(userDetails);
-
-        if (!model.containsAttribute("producao")) {
-            model.addAttribute("producao", new Producao());
-        }
-
-        // Nome da lista deve ser 'apiarios' para bater com o th:each acima
-        model.addAttribute("apiarios", apiarioRepository.findByUsuario(usuario));
-
-        return "cadastro-produtos";
-    }
-
-    @PostMapping("/salvar-producao")
-    public String salvarProducao(@ModelAttribute("producao") Producao producao,
-                                 @AuthenticationPrincipal UserDetails userDetails,
-                                 RedirectAttributes attributes) {
-        try {
-            Usuario usuario = buscarUsuarioLogado(userDetails);
-            producao.setUsuario(usuario);
-
-            // 1. SALVA NA TABELA PRODUÇÃO (Onde você vê o detalhe por apiário)
-            producaoRepository.save(producao);
-
-            // 2. SALVA NA TABELA MOVIMENTAÇÃO (Onde o Dashboard lê o estoque disponível)
-            MovimentacaoEstoque mov = new MovimentacaoEstoque();
-            mov.setUsuario(usuario);
-            mov.setApiario(producao.getApiario());
-            mov.setNome(producao.getTipoProduto());
-            mov.setQuantidade(producao.getQuantidade().intValue());
-            mov.setDataCompra(producao.getDataColheita()); // Data que entra no gráfico
-            mov.setTipoMovimentacao("ENTRADA");
-
-            movimentacaoEstoqueRepository.save(mov);
-
-            attributes.addFlashAttribute("mensagemSucesso", "Produção e estoque registrados!");
-        } catch (Exception e) {
-            attributes.addFlashAttribute("mensagemErro", "Erro ao salvar: " + e.getMessage());
-        }
-        return "redirect:/gerenciar/cadastro-produtos";
-    }
-
-    // --- 2. CADASTRO DE COMPRAS (ALMOXARIFADO/INSUMOS) ---
-
-    @GetMapping("/cadastro-compras")
-    public String abrirCadastro(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        Usuario usuario = buscarUsuarioLogado(userDetails);
-
-        MaterialApicola material = new MaterialApicola();
-        material.setTipoMovimentacao("ENTRADA");
-        material.setQuantidadeEmUso(0.0);
-
-        model.addAttribute("material", material);
-        model.addAttribute("fornecedores", fornecedorRepository.findByUsuario(usuario));
-
-        return "cadastro-compras";
-    }
-
-    @PostMapping("/salvar-material")
-    public String salvarMaterial(@ModelAttribute("material") MaterialApicola material,
-                                 @AuthenticationPrincipal UserDetails userDetails,
-                                 RedirectAttributes attributes) {
-        try {
-            Usuario usuario = buscarUsuarioLogado(userDetails);
-            material.setUsuario(usuario);
-
-            if (material.getQuantidadeEmUso() == null) material.setQuantidadeEmUso(0.0);
-
-            materialRepo.save(material);
-            attributes.addFlashAttribute("mensagemSucesso", "Material registrado com sucesso!");
-        } catch (Exception e) {
-            attributes.addFlashAttribute("mensagemErro", "Erro: " + e.getMessage());
-        }
-        return "redirect:/gerenciar/cadastro-compras";
-    }
-
-    // --- 3. CADASTRO DE VENDAS (SAÍDA DE ESTOQUE) ---
+    // =========================================================================
+    // BLOCO 1: VENDAS (SAÍDA)
+    // =========================================================================
 
     @GetMapping("/cadastro-vendas")
-    public String exibirFormularioVenda(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String abrirCadastroVendas(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         Usuario usuario = buscarUsuarioLogado(userDetails);
+        MovimentacaoEstoque mov = new MovimentacaoEstoque();
+        mov.setTipoMovimentacao("SAIDA");
+        model.addAttribute("movimentacao", mov);
+        model.addAttribute("clientes", clienteRepository.findByUsuario(usuario));
+        return "cadastro-vendas";
+    }
+
+    @GetMapping("/gerenciar-vendas")
+    public String gerenciarVendas(@RequestParam(value = "keyword", required = false) String keyword,
+                                  Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Usuario usuario = buscarUsuarioLogado(userDetails);
+        List<MovimentacaoEstoque> lista = (keyword != null && !keyword.isEmpty())
+                ? movimentacaoEstoqueRepository.buscarTudo(keyword, usuario)
+                : movimentacaoEstoqueRepository.findByUsuarioOrderByDataEntradaDesc(usuario);
+
+        model.addAttribute("vendas", lista.stream().filter(m -> "SAIDA".equals(m.getTipoMovimentacao())).toList());
+        model.addAttribute("clientes", clienteRepository.findByUsuario(usuario));
+        model.addAttribute("keyword", keyword);
 
         if (!model.containsAttribute("movimentacao")) {
             MovimentacaoEstoque mov = new MovimentacaoEstoque();
             mov.setTipoMovimentacao("SAIDA");
             model.addAttribute("movimentacao", mov);
         }
-
-        model.addAttribute("clientes", clienteRepository.findByUsuario(usuario));
-        model.addAttribute("apiarios", apiarioRepository.findByUsuario(usuario));
-        return "cadastro-vendas";
+        return "gerenciar-vendas";
     }
 
-    @PostMapping("/cadastro-vendas")
-    public String salvarVenda(@ModelAttribute("movimentacao") MovimentacaoEstoque mov,
-                              @AuthenticationPrincipal UserDetails userDetails,
-                              RedirectAttributes attributes) {
+    @GetMapping("/gerenciar-vendas/editar/{id}")
+    public String editarVenda(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        MovimentacaoEstoque mov = movimentacaoEstoqueRepository.findById(id).orElseThrow();
+        model.addAttribute("movimentacao", mov);
+        return gerenciarVendas(null, model, userDetails);
+    }
+
+    // =========================================================================
+    // BLOCO 2: PRODUÇÃO (COLHEITA)
+    // =========================================================================
+
+    @GetMapping("/cadastro-producao")
+    public String abrirCadastroProducao(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Usuario usuario = buscarUsuarioLogado(userDetails);
+        MovimentacaoEstoque mov = new MovimentacaoEstoque();
+        mov.setTipoMovimentacao("COLHEITA");
+        model.addAttribute("movimentacao", mov);
+        model.addAttribute("apiarios", apiarioRepository.findByUsuario(usuario));
+        return "cadastro-producao";
+    }
+
+    @GetMapping("/gerenciar-producao")
+    public String gerenciarProducao(@RequestParam(value = "keyword", required = false) String keyword,
+                                    Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Usuario usuario = buscarUsuarioLogado(userDetails);
+        List<MovimentacaoEstoque> lista = (keyword != null && !keyword.isEmpty())
+                ? movimentacaoEstoqueRepository.buscarTudo(keyword, usuario)
+                : movimentacaoEstoqueRepository.findByUsuarioOrderByDataEntradaDesc(usuario);
+
+        model.addAttribute("movimentacoes", lista.stream().filter(m -> "COLHEITA".equals(m.getTipoMovimentacao())).toList());
+        model.addAttribute("apiarios", apiarioRepository.findByUsuario(usuario));
+
+        if (!model.containsAttribute("movimentacao")) {
+            MovimentacaoEstoque mov = new MovimentacaoEstoque();
+            mov.setTipoMovimentacao("COLHEITA");
+            model.addAttribute("movimentacao", mov);
+        }
+        return "gerenciar-producao";
+    }
+
+    @GetMapping("/gerenciar-producao/editar/{id}")
+    public String editarProducao(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        MovimentacaoEstoque mov = movimentacaoEstoqueRepository.findById(id).orElseThrow();
+        model.addAttribute("movimentacao", mov);
+        return gerenciarProducao(null, model, userDetails);
+    }
+
+    // =========================================================================
+    // BLOCO 3: INSUMOS (ENTRADA)
+    // =========================================================================
+
+    @GetMapping("/cadastro-insumos")
+    public String abrirCadastroInsumos(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Usuario usuario = buscarUsuarioLogado(userDetails);
+        MovimentacaoEstoque mov = new MovimentacaoEstoque();
+        mov.setTipoMovimentacao("ENTRADA");
+        model.addAttribute("movimentacao", mov);
+        model.addAttribute("fornecedores", fornecedorRepository.findByUsuario(usuario));
+        return "cadastro-insumos";
+    }
+
+    @GetMapping("/gerenciar-insumos")
+    public String gerenciarInsumos(@RequestParam(value = "keyword", required = false) String keyword,
+                                   Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Usuario usuario = buscarUsuarioLogado(userDetails);
+        List<MovimentacaoEstoque> lista = (keyword != null && !keyword.isEmpty())
+                ? movimentacaoEstoqueRepository.buscarTudo(keyword, usuario)
+                : movimentacaoEstoqueRepository.findByUsuarioOrderByDataEntradaDesc(usuario);
+
+        model.addAttribute("insumos", lista.stream().filter(m -> "ENTRADA".equals(m.getTipoMovimentacao())).toList());
+        model.addAttribute("fornecedores", fornecedorRepository.findByUsuario(usuario));
+
+        if (!model.containsAttribute("movimentacao")) {
+            MovimentacaoEstoque mov = new MovimentacaoEstoque();
+            mov.setTipoMovimentacao("ENTRADA");
+            model.addAttribute("movimentacao", mov);
+        }
+        return "gerenciar-insumos";
+    }
+
+    @GetMapping("/gerenciar-insumos/editar/{id}")
+    public String editarInsumo(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        MovimentacaoEstoque mov = movimentacaoEstoqueRepository.findById(id).orElseThrow();
+        model.addAttribute("movimentacao", mov);
+        return gerenciarInsumos(null, model, userDetails);
+    }
+
+    // =========================================================================
+    // BLOCO 4: PROCESSAMENTO (Salvar e Excluir)
+    // =========================================================================
+
+    @PostMapping("/salvar")
+    public String salvar(@ModelAttribute("movimentacao") MovimentacaoEstoque mov,
+                         @AuthenticationPrincipal UserDetails userDetails,
+                         RedirectAttributes attributes) {
         try {
             Usuario usuario = buscarUsuarioLogado(userDetails);
             mov.setUsuario(usuario);
-
-            if (mov.getDataSaida() == null) mov.setDataSaida(LocalDate.now());
+            mov.setIdUsuario(usuario.getIdUsuario());
+            if (mov.getDataCadastro() == null) mov.setDataCadastro(LocalDate.now());
 
             movimentacaoEstoqueRepository.save(mov);
-            attributes.addFlashAttribute("mensagemSucesso", "Venda registrada!");
+            attributes.addFlashAttribute("mensagemSucesso", "Registro salvo com sucesso!");
         } catch (Exception e) {
-            attributes.addFlashAttribute("mensagemErro", "Erro: " + e.getMessage());
+            attributes.addFlashAttribute("mensagemErro", "Erro ao salvar: " + e.getMessage());
         }
-        return "redirect:/gerenciar/cadastro-vendas";
+
+        if ("ENTRADA".equals(mov.getTipoMovimentacao())) return "redirect:/gerenciar/gerenciar-insumos";
+        if ("SAIDA".equals(mov.getTipoMovimentacao())) return "redirect:/gerenciar/gerenciar-vendas";
+        return "redirect:/gerenciar/gerenciar-producao";
+    }
+
+    @GetMapping("/excluir-estoque/{id}")
+    public String excluir(@PathVariable("id") Integer id, RedirectAttributes attributes) {
+        MovimentacaoEstoque mov = movimentacaoEstoqueRepository.findById(id).orElse(null);
+        String redirect = "/gerenciar/gerenciar-producao";
+
+        if (mov != null) {
+            if ("ENTRADA".equals(mov.getTipoMovimentacao())) redirect = "/gerenciar/gerenciar-insumos";
+            if ("SAIDA".equals(mov.getTipoMovimentacao())) redirect = "/gerenciar/gerenciar-vendas";
+
+            movimentacaoEstoqueRepository.deleteById(id);
+            attributes.addFlashAttribute("mensagemSucesso", "Excluído com sucesso!");
+        }
+        return "redirect:" + redirect;
     }
 }

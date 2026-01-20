@@ -11,7 +11,7 @@
 
 <div class="manage-apiary-wrapper">
 	<div class="manage-apiary-box">
-		<h3>Gerenciamento de Apiários (Técnico)</h3>
+		<h3>Gerenciamento de Apiários</h3>
 
 		<div th:if="${mensagemSucesso}" class="manage-apiary-alert manage-apiary-success" th:text="${mensagemSucesso}"></div>
 		<div th:if="${mensagemErro}" class="manage-apiary-alert manage-apiary-danger" th:text="${mensagemErro}"></div>
@@ -52,8 +52,12 @@
 					<input type="text" th:field="*{cidade}">
 				</div>
 				<div class="manage-apiary-field">
-					<label>UF:</label>
+					<label>Estado:</label>
 					<input type="text" th:field="*{estado}" maxlength="2">
+				</div>
+				<div class="manage-apiary-field">
+					<label>UF:</label>
+					<input type="text" th:field="*{uf}" maxlength="2">
 				</div>
 			</div>
 

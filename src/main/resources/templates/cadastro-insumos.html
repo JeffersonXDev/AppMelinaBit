@@ -10,63 +10,66 @@
 <body class="allow-scroll">
 <div class="form-wrapper">
 	<div class="form-container">
-		<h2>Cadastro de Materiais Apícolas</h2>
+		<h2>Cadastro de Materiais Apícolas e Insumos</h2>
 
 		<div th:if="${mensagemSucesso}" class="alert alert-success" style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
 			<strong th:text="${mensagemSucesso}"></strong>
-			<p>
-				<a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a>
-			</p>
+			<p><a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a></p>
 		</div>
 
 		<div th:if="${mensagemErro}" class="alert alert-danger" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
 			<strong th:text="${mensagemErro}"></strong>
-			<p>
-				<a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a>
-			</p>
+			<p><a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a></p>
 		</div>
 
-		<form th:action="@{/gerenciar/salvar-material}" th:object="${material}" method="post">
-
-			<input type="hidden" th:field="*{tipoMovimentacao}" value="ENTRADA">
+		<form th:action="@{/gerenciar/cadastro-insumos}" th:object="${movimentacao}" method="post">
+			<input type="hidden" th:field="*{tipoMovimentacao}">
 
 			<div class="form-group">
-				<label>Data da Compra:</label>
-				<input type="date" th:field="*{dataCompra}" required>
+				<label for="fornecedor">Fornecedor:</label>
+				<select th:field="*{fornecedor.id}" id="fornecedor" required class="form-group-select">
+					<option value="">Selecione um fornecedor</option>
+					<option th:each="f : ${fornecedores}" th:value="${f.id}" th:text="${f.nomeFornecedor}"></option>
+				</select>
 			</div>
 
 			<div class="form-group">
-				<label for="nomeMaterial">Nome do Material:</label>
-				<input type="text" id="nomeMaterial" th:field="*{nomeMaterial}" placeholder="Ex: Cera Alveolada, Arame, Caixas" required>
+				<label>Data da Entrada:</label>
+				<input type="date" th:field="*{dataEntrada}" required>
 			</div>
 
 			<div class="form-group">
-				<label for="quantidadeComprada">Quantidade Comprada:</label>
-				<input type="number" id="quantidadeComprada" th:field="*{quantidadeComprada}" step="0.01" min="0.1" required>
+				<label for="nome">Nome do Insumo:</label>
+				<input type="text" id="nome" th:field="*{nome}" placeholder="Ex: Cera Alveolada, Arame" required>
+			</div>
+
+			<div class="form-group">
+				<label for="quantidade">Quantidade:</label>
+				<input type="number" id="quantidade" th:field="*{quantidade}" step="1" min="1" required>
 			</div>
 
 			<div class="form-group">
 				<label for="valorUnitario">Valor Unitário (R$):</label>
-				<input type="number" id="valorUnitario" name="valorUnitario" step="0.01" min="0" required>
+				<input type="number" id="valorUnitario" name="valorUnitario" step="0.01" min="0">
 			</div>
 
 			<div class="form-group">
 				<label for="valorFrete">Valor do Frete (R$):</label>
-				<input type="number" id="valorFrete" name="valorFrete" step="0.01" min="0" value="0.00">
+				<input type="number" id="valorFrete" th:field="*{valorFrete}" step="0.01" min="0">
 			</div>
 
 			<div class="form-group">
 				<label for="valorTotalVisual">Valor Total Pago (R$):</label>
-				<input type="number" id="valorTotalVisual" th:field="*{valorPago}" readonly style="background-color: #f0f0f0;">
+				<input type="number" id="valorTotalVisual" th:field="*{valorCompra}" readonly style="background-color: #f0f0f0;">
 				<small>Cálculo automático: (Qtd * Unitário) + Frete</small>
 			</div>
+
 			<div class="form-group">
 				<label for="obs">Observações:</label>
-				<textarea id="obs" th:field="*{obs}" rows="4" class="obs"
-						  placeholder="Digite aqui informações adicionais sobre a compra..."></textarea>
+				<textarea id="obs" th:field="*{obs}" rows="4" class="obs" placeholder="Digite aqui informações adicionais..."></textarea>
 			</div>
 
-			<button type="submit" class="btn btn-primary">Registrar Compra</button>
+			<button type="submit" class="btn btn-primary">Registrar no Estoque</button>
 		</form>
 
 		<div class="form-link">
@@ -76,8 +79,7 @@
 </div>
 
 <script>
-	// Ajustado para os novos IDs do HTML
-	const inputQtd = document.getElementById('quantidadeComprada');
+	const inputQtd = document.getElementById('quantidade');
 	const inputUnitario = document.getElementById('valorUnitario');
 	const inputFrete = document.getElementById('valorFrete');
 	const inputTotal = document.getElementById('valorTotalVisual');

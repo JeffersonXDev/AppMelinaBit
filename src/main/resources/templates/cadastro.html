@@ -48,10 +48,17 @@
 					<label for="cidade">Cidade:</label>
 					<input type="text" id="cidade" th:field="*{cidade}"> 
 				</div>
-                
+
 				<div class="form-group">
 					<label for="estado">Estado:</label>
-					<input type="text" id="estado" th:field="*{estado}">
+					<input type="text" id="estado" th:field="*{estado}" oninput="preencherUF()" placeholder="Ex: São Paulo">
+				</div>
+
+				<div class="form-group">
+					<label for="uf">UF:</label>
+					<input type="text" id="uf" th:field="*{uf}" readonly
+						   style="background-color: #f0f0f0; cursor: not-allowed;"
+						   placeholder="Auto-preenchido">
 				</div>
                 
                 <div class="form-group">

@@ -46,7 +46,9 @@ public class Usuario {
 
     @Column(name = "estado")
     private String estado;
-    
+
+    @Column(name = "uf", length = 2)
+    private String uf;
 
     @Column(name = "id_apiario")
     private Integer idApiario;
@@ -69,14 +71,9 @@ public class Usuario {
     @Column(name = "ultimo_login")
     private LocalDateTime ultimoLogin;
     
-    
-
-    
     public Usuario() {
 
     }
-    
-
 
     public Integer getIdUsuario() { // CORRIGIDO: Retorna Integer
         return idUsuario;
@@ -126,6 +123,10 @@ public class Usuario {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+    public String getUf() {return uf;}
+
+    public void setUf(String uf) {this.uf = uf;}
     
     // Outros Getters e Setters
     public Integer getIdApiario() { // CORRIGIDO: Retorna Integer

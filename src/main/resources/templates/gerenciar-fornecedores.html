@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Gerenciar Fornecedores - MelinaBit</title>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/gerenciar.css}">
+</head>
+<body class="allow-scroll">
+
+<div class="manage-apiary-wrapper">
+	<div class="manage-apiary-box">
+		<h3>Gerenciamento de Fornecedores</h3>
+
+		<div th:if="${mensagemSucesso}" class="manage-apiary-alert manage-apiary-success" th:text="${mensagemSucesso}"></div>
+		<div th:if="${mensagemErro}" class="manage-apiary-alert manage-apiary-danger" th:text="${mensagemErro}"></div>
+
+		<form th:action="@{/gerenciar/gerenciar-fornecedores}" method="get" class="manage-apiary-search">
+			<input type="text" name="keyword" th:value="${keyword}" placeholder="Pesquisar por fornecedor, material ou cidade..." class="manage-apiary-input-search">
+			<button type="submit" class="manage-apiary-btn-save" style="width: 150px; margin: 0;">Pesquisar</button>
+		</form>
+
+		<hr>
+
+		<form th:action="@{/gerenciar/gerenciar-fornecedores}" th:object="${fornecedor}" method="post">
+			<input type="hidden" th:field="*{id}">
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Nome do Fornecedor:</label>
+					<input type="text" th:field="*{nomeFornecedor}" required>
+				</div>
+				<div class="manage-apiary-field">
+					<label>Vendedor / Contato:</label>
+					<input type="text" th:field="*{vendedor}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>CNPJ:</label>
+					<input type="text" th:field="*{cnpj}">
+				</div>
+			</div>
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Email:</label>
+					<input type="email" th:field="*{email}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Telefone:</label>
+					<input type="text" th:field="*{telefone}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Material Comprado:</label>
+					<input type="text" th:field="*{materialComprado}">
+				</div>
+			</div>
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Quantidade:</label>
+					<input type="number" th:field="*{quantidade}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Preço Pago (R$):</label>
+					<input type="number" step="0.01" th:field="*{precoPago}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Valor Frete (R$):</label>
+					<input type="number" step="0.01" th:field="*{valorFrete}">
+				</div>
+			</div>
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Endereço:</label>
+					<input type="text" th:field="*{endereco}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Número:</label>
+					<input type="text" th:field="*{numero}">
+				</div>
+				<div class="manage-apiary-field" th:if="*{dataCadastro != null}">
+					<label>Data Cadastro:</label>
+					<input type="text" th:value="${#temporals.format(fornecedor.dataCadastro, 'dd/MM/yyyy HH:mm')}"
+						   readonly style="background-color: #f0f0f0; cursor: not-allowed;">
+				</div>
+			</div>
+
+			<div class="manage-apiary-grid">
+				<div class="manage-apiary-field">
+					<label>Cidade:</label>
+					<input type="text" th:field="*{cidade}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Estado:</label>
+					<input type="text" th:field="*{estado}">
+				</div>
+				<div class="manage-apiary-field">
+					<label>UF:</label>
+					<input type="text" th:field="*{uf}" maxlength="2">
+				</div>
+			</div>
+
+			<div class="manage-apiary-field">
+				<label>Observações:</label>
+				<textarea th:field="*{obs}" rows="2" class="manage-apiary-field-obs"></textarea>
+			</div>
+
+			<div class="manage-apiary-field">
+				<button type="submit" class="manage-apiary-btn-save"
+						th:text="${fornecedor.id != null ? 'Atualizar Fornecedor' : 'Salvar Fornecedor'}" >
+				</button>
+			</div>
+		</form>
+
+		<hr>
+
+		<h3>Lista de Fornecedores</h3>
+		<div class="manage-apiary-table-scroll">
+			<table class="manage-apiary-table">
+				<thead>
+				<tr>
+					<th>Fornecedor</th>
+					<th>Material</th>
+					<th>Cidade/UF</th>
+					<th>Data</th>
+					<th>Ações</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="f : ${fornecedores}">
+					<td th:text="${f.nomeFornecedor}"></td>
+					<td th:text="${f.materialComprado}"></td>
+					<td th:text="${f.cidade} + '/' + ${f.uf}"></td>
+					<td th:text="${f.dataCadastro != null ? #temporals.format(f.dataCadastro, 'dd/MM/yyyy') : '-'}"></td>
+					<td>
+						<a th:href="@{/gerenciar/gerenciar-fornecedores/editar/{id}(id=${f.id})}"
+						   class="manage-apiary-btn-edit">Editar</a>
+
+						<a th:href="@{/gerenciar/gerenciar-fornecedores/excluir/{id}(id=${f.id})}"
+						   class="manage-apiary-btn-delete"
+						   onclick="return confirm('Deseja realmente excluir este fornecedor?')">Excluir</a>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="manage-apiary-field" style="margin-top: 20px;">
+			<a th:href="@{/dashboard}" class="manage-apiary-btn-save">Voltar ao Painel</a>
+		</div>
+	</div>
+</div>
+</body>
+</html>

@@ -1,205 +1,143 @@
-/* Wrapper que centraliza o conteúdo */
-.manage-apiary-wrapper {
+.gerenciar-page .form-container {
+	max-width: 1200px; /* Mais largo para a tabela */
+}
+.cadastro-page .form-container {
+	max-width: 600px; /* Mais estreito e centralizado para o cadastro */
+}
+.form-wrapper {
+	padding: 20px;
 	display: flex;
 	justify-content: center;
-	align-items: center;
+}
+
+.form-container {
 	width: 100%;
-	min-height: 100vh;
-	/* Garante que o wrapper tenha pelo menos a altura da tela */
-	box-sizing: border-box;
-	/* Inclui padding e borda no tamanho total */
-}
-
-/* O Container principal - Seguindo o dashboard-container */
-.manage-apiary-box {
-	background-color: rgba(255, 255, 255, 0.8);
-	padding: 30px;
-	border-radius: 15px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	max-width: 1200px;
-	margin: 0 auto;
-}
-
-.manage-apiary-box h2{
-	color: rgba(0, 0, 0, 1);
-	margin-bottom: 25px;
-	font-size: 2em;
-	text-align: center;
+	background: #fff;
+	padding: 30px;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 /* Alertas */
-.manage-apiary-alert {
+.alert {
 	padding: 15px;
 	margin-bottom: 20px;
-	border-radius: 10px;
-	font-weight: bold;
+	border-radius: 4px;
+	border: 1px solid transparent;
 }
-.manage-apiary-success { background-color: rgba(40, 167, 69, 0.2); color: #155724; }
-.manage-apiary-danger { background-color: rgba(220, 53, 69, 0.2); color: #721c24; }
 
-/* Busca */
-.manage-apiary-search {
+.alert-success {
+	color: #155724;
+	background-color: #d4edda;
+	border-color: #c3e6cb;
+}
+
+.alert-danger {
+	color: #721c24;
+	background-color: #f8d7da;
+	border-color: #f5c6cb;
+}
+
+/* Formulário de Busca */
+.search-form {
+	margin-bottom: 20px;
 	display: flex;
 	gap: 10px;
-	margin-bottom: 20px;
-
 }
-.manage-apiary-input-search {
+
+.search-input {
 	flex-grow: 1;
-	padding: 12px;
-	border-radius: 10px;
-	border: 1px solid #ddd;
-	background-color:#ffffff;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
 
-/* Grid de Formulário */
-.manage-apiary-grid {
+/* Grid do Formulário de Cadastro/Edição */
+.form-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 	gap: 15px;
 	margin-bottom: 15px;
 }
 
-.manage-apiary-field {
+.form-group {
 	display: flex;
 	flex-direction: column;
-	text-align: left;
+	margin-bottom: 10px;
+}
+
+.form-group label {
+	font-weight: bold;
+	margin-bottom: 5px;
+	font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea {
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.full-width {
 	width: 100%;
 }
 
-.manage-apiary-field label {
-	font-weight: bold;
-	color: #000000;
-	margin-bottom: 5px;
-}
-
-.manage-apiary-field input,
-.manage-apiary-field textarea {
-	padding: 12px;
-	border-radius: 10px;
-	border: 1px solid #ddd;
-	background-color:#ffffff;
-	box-sizing: border-box;
-	width: 100%;       /* Ocupa toda a largura da coluna */
-	height: 40px;      /* Mesma altura para todos */
-	box-sizing: border-box; /* Evita que o campo saia da borda */
-}
-
-/* Botão Principal - Estilo btn-cadastrar */
-.manage-apiary-btn-save {
-	background-color: #ffffff;
-	font-weight: bold;
-	padding: 12px; /* Aumentado levemente para melhor clique */
-	cursor: pointer;
-	font-size: 15px;
-	text-decoration: none;
-	color: #000000;
-	border-radius: 10px;
-	border: 1px solid #ddd;
-	/* Centralização Chave */
-	display: block;      /* Mudado de flex para block */
-	width: 200px;        /* Tamanho fixo solicitado */
-	margin: 20px auto;   /* Centraliza horizontalmente */
-	text-align: center;
-	transition: 0.3s;
-}
-
-.manage-apiary-btn-save:hover {
-	background-color: #ffd700; /* Destaque Mel */
-	border-color: #000000;
-}
-
-/* Tabela - Estilo usersTable */
-.manage-apiary-table-scroll {
+/* Tabela Técnica */
+.table-responsive {
+	width: 100%;
 	overflow-x: auto;
 	margin-top: 20px;
 }
 
-.manage-apiary-table {
+.tech-table {
 	width: 100%;
 	border-collapse: collapse;
-	table-layout: auto;
-	word-wrap: break-word;
+	font-size: 0.85rem;
 }
 
-.manage-apiary-table thead {
-	background-color: #f2f2f2;
-	color: #4A3A2C;
-}
-
-.manage-apiary-table th,
-.manage-apiary-table td {
-	text-align: center;        /* Alinha o conteúdo à direita */
-	white-space: nowrap;      /* Impede que o texto quebre a linha e aumente a altura da linha */
-	overflow: hidden;         /* Esconde o que sobrar */
-	text-overflow: ellipsis;  /* Coloca "..." se o nome for gigante */
-	padding: 10px 13px;
-}
-.manage-apiary-table th:nth-child(1),
-.manage-apiary-table td:nth-child(1) { width: 30%; } /* Nome ganha mais espaço */
-
-.manage-apiary-table th:nth-child(2),
-.manage-apiary-table td:nth-child(2) { width: 10%; } /* Colmeias (número curto) */
-
-.manage-apiary-table th:nth-child(4),
-.manage-apiary-table td:nth-child(4) { width: 20%; } /* Cidade */
-.manage-apiary-field-obs {
-	width: 50% !important; /* Metade do conteúdo */
-	min-height: 100px;     /* Deixa o campo mais alto/maior */
-	padding: 12px;
-	border-radius: 10px;
+.tech-table th,
+.tech-table td {
+	padding: 10px;
 	border: 1px solid #ddd;
-	background-color: #ffffff;
-	box-sizing: border-box;
-	resize: vertical;      /* Permite ao usuário ajustar apenas a altura se quiser */
-}
-
-
-/* 1. Alinhamento da célula na tabela */
-.manage-apiary-table th:last-child,
-.manage-apiary-table td:last-child {
-	width: 220px;             /* Espaço reservado fixo para os botões */
-	text-align: center;
-	overflow: visible;        /* Aqui os botões NÃO podem ser escondidos */
+	text-align: left;
 	white-space: nowrap;
 }
 
-/* 2. Estilo Único para os dois botões (Simetria) */
-.manage-apiary-btn-edit,
-.manage-apiary-btn-delete {
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
+.tech-table th {
+	background-color: #f4f4f4;
+	color: #333;
+	text-transform: uppercase;
+}
 
-	/* Largura fixa garante que o 'Excluir' não estique */
-	width: 90px;
-	height: 32px;
+/* Botões */
+.btn-primary {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 4px;
+	cursor: pointer;
+}
 
-	font-size: 14px;
-	font-weight: 600;          /* Peso da fonte mais elegante */
+.btn-cancel {
+	background-color: #f0ad4e;
+	color: white;
+	padding: 10px 20px;
 	text-decoration: none;
-	border-radius: 6px;        /* Bordas levemente arredondadas, mais modernas */
-	border: 1px solid rgba(0,0,0,0.1);
-	transition: all 0.3s ease;
-	margin: 0 !important;      /* Remove qualquer margem residual */
+	border-radius: 4px;
+	display: inline-block;
+	margin-left: 10px;
 }
 
-/* 3. Cores mais suaves e profissionais */
-.manage-apiary-btn-edit {
-	background-color: #e3f7e5; /* Verde bem suave */
-	color: #28a745;
+.btn-clear {
+	background-color: #eee;
+	padding: 10px;
+	text-decoration: none;
+	color: black;
+	border-radius: 4px;
 }
 
-.manage-apiary-btn-delete {
-	background-color: #fceaea; /* Vermelho bem suave */
-	color: #dc3545;
-}
-
-/* 4. Efeito de Hover (Destaque Mel) */
-.manage-apiary-btn-edit:hover,
-.manage-apiary-btn-delete:hover {
-	background-color: #ffd700; /* Cor de mel ao passar o mouse */
-	color: #000;
-	transform: translateY(-2px); /* Leve efeito de flutuar */
-	box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
+.btn-edit { color: #007bff; font-weight: bold; text-decoration: none; margin-right: 10px; }
+.btn-delete { color: #dc3545; font-weight: bold; text-decoration: none; }

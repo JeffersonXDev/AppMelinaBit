@@ -1,75 +1,71 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Dashboard - MelinaBit, Seu Gerenciamento de Apiários!</title>
+	<title>Admin - AppMelinaBit</title>
 	<link rel="stylesheet" th:href="@{/css/global.css}">
-	<link rel="stylesheet" th:href="@{/css/dashboard.css}">
+	<link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
 </head>
+<body class="allow-scroll">
+<div class="manager-wrapper">
+	<div class="manager-box">
 
-<body>
-	<div class="dashboard-container">
-		<main class="main-content">
-			<header class="dashboard-header">
-				<h1>Dashboard Admin</h1>
-					<form th:action="@{/logout}" method="post">
-							<form th:action="@{/logout}" method="post" >
-									<button class="btn btn-sair"type="submit" >Sair</button>
+		<header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+			<h2 style="margin: 0; font-size: 1.5em;">User Manager</h2>
+			<form th:action="@{/logout}" method="post">
+				<a th:href="@{/login}" class="manager-btn-back">Sair</a>
+			</form>
+		</header>
+
+		<div class="manager-stats-row">
+			<div class="manager-card">
+				<label>Base de Usuários</label>
+				<span th:text="${totalUsuarios}">0</span>
+			</div>
+			<div class="manager-card">
+				<label>Receita Consolidada</label>
+				<span style="color: #28a745; font-weight: bold;"
+					  th:text="${faturamentoTotal != null ? #numbers.formatCurrency(faturamentoTotal) : 'R$ 0,00'}">
+             </span>
+			</div>
+		</div>
+
+		<div class="manager-table-scroll">
+			<table class="manager-table">
+				<thead>
+				<tr>
+					<th style="width: 30%;">Nome Completo</th>
+					<th style="width: 30%;">E-mail de Acesso</th>
+					<th style="width: 20%;">Valor Pago (R$)</th>
+					<th style="width: 20%;">Ações</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="user : ${usuarios}">
+					<td th:text="${user.nome}"></td>
+					<td th:text="${user.email}" style="font-size: 0.8em;"></td>
+					<td style="font-weight: bold; color: #28a745;"
+						th:text="${user.valorRecebido != null ? #numbers.formatCurrency(user.valorRecebido) : 'R$ 0,00'}">
+					</td>
+					<td>
+						<div style="display: flex; gap: 5px; justify-content: center;">
+							<form th:action="@{/admin/usuarios/status/{id}(id=${user.idUsuario})}" method="post">
+								<button type="submit" class="manager-btn-action manager-btn-status"
+										th:text="${user.statusConta == 'ATIVO' ? 'Bloquear' : 'Ativar'}"></button>
 							</form>
-			</header>
-			<section class="dashboard-grid">
-				<div class="widget online-users">
-					<h2>Usuários Online</h2>
-					<div class="data-display">
-						<span id="onlineCount">0</span>
-					</div>
-				</div>
-
-				<div class="widget new-users">
-					<h2>Últimos Cadastros</h2>
-					<ul id="latestUsersList" class="user-list">
-					</ul>
-				</div>
-
-				<div class="widget revenue">
-					<h2>Receita Mensal</h2>
-					<div class="data-display">
-						<span id="monthlyRevenue">R$ 0,00</span>
-					</div>
-				</div>
-			</section>
-
-			<section class="user-management">
-				<h2>Gerenciar Usuários</h2>
-				<table id="usersTable">
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>Nome</th>
-							<th>Email</th>
-							<th>Status</th>
-							<th>Ações</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td><span class="status-ativa"></span></td>
-							<td class="action-buttons">
-								<button class="btn-block" data-id="" data-status="">Bloquear</button>
-								<button class="btn-delete" data-id="">Excluir</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</section>
-		</main>
+							<a th:href="@{/admin/usuarios/excluir/{id}(id=${user.idUsuario})}"
+							   class="manager-btn-action manager-btn-delete"
+							   onclick="return confirm('Excluir acesso?')">Excluir</a>
+						</div>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<form th:action="@{/logout}" method="post">
+			<a th:href="@{/login}" class="manager-btn-back">Sair</a>
+		</form>
 	</div>
-	<script src="css/script_dashboard.js"></script>
+</div>
 </body>
-
 </html>

@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome false
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+
+title MelinaBit ERP - Arquitetura de Sistema Integrado
+
+' Camada de Segurança e Cross-cutting
+package "Security Framework (Spring Security)" #F5F5F5 {
+    [SecurityConfig]
+    [CustomAuthHandler]
+}
+
+' Camada de Orquestração (Controllers)
+package "ERP Core (Controllers)" #E1F5FE {
+    [ManejoController] as MC <<Módulo Técnico>>
+    [EstoqueController] as EC <<Módulo Suprimentos>>
+    [VendaController] as VC <<Módulo Comercial>>
+    [ApiarioController] as AC <<Módulo Ativos>>
+    [DashboardController] as DC <<BI & Analytics>>
+}
+
+' Camada de Negócio
+package "Service Layer (Business Logic)" #FFF9C4 {
+    [ManejoService]
+    [EstoqueService]
+    [EmailService]
+}
+
+' Camada de Dados
+database "PostgreSQL" #C8E6C9 {
+    [Entidades Relacionais]
+}
+
+' Fluxos ERP
+MC -down-> [ManejoService]
+EC -down-> [EstoqueService]
+[ManejoService] -right-> [EstoqueService] : "Baixa automática de insumos"
+VC -right-> [EstoqueService] : "Baixa de produtos acabados"
+
+DC -up-> MC : Coleta Dados
+DC -up-> VC : Coleta Dados
+
+[Security Framework] .down.> [ERP Core] : "Proteção de Endpoints"
+
+@enduml

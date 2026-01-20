@@ -1,16 +1,20 @@
 package com.appmelinabit.controller;
 
 import com.appmelinabit.model.Manejo;
+import com.appmelinabit.model.Usuario;
 import com.appmelinabit.service.ManejoService;
 import com.appmelinabit.service.ApiarioService;
+import com.appmelinabit.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/gerenciar") // Padronizado com os outros
+@RequestMapping("/gerenciar")
 public class ManejoController {
 
     @Autowired
@@ -19,36 +23,74 @@ public class ManejoController {
     @Autowired
     private ApiarioService apiarioService;
 
-    // AJUSTE: Rota exata do botão do Dashboard
+    @Autowired
+    private UsuarioService usuarioService;
+
+    // --- CADASTRO (Mantido) ---
     @GetMapping("/cadastro-manejos")
     public String exibirCadastroManejo(Model model) {
         if (!model.containsAttribute("manejo")) {
             model.addAttribute("manejo", new Manejo());
         }
-
-        try {
-            // Carrega os apiários para o <select> do formulário
-            model.addAttribute("apiarios", apiarioService.buscarApiariosDoUsuarioLogado());
-        } catch (Exception e) {
-            model.addAttribute("mensagemErro", "Erro ao carregar Apiários.");
-            model.addAttribute("apiarios", java.util.Collections.emptyList());
-        }
-
-        return "cadastro-manejos"; // Nome do arquivo .html na pasta templates
+        model.addAttribute("apiarios", apiarioService.buscarApiariosDoUsuarioLogado());
+        return "cadastro-manejos";
     }
 
-    // AJUSTE: POST na mesma rota para evitar confusão
-    @PostMapping("/cadastro-manejos")
-    public String salvarManejo(@ModelAttribute("manejo") Manejo manejo,
-                               RedirectAttributes attributes) {
+    // --- GERENCIAMENTO (CRUD) ---
+    @GetMapping("/gerenciar-manejos")
+    public String gerenciarManejos(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
+        Usuario usuario = usuarioService.buscarUsuarioLogado();
+
+        List<Manejo> lista = (keyword != null && !keyword.isEmpty())
+                ? manejoService.pesquisarManejos(keyword, usuario)
+                : manejoService.listarManejosPorUsuario(usuario);
+
+        model.addAttribute("manejos", lista);
+        model.addAttribute("keyword", keyword);
+
+        // ADIÇÃO IMPORTANTE: Carrega apiários para o formulário de edição/cadastro na mesma tela
+        model.addAttribute("apiarios", apiarioService.buscarApiariosDoUsuarioLogado());
+
+        if (!model.containsAttribute("manejo")) {
+            model.addAttribute("manejo", new Manejo());
+        }
+        return "gerenciar-manejos";
+    }
+
+    // --- EDIÇÃO (Atualizado para carregar tudo) ---
+    @GetMapping("/gerenciar-manejos/editar/{id}")
+    public String editarManejo(@PathVariable("id") Integer id, Model model) {
+        Manejo manejo = manejoService.buscarPorId(id);
+        model.addAttribute("manejo", manejo);
+        // Ao retornar o gerenciarManejos, ele agora levará a lista de apiários e os dados do manejo
+        return gerenciarManejos(null, model);
+    }
+
+    // --- SALVAR (Sua lógica de redirecionamento mantida) ---
+    @PostMapping("/salvar-manejo")
+    public String salvarManejo(@ModelAttribute("manejo") Manejo manejo, RedirectAttributes attributes) {
         try {
             manejoService.salvarManejo(manejo);
-            attributes.addFlashAttribute("mensagemSucesso", "Manejo registrado com sucesso!");
-            return "redirect:/gerenciar/cadastro-manejos";
+            attributes.addFlashAttribute("mensagemSucesso", "Registro de manejo salvo com sucesso!");
         } catch (Exception e) {
-            attributes.addFlashAttribute("mensagemErro", "Erro ao salvar o Manejo, tente novamente: " + e.getMessage());
-            attributes.addFlashAttribute("manejo", manejo);
-            return "redirect:/gerenciar/cadastro-manejos";
+            attributes.addFlashAttribute("mensagemErro", "Erro ao processar: " + e.getMessage());
         }
+
+        // Se o ID já existia (Edição), volta para o gerenciar. Se era novo, volta para o cadastro.
+        return (manejo.getIdManejo() != null)
+                ? "redirect:/gerenciar/gerenciar-manejos"
+                : "redirect:/gerenciar/cadastro-manejos";
+    }
+
+    // --- EXCLUIR (Mantido) ---
+    @GetMapping("/excluir-manejo/{id}")
+    public String excluirManejo(@PathVariable("id") Integer id, RedirectAttributes attributes) {
+        try {
+            manejoService.excluirManejo(id);
+            attributes.addFlashAttribute("mensagemSucesso", "Registro removido!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("mensagemErro", "Erro ao excluir.");
+        }
+        return "redirect:/gerenciar/gerenciar-manejos";
     }
 }
