@@ -47,7 +47,7 @@ Simulando um ambiente real de produção.
 
 ---
 
-## 🖥️ Diagrama de Arquitetura
+## 🏗️ Arquitetura e Estrutura
 
 ![Diagrama](Diagrama.png)
 
