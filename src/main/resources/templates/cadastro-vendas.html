@@ -27,9 +27,11 @@
 			</p>
 		</div>
 
-		<form th:action="@{/gerenciar/cadastro-vendas}" th:object="${movimentacao}" method="post">
-
+		<form th:action="@{/gerenciar/salvar}" th:object="${movimentacao}" method="post">
+			<input type="hidden" th:field="*{idMovimentacao}">
 			<input type="hidden" th:field="*{tipoMovimentacao}">
+
+			<input type="hidden" name="referencia" value="cadastro-vendas">
 
 			<div class="form-group">
 				<label for="descricao">Nome Identificador da Venda:</label>
@@ -50,32 +52,32 @@
 				<label for="unidadeMedida">Produto:</label>
 				<select id="unidadeMedida" th:field="*{unidadeMedida}" onchange="atualizarNomeProduto(this)" required class="form-group-select">
 					<option value="">Selecione o Tipo e Peso/Volume</option>
-					<optgroup label="Mel/Outros (Pesos - Gramas/Kilos)">
-						<option value="250g_mel">Frasco 250 Gramas</option>
-						<option value="500g_mel">Frasco 500 Gramas</option>
-						<option value="750g_mel">Frasco 750 Gramas</option>
-						<option value="1kg_mel">Frasco 1 Kilo</option>
-						<option value="10kg_balde">Balde 10 Kilos</option>
-						<option value="20kg_balde">Balde 20 Kilos</option>
-						<option value="30kg_balde">Balde 30 Kilos</option>
+					<optgroup label="Mel">
+						<option value="250g">Frasco 250 Gramas</option>
+						<option value="500g">Frasco 500 Gramas</option>
+						<option value="750g">Frasco 750 Gramas</option>
+						<option value="1kg">Frasco 1 Quilo</option>
+						<option value="10kg">Balde 10 Quilos</option>
+						<option value="20kg">Balde 20 Quilos</option>
+						<option value="30kg">Balde 30 Quilos</option>
 					</optgroup>
-					<optgroup label="Pólen (Pesos - Gramas/Quilos)">
-						<option value="1kg_polen">Pote de 1 Quilo (Kg)</option>
-						<option value="500g_polen">Pote de 500 Gramas</option>
-						<option value="250g_polen">Pote de 250 Gramas</option>
-						<option value="100g_polen">Pote de 100 Gramas</option>
+					<optgroup label="Pólen">
+						<option value="1kg">Pote de 1 Quilo (Kg)</option>
+						<option value="500g">Pote de 500 Gramas</option>
+						<option value="250g">Pote de 250 Gramas</option>
+						<option value="100g">Pote de 100 Gramas</option>
 					</optgroup>
-					<optgroup label="Cera (Pesos - Gramas/Quilos)">
-						<option value="1kg_cera">Cera de 1 Quilo (Kg)</option>
-						<option value="500g_cera">Cera de 500 Gramas</option>
-						<option value="250g_cera">Cera de 250 Gramas</option>
+					<optgroup label="Cera">
+						<option value="1kg">Cera de 1 Quilo (Kg)</option>
+						<option value="500g">Cera de 500 Gramas</option>
+						<option value="250g">Cera de 250 Gramas</option>
 					</optgroup>
-					<optgroup label="Própolis (Volume - ML/Litros)">
-						<option value="1L_extrato">Frasco 1 Litro (L)</option>
-						<option value="500ml_extrato">Frasco 500ml</option>
-						<option value="250ml_extrato">Frasco 250ml</option>
-						<option value="100ml_extrato">Frasco 100ml</option>
-						<option value="30ml_extrato">Frasco 30ml</option>
+					<optgroup label="Própolis">
+						<option value="1L">Frasco 1 Litro (L)</option>
+						<option value="500ml">Frasco 500ml</option>
+						<option value="250ml">Frasco 250ml</option>
+						<option value="100ml">Frasco 100ml</option>
+						<option value="30ml">Frasco 30ml</option>
 					</optgroup>
 				</select>
 				<input type="hidden" id="nomeProdutoOculto" th:field="*{nome}">
@@ -119,39 +121,6 @@
 		</div>
 	</div>
 </div>
-
-<script>
-	const inputQtd = document.getElementById('quantidade');
-	const inputUnitario = document.getElementById('valorUnitario');
-	const inputFrete = document.getElementById('valorFrete');
-	const inputTotal = document.getElementById('valorTotalVisual');
-
-	function calcularTotal() {
-		const qtd = parseFloat(inputQtd.value) || 0;
-		const unit = parseFloat(inputUnitario.value) || 0;
-		const frete = parseFloat(inputFrete.value) || 0;
-		const total = (qtd * unit) + frete;
-
-		inputTotal.value = total.toFixed(2);
-		document.getElementById('valorTotalReal').value = total.toFixed(2); // Atualiza o campo do Java
-	}
-
-	inputQtd.addEventListener('input', calcularTotal);
-	inputUnitario.addEventListener('input', calcularTotal);
-	inputFrete.addEventListener('input', calcularTotal);
-
-	function atualizarNomeProduto(select) {
-		const valor = select.value;
-		const campoNome = document.getElementById('nomeProdutoOculto');
-
-		if (valor.includes('mel')) campoNome.value = 'Mel';
-		else if (valor.includes('polen')) campoNome.value = 'Polen';
-		else if (valor.includes('extrato')) campoNome.value = 'Propolis';
-		else if (valor.includes('cera')) campoNome.value = 'Cera';
-		// Log para você testar no F12 do navegador se está funcionando
-		console.log("Categoria definida para o banco: " + campoNome.value);
-	}
-</script>
-
+<script th:src="@{/js/script.js}"></script>
 </body>
 </html>

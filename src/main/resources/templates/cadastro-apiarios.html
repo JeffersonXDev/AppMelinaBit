@@ -47,25 +47,25 @@
 				<label for="qntdColmeias">Quantidade de Colmeias:</label>
 				<input type="number" id="qntdColmeias" th:field="*{qntdColmeias}" required>
 			</div>
-
+			<hr>
 			<div class="form-group">
 				<label for="terraTerceiros">Esta em Terras de Terceiros?</label>
-				<select id="terraTerceiros" th:field="*{terraTerceiros} " class="form-group-select"	>
-					<option th:value="true">Sim</option>
+				<select id="terraTerceiros" th:field="*{terraTerceiros}" class="form-group-select" onchange="toggleResponsavel()">
 					<option th:value="false">Não</option>
+					<option th:value="true">Sim</option>
 				</select>
 			</div>
 
-			<div class="form-group">
-				<label for="nomeResponsavel">Nome Responsavel Pela Terra:</label>
+			<div class="form-group" id="grupoResponsavel">
+				<label for="nomeResponsavel">Nome Responsável Pela Terra:</label>
 				<input type="text" id="nomeResponsavel" th:field="*{nomeResponsavel}" required>
 			</div>
 
-			<div class="form-group">
+			<div class="form-group" id="grupoTelefone">
 				<label for="telefoneResponsavel">Telefone Responsável Pela Terra:</label>
 				<input type="text" id="telefoneResponsavel" th:field="*{telefoneResponsavel}" required>
 			</div>
-
+			<hr>
 			<div class="form-group">
 				<label for="endereco">Endereço:</label>
 				<input type="text" id="endereco" th:field="*{endereco}" required>
@@ -92,7 +92,7 @@
 					   style="background-color: #f0f0f0; cursor: not-allowed;"
 					   placeholder="Auto-preenchido">
 			</div>
-
+			<hr>
 			<div class="form-group">
 				<label for="obs">Observações:</label>
 				<textarea id="obs" th:field="*{obs}" rows="4" class="obs"
@@ -109,28 +109,6 @@
 		</div>
 	</div>
 </div>
-<script>
-	function preencherUF() {
-		// Remove acentos e padroniza para busca
-		const estadoInput = document.getElementById('estado').value
-				.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-				.trim().toLowerCase();
-
-		const ufInput = document.getElementById('uf');
-
-		const estadosUf = {
-			"acre": "AC", "alagoas": "AL", "amapa": "AP", "amazonas": "AM",
-			"bahia": "BA", "ceara": "CE", "distrito federal": "DF", "espirito santo": "ES",
-			"goias": "GO", "maranhao": "MA", "mato grosso": "MT", "mato grosso do sul": "MS",
-			"minas gerais": "MG", "para": "PA", "paraiba": "PB", "parana": "PR",
-			"pernambuco": "PE", "piaui": "PI", "rio de janeiro": "RJ", "rio grande do norte": "RN",
-			"rio grande do sul": "RS", "rondonia": "RO", "roraima": "RR", "santa catarina": "SC",
-			"sao paulo": "SP", "sergipe": "SE", "tocantins": "TO"
-		};
-
-		// Preenche se encontrar no mapa, senão limpa
-		ufInput.value = estadosUf[estadoInput] || "";
-	}
-</script>
+<script th:src="@{/js/script.js}"></script>
 </body>
 </html>

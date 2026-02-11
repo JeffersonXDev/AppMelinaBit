@@ -21,7 +21,6 @@ public class DashboardController {
     private final ApiarioRepository apiarioRepo;
     private final UsuarioRepository usuarioRepo;
 
-    // Removemos o producaoRepo pois agora tudo está em movimentacao_estoque
     public DashboardController(MovimentacaoEstoqueRepository movimentacaoRepo,
                                ApiarioRepository apiarioRepo,
                                UsuarioRepository usuarioRepo) {
@@ -40,25 +39,23 @@ public class DashboardController {
         if (usuario != null) {
             LocalDate dataLimite = LocalDate.now().minusDays(7);
 
-            // 1. VENDAS (Widgets Superiores - Valores em R$)
-            model.addAttribute("vendaMel", nuloParaZero(movimentacaoRepo.sumVendasSemana("mel", usuario, dataLimite)));
-            model.addAttribute("vendaPropolis", nuloParaZero(movimentacaoRepo.sumVendasSemana("propolis", usuario, dataLimite)));
-            model.addAttribute("vendaPolen", nuloParaZero(movimentacaoRepo.sumVendasSemana("polen", usuario, dataLimite)));
-            model.addAttribute("vendaCera", nuloParaZero(movimentacaoRepo.sumVendasSemana("cera", usuario, dataLimite)));
+            // 1. VENDAS (Corrigido para bater com os values do Formulário: Mel, Propolis, etc.)
+            model.addAttribute("vendaMel", nuloParaZero(movimentacaoRepo.sumVendasSemana("Mel", usuario, dataLimite)));
+            model.addAttribute("vendaPropolis", nuloParaZero(movimentacaoRepo.sumVendasSemana("Propolis", usuario, dataLimite)));
+            model.addAttribute("vendaPolen", nuloParaZero(movimentacaoRepo.sumVendasSemana("Polen", usuario, dataLimite)));
+            model.addAttribute("vendaCera", nuloParaZero(movimentacaoRepo.sumVendasSemana("Cera", usuario, dataLimite)));
 
-            // 2. ESTOQUE ATUAL (Widgets Centrais - Agora usando a tabela unificada)
-            // O método calcularEstoquePorProduto já faz (ENTRADA + COLHEITA - SAIDA)
-            model.addAttribute("estoqueMel", movimentacaoRepo.calcularEstoquePorProduto("mel", usuario));
-            model.addAttribute("estoquePropolis", movimentacaoRepo.calcularEstoquePorProduto("propolis", usuario));
-            model.addAttribute("estoquePolen", movimentacaoRepo.calcularEstoquePorProduto("polen", usuario));
-            model.addAttribute("estoqueCera", movimentacaoRepo.calcularEstoquePorProduto("cera", usuario));
+            // 2. ESTOQUE ATUAL (Corrigido para bater com os values do Formulário: Mel, Propolis, etc.)
+            model.addAttribute("estoqueMel", nuloParaZero(movimentacaoRepo.calcularEstoquePorProduto("Mel", usuario)));
+            model.addAttribute("estoquePropolis", nuloParaZero(movimentacaoRepo.calcularEstoquePorProduto("Propolis", usuario)));
+            model.addAttribute("estoquePolen", nuloParaZero(movimentacaoRepo.calcularEstoquePorProduto("Polen", usuario)));
+            model.addAttribute("estoqueCera", nuloParaZero(movimentacaoRepo.calcularEstoquePorProduto("Cera", usuario)));
 
             // 3. DADOS GERAIS
             model.addAttribute("totalApiarios", nuloParaZeroObj(apiarioRepo.countByUsuario(usuario)));
             model.addAttribute("totalColmeias", nuloParaZeroObj(apiarioRepo.sumColmeiasByUsuario(usuario)));
 
-            // 4. LISTA DE ÚLTIMAS COLHEITAS (Filtro para a Tabela do Dashboard)
-            // Pegamos as movimentações e filtramos as que são do tipo COLHEITA
+            // 4. LISTA DE ÚLTIMAS COLHEITAS
             List<MovimentacaoEstoque> ultimasColheitas = movimentacaoRepo.findByUsuarioOrderByDataEntradaDesc(usuario)
                     .stream()
                     .filter(m -> "COLHEITA".equalsIgnoreCase(m.getTipoMovimentacao()))

@@ -18,7 +18,9 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
     @Column(name = "id_usuario") 
     private Integer idUsuario;
-
+    
+    @Column(name = "status")
+    private String status = "INATIVO"; // Define o padrão aqui
 
     @Column(name = "nome")
     private String nome;
@@ -71,9 +73,7 @@ public class Usuario {
     @Column(name = "ultimo_login")
     private LocalDateTime ultimoLogin;
     
-    public Usuario() {
-
-    }
+    public Usuario() { }
 
     public Integer getIdUsuario() { // CORRIGIDO: Retorna Integer
         return idUsuario;

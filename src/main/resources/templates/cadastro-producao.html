@@ -22,7 +22,11 @@
 			<p><a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a></p>
 		</div>
 
-		<form th:action="@{/gerenciar/cadastro-producao}" th:object="${movimentacao}" method="post">
+		<form th:action="@{/gerenciar/salvar}" th:object="${movimentacao}" method="post">
+
+			<input type="hidden" th:field="*{tipoMovimentacao}">
+
+			<input type="hidden" name="referencia" value="cadastro-producao" >
 
 			<div class="form-group">
 				<label>Data da Colheita:</label>

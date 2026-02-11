@@ -22,12 +22,10 @@
 			<div class="widget"><h2>Venda de Própolis (7 dias):</h2><div class="data-display"><span th:text="${#numbers.formatCurrency(vendaPropolis)}">R$ 0,00</span></div></div>
 			<div class="widget"><h2>Venda de Pólen (7 dias):</h2><div class="data-display"><span th:text="${#numbers.formatCurrency(vendaPolen)}">R$ 0,00</span></div></div>
 			<div class="widget"><h2>Venda de Cera (7 dias):</h2><div class="data-display"><span th:text="${#numbers.formatCurrency(vendaCera)}">R$ 0,00</span></div></div>
-
 			<div class="widget"><h2>Mel em Estoque:</h2><div class="data-display"><span th:text="|${estoqueMel} kg|">0 kg</span></div></div>
 			<div class="widget"><h2>Própolis em Estoque:</h2><div class="data-display"><span th:text="|${estoquePropolis} kg|">0 kg</span></div></div>
 			<div class="widget"><h2>Pólen em Estoque:</h2><div class="data-display"><span th:text="|${estoquePolen} kg|">0 kg</span></div></div>
 			<div class="widget"><h2>Cera em Estoque:</h2><div class="data-display"><span th:text="|${estoqueCera} kg|">0 kg</span></div></div>
-
 			<div class="widget"><h2>Apiários Ativos:</h2><div class="data-display"><span th:text="${totalApiarios}">0</span></div></div>
 			<div class="widget"><h2>Total de Colmeias:</h2><div class="data-display"><span th:text="${totalColmeias}">0</span></div></div>
 		</section>
@@ -36,8 +34,8 @@
 			<h2>Ações de Cadastros:</h2>
 			<table class="usersTable">
 				<tbody>
-				<tr>
-					<td><a th:href="@{/gerenciar/cadastro-apiarios}" class="btn btn-cadastrar">Apiários</a></td>
+					<tr>
+					<td><a th:href="@{/gerenciar/cadastro-apiarios}" class="btn btn-cadastrar" title="Clique aqui para cadastrar a colheita do seu apiário"> Apiários</a></td>
 					<td><a th:href="@{/gerenciar/cadastro-producao}" class="btn btn-cadastrar">Colheitas</a></td>
 					<td><a th:href="@{/gerenciar/cadastro-clientes}" class="btn btn-cadastrar">Clientes</a></td>
 					<td><a th:href="@{/gerenciar/cadastro-fornecedores}" class="btn btn-cadastrar">Fornecedores</a></td>
@@ -64,7 +62,6 @@
 				</tr>
 				</tbody>
 			</table>
-		</section>
 		</section>
 	</main>
 </div>

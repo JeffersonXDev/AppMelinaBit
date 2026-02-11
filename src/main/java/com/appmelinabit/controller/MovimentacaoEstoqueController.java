@@ -17,11 +17,16 @@ import java.util.List;
 @RequestMapping("/gerenciar")
 public class MovimentacaoEstoqueController {
 
-    @Autowired private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
-    @Autowired private ClienteRepository clienteRepository;
-    @Autowired private FornecedorRepository fornecedorRepository;
-    @Autowired private ApiarioRepository apiarioRepository;
-    @Autowired private UsuarioRepository usuarioRepository;
+    @Autowired
+    private MovimentacaoEstoqueRepository movimentacaoEstoqueRepository;
+    @Autowired
+    private ClienteRepository clienteRepository;
+    @Autowired
+    private FornecedorRepository fornecedorRepository;
+    @Autowired
+    private ApiarioRepository apiarioRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     private Usuario buscarUsuarioLogado(UserDetails userDetails) {
         return usuarioRepository.findByEmail(userDetails.getUsername())
@@ -62,22 +67,15 @@ public class MovimentacaoEstoqueController {
         return "gerenciar-vendas";
     }
 
-    @GetMapping("/gerenciar-vendas/editar/{id}")
-    public String editarVenda(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        MovimentacaoEstoque mov = movimentacaoEstoqueRepository.findById(id).orElseThrow();
-        model.addAttribute("movimentacao", mov);
-        return gerenciarVendas(null, model, userDetails);
-    }
-
     // =========================================================================
-    // BLOCO 2: PRODUÇÃO (COLHEITA)
+    // BLOCO 2: PRODUÇÃO (AGORA É ENTRADA)
     // =========================================================================
 
     @GetMapping("/cadastro-producao")
     public String abrirCadastroProducao(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         Usuario usuario = buscarUsuarioLogado(userDetails);
         MovimentacaoEstoque mov = new MovimentacaoEstoque();
-        mov.setTipoMovimentacao("COLHEITA");
+        mov.setTipoMovimentacao("ENTRADA");
         model.addAttribute("movimentacao", mov);
         model.addAttribute("apiarios", apiarioRepository.findByUsuario(usuario));
         return "cadastro-producao";
@@ -91,22 +89,17 @@ public class MovimentacaoEstoqueController {
                 ? movimentacaoEstoqueRepository.buscarTudo(keyword, usuario)
                 : movimentacaoEstoqueRepository.findByUsuarioOrderByDataEntradaDesc(usuario);
 
-        model.addAttribute("movimentacoes", lista.stream().filter(m -> "COLHEITA".equals(m.getTipoMovimentacao())).toList());
+        // Filtra o que é ENTRADA e veio de um Apiário (Produção)
+        model.addAttribute("movimentacoes", lista.stream()
+                .filter(m -> "ENTRADA".equals(m.getTipoMovimentacao()) && m.getApiario() != null).toList());
         model.addAttribute("apiarios", apiarioRepository.findByUsuario(usuario));
 
         if (!model.containsAttribute("movimentacao")) {
             MovimentacaoEstoque mov = new MovimentacaoEstoque();
-            mov.setTipoMovimentacao("COLHEITA");
+            mov.setTipoMovimentacao("ENTRADA");
             model.addAttribute("movimentacao", mov);
         }
         return "gerenciar-producao";
-    }
-
-    @GetMapping("/gerenciar-producao/editar/{id}")
-    public String editarProducao(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        MovimentacaoEstoque mov = movimentacaoEstoqueRepository.findById(id).orElseThrow();
-        model.addAttribute("movimentacao", mov);
-        return gerenciarProducao(null, model, userDetails);
     }
 
     // =========================================================================
@@ -131,7 +124,9 @@ public class MovimentacaoEstoqueController {
                 ? movimentacaoEstoqueRepository.buscarTudo(keyword, usuario)
                 : movimentacaoEstoqueRepository.findByUsuarioOrderByDataEntradaDesc(usuario);
 
-        model.addAttribute("insumos", lista.stream().filter(m -> "ENTRADA".equals(m.getTipoMovimentacao())).toList());
+        // Filtra o que é ENTRADA e veio de Fornecedor (Insumos)
+        model.addAttribute("insumos", lista.stream()
+                .filter(m -> "ENTRADA".equals(m.getTipoMovimentacao()) && m.getFornecedor() != null).toList());
         model.addAttribute("fornecedores", fornecedorRepository.findByUsuario(usuario));
 
         if (!model.containsAttribute("movimentacao")) {
@@ -141,51 +136,104 @@ public class MovimentacaoEstoqueController {
         }
         return "gerenciar-insumos";
     }
-
-    @GetMapping("/gerenciar-insumos/editar/{id}")
-    public String editarInsumo(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        MovimentacaoEstoque mov = movimentacaoEstoqueRepository.findById(id).orElseThrow();
-        model.addAttribute("movimentacao", mov);
-        return gerenciarInsumos(null, model, userDetails);
-    }
-
     // =========================================================================
-    // BLOCO 4: PROCESSAMENTO (Salvar e Excluir)
+    // BLOCO 4: PROCESSAMENTO (Salvar e Excluir) corrigido para as 6 páginas
     // =========================================================================
 
     @PostMapping("/salvar")
     public String salvar(@ModelAttribute("movimentacao") MovimentacaoEstoque mov,
+                         @RequestParam(value = "origem", required = false) String origem,
                          @AuthenticationPrincipal UserDetails userDetails,
                          RedirectAttributes attributes) {
         try {
+            // 1. Limpeza de String Duplicada (Ex: "SAIDA,SAIDA" vira apenas "SAIDA")
+            if (mov.getTipoMovimentacao() != null && mov.getTipoMovimentacao().contains(",")) {
+                mov.setTipoMovimentacao(mov.getTipoMovimentacao().split(",")[0]);
+            }
+
             Usuario usuario = buscarUsuarioLogado(userDetails);
             mov.setUsuario(usuario);
             mov.setIdUsuario(usuario.getIdUsuario());
-            if (mov.getDataCadastro() == null) mov.setDataCadastro(LocalDate.now());
+
+            if (mov.getDataCadastro() == null) {
+                mov.setDataCadastro(LocalDate.now());
+            }
 
             movimentacaoEstoqueRepository.save(mov);
             attributes.addFlashAttribute("mensagemSucesso", "Registro salvo com sucesso!");
+
         } catch (Exception e) {
             attributes.addFlashAttribute("mensagemErro", "Erro ao salvar: " + e.getMessage());
+            // Em caso de erro, tenta voltar para a origem ou usa a lógica de segurança
+            return (origem != null) ? "redirect:/gerenciar/" + origem : redirecionarSeguranca(mov);
         }
 
-        if ("ENTRADA".equals(mov.getTipoMovimentacao())) return "redirect:/gerenciar/gerenciar-insumos";
-        if ("SAIDA".equals(mov.getTipoMovimentacao())) return "redirect:/gerenciar/gerenciar-vendas";
+        // 2. RETORNO DINÂMICO PARA AS 6 PÁGINAS
+        // Se o seu HTML enviou o input name="origem", o Java volta para ela exatamente.
+        if (origem != null && !origem.isEmpty()) {
+            return "redirect:/gerenciar/" + origem;
+        }
+
+        // 3. LOGICA DE SEGURANÇA (Se a origem falhar)
+        return redirecionarSeguranca(mov);
+    }
+
+    // Método de segurança para não dar erro se o parâmetro origem sumir
+    private String redirecionarSeguranca(MovimentacaoEstoque mov) {
+        if ("SAIDA".equals(mov.getTipoMovimentacao())) return "redirect:/gerenciar/cadastro-vendas";
+        if (mov.getApiario() != null) return "redirect:/gerenciar/cadastro-producao";
+        return "redirect:/gerenciar/cadastro-insumos";
+    }
+
+    // --- ROTAS DE EDIÇÃO AJUSTADAS ---
+
+    // =========================================================================
+    // BLOCO 5: EXCLUSÃO
+    // =========================================================================
+
+    @GetMapping("/gerenciar-vendas/{id}") // Para o botão "Corrigir"
+    public String carregarVenda(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("movimentacao", movimentacaoEstoqueRepository.findById(id).orElseThrow());
+        return gerenciarVendas(null, model, userDetails);
+    }
+
+    @GetMapping("/gerenciar-vendas/excluir/{id}") // Para o botão "Excluir"
+    public String excluirVenda(@PathVariable("id") Integer id, RedirectAttributes attributes) {
+        movimentacaoEstoqueRepository.deleteById(id);
+        attributes.addFlashAttribute("mensagemSucesso", "Venda excluída!");
+        return "redirect:/gerenciar/gerenciar-vendas";
+    }
+
+    // === CORREÇÃO PARA PRODUÇÃO ===
+    @GetMapping("/gerenciar-producao/{id}")
+    public String carregarProducao(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("movimentacao", movimentacaoEstoqueRepository.findById(id).orElseThrow());
+        return gerenciarProducao(null, model, userDetails);
+    }
+
+    @GetMapping("/gerenciar-producao/excluir/{id}")
+    public String excluirProducao(@PathVariable("id") Integer id, RedirectAttributes attributes) {
+        movimentacaoEstoqueRepository.deleteById(id);
+        attributes.addFlashAttribute("mensagemSucesso", "Produção excluída!");
         return "redirect:/gerenciar/gerenciar-producao";
     }
 
-    @GetMapping("/excluir-estoque/{id}")
-    public String excluir(@PathVariable("id") Integer id, RedirectAttributes attributes) {
-        MovimentacaoEstoque mov = movimentacaoEstoqueRepository.findById(id).orElse(null);
-        String redirect = "/gerenciar/gerenciar-producao";
+    // Para a página de Insumos
+    @GetMapping("/gerenciar-insumos/{id}")
+    public String carregarInsumo(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("movimentacao", movimentacaoEstoqueRepository.findById(id).orElseThrow());
+        return gerenciarInsumos(null, model, userDetails);
+    }
 
-        if (mov != null) {
-            if ("ENTRADA".equals(mov.getTipoMovimentacao())) redirect = "/gerenciar/gerenciar-insumos";
-            if ("SAIDA".equals(mov.getTipoMovimentacao())) redirect = "/gerenciar/gerenciar-vendas";
-
+    // Rota para o botão "Excluir" (Insumos) - Corrigindo o 404
+    @GetMapping("/gerenciar-insumos/excluir/{id}")
+    public String excluirInsumo(@PathVariable("id") Integer id, RedirectAttributes attributes) {
+        try {
             movimentacaoEstoqueRepository.deleteById(id);
-            attributes.addFlashAttribute("mensagemSucesso", "Excluído com sucesso!");
+            attributes.addFlashAttribute("mensagemSucesso", "Insumo excluído com sucesso!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("mensagemErro", "Erro ao excluir: " + e.getMessage());
         }
-        return "redirect:" + redirect;
+        return "redirect:/gerenciar/gerenciar-insumos";
     }
 }

@@ -22,9 +22,10 @@
 
 		<hr>
 
-		<form th:action="@{/gerenciar/gerenciar-insumos/salvar}" th:object="${movimentacao}" method="post">
-			<input type="hidden" th:field="*{idMovimentacao}">
+		<form th:action="@{/gerenciar/salvar}" th:object="${movimentacao}" method="post">
 			<input type="hidden" th:field="*{tipoMovimentacao}">
+
+			<input type="hidden" name="origem" value="gerenciar-insumos">
 
 			<input type="hidden" name="idFornecedor" th:value="${movimentacao.fornecedor != null ? movimentacao.fornecedor.id : ''}">
 
@@ -106,10 +107,9 @@
 					<td th:text="${item.quantidade != null ? #numbers.formatInteger(item.quantidade, 1, 'POINT') : '0'}"></td>
 					<td th:text="${item.valorCompra != null ? 'R$ ' + #numbers.formatInteger(item.valorCompra, 1, 'POINT') : 'R$ 0'}"></td>
 					<td>
-						<a th:href="@{/gerenciar/gerenciar-insumos/editar/{id}(id=${item.idMovimentacao})}"
-						   class="manage-apiary-btn-edit">Editar</a>
-						<a th:href="@{/gerenciar/excluir-estoque/{id}(id=${item.idMovimentacao})}"
-						   class="manage-apiary-btn-delete"
+						<a th:href="@{/gerenciar/gerenciar-insumos/{id}(id=${item.idMovimentacao})}"
+						   class="manage-apiary-btn-edit">Corrigir</a>
+						<a th:href="@{/gerenciar/gerenciar-insumos/excluir/{id}(id=${item.idMovimentacao})}" class="manage-apiary-btn-delete"
 						   onclick="return confirm('Deseja realmente excluir este registro?')">Excluir</a>
 					</td>
 				</tr>

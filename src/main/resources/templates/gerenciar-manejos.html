@@ -23,71 +23,80 @@
 
 		<hr>
 
-		<form th:action="@{/gerenciar/salvar-manejo}" th:object="${manejo}" method="post">
-			<input type="hidden" th:field="*{idManejo}">
-			<input type="hidden" th:field="*{usuario}">
-			<input type="hidden" th:if="*{apiario != null}" th:field="*{apiario.idApiario}">
+		<form th:action="@{/gerenciar/gerenciar-manejos}" th:object="${manejo}" method="post">
+		    <input type="hidden" th:field="*{idManejo}">		    
+		    <input type="hidden" name="apiario.idApiario" th:value="${manejo.apiario != null ? manejo.apiario.idApiario : ''}">
 
-			<div class="manage-apiary-grid">
-				<div class="manage-apiary-field">
-					<label>Apiário:</label>
-					<input type="text" th:field="*{apiario.nome}" readonly style="background-color: #f0f0f0; cursor: not-allowed;">
-				</div>
+		    <div class="manage-apiary-grid">
+		        <div class="manage-apiary-field">
+		            <label>Apiário:</label>
+		            <select th:field="*{apiario}" required class="manage-apiary-select" >
+		                <option th:each="apiarioOp : ${apiarios}"
+		                        th:value="${apiarioOp.idApiario}"
+		                        th:text="${apiarioOp.nome}">
+		                </option>
+		            </select>
+		        </div>
 				<div class="manage-apiary-field">
 					<label>Nº Colmeia:</label>
 					<input type="text" th:field="*{numeroColmeia}" required>
 				</div>
 				<div class="manage-apiary-field">
-					<label>Data do Manejo:</label>
-					<input type="date" th:field="*{dataInspecao}" required>
+				    <label>Data do Manejo:</label>
+				    <input type="date" id="dataInspecao" th:field="*{dataInspecao}" required>
 				</div>
 			</div>
-
+			<hr>
 			<div class="manage-apiary-grid">
 				<div class="manage-apiary-field">
-					<label>Quadros com Ovos:</label>
-					<input type="number" th:field="*{quadros}">
+					<label>Quadros de Ovos e Crias Abertas:</label>
+					<input type="number" th:field="*{criasAbertas}">
 				</div>
+				
+				<div class="manage-apiary-field">
+					<label>Quadros com Mel:</label>
+					<input type="number" th:field="*{quadrosMel}">
+				</div>
+				
 				<div class="manage-apiary-field">
 					<label>Crias Operculadas:</label>
 					<input type="number" th:field="*{criasOperculadas}">
-				</div>
-				<div class="manage-apiary-field">
-					<label>Quadros com Mel:</label>
-					<input type="number" th:field="*{mel}">
-				</div>
+				</div>		
 			</div>
 
+			<hr>
 			<div class="manage-apiary-grid">
 				<div class="manage-apiary-field">
-					<label>Pólen (0 ou 1):</label>
-					<input type="number" th:field="*{polen}" class="mask-binary" min="0" max="1" placeholder="0=Não, 1=Sim">
+				    <label>Pólen:</label>
+				    <input type="text" th:field="*{polen}" class="mask-binary"> 
 				</div>
+
 				<div class="manage-apiary-field">
-					<label>Néctar (0 ou 1):</label>
-					<input type="number" th:field="*{nectar}" class="mask-binary" min="0" max="1">
+				    <label>Néctar:</label>
+				    <input type="text" th:field="*{nectar}" class="mask-binary">
 				</div>
+
 				<div class="manage-apiary-field">
-					<label>Própolis (0 ou 1):</label>
-					<input type="number" th:field="*{propolis}" class="mask-binary" min="0" max="1">
+				    <label>Própolis (0 ou 1):</label>
+				    <input type="text" th:field="*{propolis}" class="mask-binary">
 				</div>
 			</div>
-
+			<hr>
 			<div class="manage-apiary-grid">
 				<div class="manage-apiary-field">
-					<label>Rainha Nova (true/false):</label>
-					<input type="text" th:field="*{rainhaNova}" placeholder="true ou false">
+					<label>Rainha Nova:</label>
+					<input type="text" th:field="*{rainhaNova}">
 				</div>
 				<div class="manage-apiary-field">
 					<label>Inimigos Naturais:</label>
-					<input type="text" th:field="*{inimigosNaturais}" placeholder="Ex: Não, Formigas, etc">
+					<input type="text" th:field="*{inimigosNaturais}">
 				</div>
 				<div class="manage-apiary-field">
-					<label>Alimentador (0 ou 1):</label>
-					<input type="number" th:field="*{alimentador}" class="mask-binary" min="0" max="1">
+					<label>Alimentador:</label>
+					<input type="text" th:field="*{alimentador}" class="mask-binary">
 				</div>
 			</div>
-
+			<hr>
 			<div class="manage-apiary-grid">
 				<div class="manage-apiary-field">
 					<label>Xarope (Litros):</label>
@@ -102,7 +111,7 @@
 					<input type="text" th:field="*{melgueiras}">
 				</div>
 			</div>
-
+			<hr>
 			<div class="manage-apiary-field">
 				<label>Observações:</label>
 				<textarea th:field="*{obs}" rows="2" class="manage-apiary-field-obs"></textarea>
@@ -134,7 +143,8 @@
 					<td th:text="${m.apiario != null ? m.apiario.nome : 'N/A'}"></td>
 					<td th:text="${m.numeroColmeia}"></td>
 					<td>
-						<a th:href="@{/gerenciar/gerenciar-manejos/editar/{id}(id=${m.idManejo})}" class="manage-apiary-btn-edit">Editar</a>
+						<a th:href="@{/gerenciar/gerenciar-manejos/editar/{id}(id=${m.idManejo})}" class="manage-apiary-btn-edit">Corrigir</a>
+
 						<a th:href="@{/gerenciar/excluir-manejo/{id}(id=${m.idManejo})}" class="manage-apiary-btn-delete" onclick="return confirm('Deseja excluir?')">Excluir</a>
 					</td>
 				</tr>
@@ -146,44 +156,6 @@
 			<a th:href="@{/dashboard}" class="manage-apiary-btn-save">Voltar ao Painel</a>
 		</div>
 	</div>
-</div>
-
-<script>
-	document.addEventListener('DOMContentLoaded', function() {
-
-		// 1. Validação para campos 0 ou 1 (Sim/Não)
-		const binaryInputs = document.querySelectorAll('.mask-binary');
-		binaryInputs.forEach(input => {
-			input.addEventListener('change', (e) => {
-				const val = e.target.value;
-				if (val !== "" && val !== "0" && val !== "1") {
-					alert("Atenção: Use apenas 0 (Não) ou 1 (Sim).");
-					e.target.value = "";
-				}
-			});
-		});
-
-		// 2. Correção de vírgula para ponto em campos decimais (Xarope, Preço, etc)
-		const decimalInputs = document.querySelectorAll('.mask-decimal, input[step="0.01"], input[step="0.1"]');
-		decimalInputs.forEach(input => {
-			input.addEventListener('input', (e) => {
-				if (e.target.value.includes(',')) {
-					e.target.value = e.target.value.replace(',', '.');
-				}
-			});
-		});
-
-		// 3. Auto-format para true/false no campo Rainha Nova
-		const rainhaInput = document.querySelector('input[name="rainhaNova"]');
-		if(rainhaInput) {
-			rainhaInput.addEventListener('blur', (e) => {
-				let val = e.target.value.toLowerCase().trim();
-				if (val === 's' || val === 'sim' || val === 't' || val === '1') e.target.value = 'true';
-				if (val === 'n' || val === 'nao' || val === 'não' || val === 'f' || val === '0') e.target.value = 'false';
-			});
-		}
-	});
-</script>
-
+</div> 
 </body>
 </html>

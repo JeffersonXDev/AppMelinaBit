@@ -120,4 +120,77 @@
 	color: #000;
 }
 
+/* --- Botão Sair com Rollover e Centralizado --- */
+.manager-btn-sair {
+    background-color: #ffffff;
+    font-weight: bold;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    text-decoration: none;
+    color: #000000;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    display: block;
+    width: 200px;
+    margin: 20px auto; /* Centraliza horizontalmente */
+    text-align: center;
+    transition: all 0.3s ease; /* Suaviza o rollover */
+}
+
+.manager-btn-sair:hover {
+    background-color: #ffd700; /* Destaque Mel */
+    border-color: #4A3A2C;
+    transform: translateY(-2px); /* Efeito de levante */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+       /* Estilos da Mensagem de Alerta */
+       .alert-message {
+           background-color: #d4edda;
+           color: #155724;
+           padding: 10px;
+           border-radius: 8px;
+           text-align: center;
+           margin-bottom: 15px;
+           border: 1px solid #c3e6cb;
+           font-size: 0.9em;
+           font-weight: bold;
+       }
+
+       /* Ajustes de Layout e Tabelas */
+       .header-admin {
+           display: flex; 
+           justify-content: space-between; 
+           align-items: center; 
+           margin-bottom: 15px;
+       }
+
+       .header-admin h2 {
+           margin: 0;
+       }
+
+       .logout-form {
+           text-align: center;
+       }
+
+       .text-email {
+           font-size: 0.8em;
+       }
+
+       .text-money {
+           font-weight: bold; 
+           color: #28a745;
+       }
+
+       .actions-container {
+           display: flex; 
+           gap: 5px; 
+           justify-content: center;
+       }
+
+       .form-inline {
+           display: inline;
+       }
+
 .manager-btn-back:hover { background-color: #ffd700; border-color: #000; }

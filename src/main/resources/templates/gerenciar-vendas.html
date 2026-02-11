@@ -26,8 +26,9 @@
 		<form th:action="@{/gerenciar/salvar}" th:object="${movimentacao}" method="post">
 			<input type="hidden" th:field="*{idMovimentacao}">
 			<input type="hidden" th:field="*{tipoMovimentacao}">
-			<input type="hidden" th:field="*{nome}"> <input type="hidden" th:if="*{cliente != null}" th:field="*{cliente.id}">
-
+			<input type="hidden" th:field="*{nome}">
+			<input type="hidden" th:if="*{cliente != null}" th:field="*{cliente.id}">
+			<input type="hidden" name="origem" value="gerenciar-vendas">
 			<div class="manage-apiary-grid">
 				<div class="manage-apiary-field">
 					<label>Identificador da Venda:</label>
@@ -50,7 +51,7 @@
 				</div>
 				<div class="manage-apiary-field">
 					<label>Preço Unitário (R$):</label>
-					<input type="number" th:field="*{precoBase}" step="0.01">
+					<input type="number" th:field="*{valorUnitario}" step="0.01">
 				</div>
 				<div class="manage-apiary-field">
 					<label>Valor do Frete (R$):</label>
@@ -62,6 +63,10 @@
 				<div class="manage-apiary-field">
 					<label>Valor Total da Venda (R$):</label>
 					<input type="number" th:field="*{valorVenda}" step="0.01" style="font-weight: bold; border: 2px solid #ccc;">
+				</div>
+				<div class="manage-apiary-field">
+					<label>Data da Venda:</label>
+					<input type="date" th:field="*{dataCadastro}">
 				</div>
 				<div class="manage-apiary-field" style="grid-column: span 2;">
 					<label>Observações:</label>
@@ -99,8 +104,8 @@
 					<td th:text="${v.quantidade + ' (' + v.unidadeMedida + ')'}"></td>
 					<td th:text="${'R$ ' + #numbers.formatDecimal(v.valorVenda, 1, 'POINT', 2, 'COMMA')}"></td>
 					<td>
-						<a th:href="@{/gerenciar/gerenciar-vendas/editar/{id}(id=${v.idMovimentacao})}" class="manage-apiary-btn-edit">Corrigir</a>
-						<a th:href="@{/gerenciar/excluir-estoque/{id}(id=${v.idMovimentacao})}" class="manage-apiary-btn-delete" onclick="return confirm('Excluir esta venda?')">Excluir</a>
+						<a th:href="@{/gerenciar/gerenciar-vendas/{id}(id=${v.idMovimentacao})}" class="manage-apiary-btn-edit">Corrigir</a>
+						<a th:href="@{/gerenciar/gerenciar-vendas/excluir/{id}(id=${v.idMovimentacao})}" class="manage-apiary-btn-delete" onclick="return confirm('Excluir esta venda?')">Excluir</a>
 					</td>
 				</tr>
 				</tbody>

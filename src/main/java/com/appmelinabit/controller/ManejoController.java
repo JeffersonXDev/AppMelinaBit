@@ -67,8 +67,12 @@ public class ManejoController {
     }
 
     // --- SALVAR (Sua lógica de redirecionamento mantida) ---
-    @PostMapping("/salvar-manejo")
+    // --- SALVAR (Ajustado para sempre voltar ao cadastro se for novo) ---
+    @PostMapping("/cadastro-manejos")
     public String salvarManejo(@ModelAttribute("manejo") Manejo manejo, RedirectAttributes attributes) {
+        // Criamos uma variável para saber se era uma edição antes de salvar
+        boolean ehEdicao = (manejo.getIdManejo() != null);
+
         try {
             manejoService.salvarManejo(manejo);
             attributes.addFlashAttribute("mensagemSucesso", "Registro de manejo salvo com sucesso!");
@@ -76,12 +80,14 @@ public class ManejoController {
             attributes.addFlashAttribute("mensagemErro", "Erro ao processar: " + e.getMessage());
         }
 
-        // Se o ID já existia (Edição), volta para o gerenciar. Se era novo, volta para o cadastro.
-        return (manejo.getIdManejo() != null)
-                ? "redirect:/gerenciar/gerenciar-manejos"
-                : "redirect:/gerenciar/cadastro-manejos";
+        // SE era uma edição, volta para a lista (Gerenciamento)
+        // SE era um cadastro novo, volta para a tela de Cadastro
+        if (ehEdicao) {
+            return "redirect:/gerenciar/gerenciar-manejos";
+        } else {
+            return "redirect:/gerenciar/cadastro-manejos";
+        }
     }
-
     // --- EXCLUIR (Mantido) ---
     @GetMapping("/excluir-manejo/{id}")
     public String excluirManejo(@PathVariable("id") Integer id, RedirectAttributes attributes) {
@@ -91,6 +97,17 @@ public class ManejoController {
         } catch (Exception e) {
             attributes.addFlashAttribute("mensagemErro", "Erro ao excluir.");
         }
+        return "redirect:/gerenciar/gerenciar-manejos";
+    }
+    @PostMapping("/gerenciar-manejos")
+    public String atualizarManejo(@ModelAttribute("manejo") Manejo manejo, RedirectAttributes attributes) {
+        try {
+            manejoService.salvarManejo(manejo);
+            attributes.addFlashAttribute("mensagemSucesso", "Manejo atualizado com sucesso!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("mensagemErro", "Erro ao atualizar: " + e.getMessage());
+        }
+        // Forçamos ele a ficar na página de Gerenciamento
         return "redirect:/gerenciar/gerenciar-manejos";
     }
 }

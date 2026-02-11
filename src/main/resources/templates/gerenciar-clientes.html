@@ -105,7 +105,7 @@
 					<td th:text="${c.dataCadastro != null ? #temporals.format(c.dataCadastro, 'dd/MM/yyyy') : '-'}"></td>
 					<td>
 						<a th:href="@{/gerenciar/gerenciar-clientes/editar/{id}(id=${c.id})}"
-						   class="manage-apiary-btn-edit">Editar</a>
+						   class="manage-apiary-btn-edit">Corrigir</a>
 
 						<a th:href="@{/gerenciar/gerenciar-clientes/excluir/{id}(id=${c.id})}"
 						   class="manage-apiary-btn-delete"

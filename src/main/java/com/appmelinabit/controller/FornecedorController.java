@@ -85,9 +85,10 @@ public class FornecedorController {
         return "gerenciar-fornecedores";
     }
 
-    @PostMapping("/gerenciar-fornecedores/salvar")
+    @PostMapping("/gerenciar-fornecedores")
     public String salvarNoGerenciamento(@ModelAttribute("fornecedor") Fornecedor fornecedor,
                                         Principal principal, RedirectAttributes attributes) {
+        // Aqui ele vai processar tanto o NOVO quanto a ATUALIZAÇÃO (baseado no ID)
         return processarSalvamento(fornecedor, principal, attributes, "redirect:/gerenciar/gerenciar-fornecedores");
     }
 
@@ -95,11 +96,11 @@ public class FornecedorController {
     // BLOCO 4: AÇÕES (EDITAR / EXCLUIR)
     // =========================================================================
 
-    @GetMapping("/gerenciar-fornecedores/editar/{id}")
+    @GetMapping("/gerenciar-fornecedores/{id}")
     public String prepararEdicao(@PathVariable("id") Integer id, Model model, Principal principal) {
         try {
             Fornecedor f = fornecedorService.buscarPorId(id);
-            model.addAttribute("fornecedor", f); // Injeta o fornecedor populado no formulário
+            model.addAttribute("fornecedor", f);
         } catch (Exception e) {
             model.addAttribute("mensagemErro", "Fornecedor não encontrado.");
         }

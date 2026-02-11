@@ -22,8 +22,10 @@
 			<p><a th:href="@{/dashboard}" class="btn btn-cadastrar">Voltar ao Painel</a></p>
 		</div>
 
-		<form th:action="@{/gerenciar/cadastro-insumos}" th:object="${movimentacao}" method="post">
+		<form th:action="@{/gerenciar/salvar}" th:object="${movimentacao}" method="post">
 			<input type="hidden" th:field="*{tipoMovimentacao}">
+
+			<input type="hidden" name="referencia" value="cadastro-insumos">
 
 			<div class="form-group">
 				<label for="fornecedor">Fornecedor:</label>
@@ -78,23 +80,7 @@
 	</div>
 </div>
 
-<script>
-	const inputQtd = document.getElementById('quantidade');
-	const inputUnitario = document.getElementById('valorUnitario');
-	const inputFrete = document.getElementById('valorFrete');
-	const inputTotal = document.getElementById('valorTotalVisual');
+	<script th:src="@{/js/script.js}"></script>
 
-	function calcularTotal() {
-		const qtd = parseFloat(inputQtd.value) || 0;
-		const unit = parseFloat(inputUnitario.value) || 0;
-		const frete = parseFloat(inputFrete.value) || 0;
-		const total = (qtd * unit) + frete;
-		inputTotal.value = total.toFixed(2);
-	}
-
-	inputQtd.addEventListener('input', calcularTotal);
-	inputUnitario.addEventListener('input', calcularTotal);
-	inputFrete.addEventListener('input', calcularTotal);
-</script>
 </body>
 </html>

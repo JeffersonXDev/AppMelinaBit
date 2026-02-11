@@ -41,7 +41,7 @@
 					<input type="date" th:field="*{dataInstalacao}">
 				</div>
 			</div>
-
+			<hr>
 			<div class="manage-apiary-grid">
 				<div class="manage-apiary-field">
 					<label>Endereço:</label>
@@ -53,30 +53,34 @@
 				</div>
 				<div class="manage-apiary-field">
 					<label>Estado:</label>
-					<input type="text" th:field="*{estado}" maxlength="2">
+					<input type="text" th:field="*{estado}">
 				</div>
 				<div class="manage-apiary-field">
 					<label>UF:</label>
 					<input type="text" th:field="*{uf}" maxlength="2">
 				</div>
 			</div>
-
+			<hr>
 			<div class="manage-apiary-grid">
 				<div class="manage-apiary-field">
 					<label>Está em terras de terceiros:</label>
-					<input type="text"
-						   th:value="${apiario.terraTerceiros != null ? (apiario.terraTerceiros ? 'Sim' : 'Não') : ''}"
-						   readonly
+					<input type="text"th:value="${apiario.terraTerceiros != null ? (apiario.terraTerceiros ? 'Sim' : 'Não') : ''}"  readonly
 						   class="manage-apiary-input-readonly">
-
 					<input type="hidden" th:field="*{terraTerceiros}">
 				</div>
-				<div class="manage-apiary-field">
-					<label>Última Visita:</label>
-					<input type="date" th:field="*{dataVisita}">
+				
+				<div class="manage-apiary-field" id="grupoResponsavel">
+					<label for="nomeResponsavel">Nome responsável pela terra:</label>
+					<input type="text" th:field="*{nomeResponsavel}">
 				</div>
-			</div>
 
+				<div class="manage-apiary-field" id="grupoTelefone">
+					<label for="telefoneResponsavel">Telefone responsável pela terra:</label>
+					<input type="text" th:field="*{telefoneResponsavel}">
+				</div>
+				
+			</div>
+			<hr>
 			<div class="manage-apiary-field">
 				<label>Observações:</label>
 				<textarea th:field="*{obs}" rows="2" class="manage-apiary-field-obs"></textarea>
@@ -89,7 +93,7 @@
 
 		<hr>
 
-		<h3>Registros no Banco de Dados</h3>
+		<h3>Registros Salvos</h3>
 		<div class="manage-apiary-table-scroll">
 			<table class="manage-apiary-table">
 				<thead>
@@ -108,8 +112,9 @@
 					<td th:text="${#temporals.format(api.dataInstalacao, 'dd/MM/yyyy')}"></td>
 					<td th:text="${api.cidade}"></td>
 					<td>
-						<a th:href="@{/gerenciar/gerenciar-apiario/{id}(id=${api.idApiario})}" class="manage-apiary-btn-edit">Corrigir</a>
-						<a th:href="@{/gerenciar/excluir-apiario/{id}(id=${api.idApiario})}" class="manage-apiary-btn-delete" onclick="return confirm('Excluir este registro?')">Excluir</a>
+						<a th:href="@{/gerenciar/gerenciar-apiarios/{id}(id=${api.idApiario})}" class="manage-apiary-btn-edit">Corrigir</a>
+						<a th:href="@{/gerenciar/gerenciar-apiarios/excluir/{id}(id=${api.idApiario})}" class="manage-apiary-btn-delete"
+						   onclick="return confirm('Excluir este registro?')">Excluir</a>
 					</td>
 				</tr>
 				</tbody>

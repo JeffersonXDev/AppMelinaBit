@@ -17,7 +17,7 @@
 		<div th:if="${mensagemErro}" class="manage-apiary-alert manage-apiary-danger" th:text="${mensagemErro}"></div>
 
 		<form th:action="@{/gerenciar/gerenciar-producao}" method="get" class="manage-apiary-search">
-			<input type="text" name="keyword" th:value="${keyword}" placeholder="Pesquisar item, fornecedor ou cliente..." class="manage-apiary-input-search">
+			<input type="text" name="keyword" th:value="${keyword}" placeholder="Pesquisar item ou produção..." class="manage-apiary-input-search">
 			<button type="submit" class="manage-apiary-btn-save" style="width: 150px; margin: 0;">Pesquisar</button>
 		</form>
 
@@ -25,10 +25,9 @@
 
 		<form th:action="@{/gerenciar/salvar}" th:object="${movimentacao}" method="post">
 			<input type="hidden" th:field="*{idMovimentacao}">
-
+			<input type="hidden" name="origem" value="gerenciar-producao">
 			<input type="hidden" th:if="*{apiario != null}" th:field="*{apiario.idApiario}">
-			<input type="hidden" th:if="*{fornecedor != null}" th:field="*{fornecedor.id}">
-			<input type="hidden" th:if="*{cliente != null}" th:field="*{cliente.id}">
+			<input type="hidden" th:field="*{tipoMovimentacao}">
 
 			<div class="manage-apiary-grid">
 				<div class="manage-apiary-field">
@@ -44,51 +43,17 @@
 					<input type="number" th:field="*{quantidade}" step="1" required>
 				</div>
 			</div>
+
 			<div class="manage-apiary-grid">
 				<div class="manage-apiary-field">
 					<label>Unidade de Medida:</label>
 					<input type="text" th:field="*{unidadeMedida}" placeholder="Ex: Kg, Un, Litros">
 				</div>
 				<div class="manage-apiary-field">
-					<label>Data de Entrada:</label>
+					<label>Data da Produção/Entrada:</label>
 					<input type="date" th:field="*{dataEntrada}">
 				</div>
-				<div class="manage-apiary-field">
-					<label>Data de Saída:</label>
-					<input type="date" th:field="*{dataSaida}">
 				</div>
-			</div>
-
-			<div class="manage-apiary-grid">
-				<div class="manage-apiary-field">
-					<label>Fornecedor (Empresa):</label>
-					<input type="text" th:field="*{fornecedor.nomeFornecedor}" readonly style="background-color: #f0f0f0;" placeholder="Nome do fornecedor">
-				</div>
-				<div class="manage-apiary-field">
-					<label>Cliente (Pessoa):</label>
-					<input type="text" th:field="*{cliente.nomeCliente}" readonly style="background-color: #f0f0f0;" placeholder="Nome do cliente">
-				</div>
-				<div class="manage-apiary-field">
-					<label>Valor Frete (R$):</label>
-					<input type="number" th:field="*{valorFrete}" step="0.01">
-				</div>
-			</div>
-
-			<div class="manage-apiary-grid">
-				<div class="manage-apiary-field">
-					<label>Valor Compra (R$):</label>
-					<input type="number" th:field="*{valorCompra}" step="0.01">
-				</div>
-				<div class="manage-apiary-field">
-					<label>Valor Venda (R$):</label>
-					<input type="number" th:field="*{valorVenda}" step="0.01">
-				</div>
-				<div class="manage-apiary-field">
-					<label>Valor Custo / Preço Base:</label>
-					<input type="number" th:field="*{valorCusto}" step="0.01">
-				</div>
-			</div>
-
 			<div class="manage-apiary-field">
 				<label>Descrição / Observações:</label>
 				<textarea th:field="*{obs}" rows="2" class="manage-apiary-field-obs"></textarea>
@@ -103,7 +68,7 @@
 
 		<hr>
 
-		<h3>Histórico de Movimentações</h3>
+		<h3>Histórico de Produção e Estoque</h3>
 		<div class="manage-apiary-table-scroll">
 			<table class="manage-apiary-table">
 				<thead>
@@ -111,9 +76,7 @@
 					<th>Item</th>
 					<th>Tipo</th>
 					<th>Qtd</th>
-					<th>Cliente/Fornecedor</th>
-					<th>Data Ent.</th>
-					<th>Data Saí.</th>
+					<th>Data Mov.</th>
 					<th>Ações</th>
 				</tr>
 				</thead>
@@ -122,24 +85,10 @@
 					<td th:text="${mov.nome}"></td>
 					<td th:text="${mov.tipoMovimentacao}"></td>
 					<td th:text="${mov.quantidade != null ? #numbers.formatInteger(mov.quantidade, 1, 'POINT') : '0'} + ' ' + ${mov.unidadeMedida}"></td>
-					<td>
-						<div th:if="${mov.fornecedor != null}">
-							<span style="font-weight: bold;">Forn:</span>
-							<span th:text="${mov.fornecedor.nomeFornecedor}"></span>
-						</div>
-
-						<div th:if="${mov.cliente != null}">
-							<span style="font-weight: bold;">Cli:</span>
-							<span th:text="${mov.cliente.nomeCliente}"></span>
-						</div>
-
-						<span th:if="${mov.fornecedor == null && mov.cliente == null}">-</span>
-					</td>
 					<td th:text="${mov.dataEntrada != null ? #temporals.format(mov.dataEntrada, 'dd/MM/yyyy') : '-'}"></td>
-					<td th:text="${mov.dataSaida != null ? #temporals.format(mov.dataSaida, 'dd/MM/yyyy') : '-'}"></td>
 					<td>
-						<a th:href="@{/gerenciar/gerenciar-producao/editar/{id}(id=${mov.idMovimentacao})}" class="manage-apiary-btn-edit">Corrigir</a>
-						<a th:href="@{/gerenciar/excluir-estoque/{id}(id=${mov.idMovimentacao})}" class="manage-apiary-btn-delete" onclick="return confirm('Deseja Mesmo Excluir?')">Excluir</a>
+						<a th:href="@{/gerenciar/gerenciar-producao/{id}(id=${mov.idMovimentacao})}" class="manage-apiary-btn-edit">Corrigir</a>
+						<a th:href="@{/gerenciar/gerenciar-producao/excluir/{id}(id=${mov.idMovimentacao})}" class="manage-apiary-btn-delete" onclick="return confirm('Deseja Mesmo Excluir?')">Excluir</a>
 					</td>
 				</tr>
 				</tbody>

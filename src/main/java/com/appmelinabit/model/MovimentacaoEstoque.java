@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
+// Imports do Hibernate para o Cascade Delete
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 // Garante que o Java encontre as outras classes
 import com.appmelinabit.model.Cliente;
 import com.appmelinabit.model.Fornecedor;
@@ -19,9 +23,10 @@ public class MovimentacaoEstoque {
     @Column(name = "id_movimentacao")
     private Integer idMovimentacao;
 
-    // Relacionamentos com objetos (Essenciais para o Service/Controller)
+    // Relacionamentos com objetos
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_fornecedor")
+    @OnDelete(action = OnDeleteAction.CASCADE) // Permite excluir fornecedor
     private Fornecedor fornecedor;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,10 +35,12 @@ public class MovimentacaoEstoque {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_apiario")
+    @OnDelete(action = OnDeleteAction.CASCADE) // CORREÇÃO PARA O SEU ERRO: Permite excluir apiário
     private Apiario apiario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente")
+    @OnDelete(action = OnDeleteAction.CASCADE) // Permite excluir cliente
     private Cliente cliente;
 
     @Column(name = "tipo_movimentacao")
@@ -50,13 +57,21 @@ public class MovimentacaoEstoque {
     @Column(name = "data_entrada")
     private LocalDate dataEntrada;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "data_saida")
-    private LocalDate dataSaida;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "data_compra")
-    private LocalDate dataCompra;
+    @PrePersist
+    protected void configurarDatasAutomaticas() {
+        // 1. Garante a data de registro para o Dashboard
+        // O Controller vai salvar, e o JPA vai executar isso aqui antes de gravar no banco.
+        if (this.dataCadastro == null) {
+            this.dataCadastro = LocalDate.now();
+        }
+
+        // 2. Se o Controller tentar mandar algo para dataEntrada e estiver vazio,
+        // preenchemos também para não ficar nulo no banco.
+        if (this.dataEntrada == null) {
+            this.dataEntrada = LocalDate.now();
+        }
+    }
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "data_cadastro")
@@ -86,7 +101,7 @@ public class MovimentacaoEstoque {
     @Column(columnDefinition = "TEXT")
     private String obs;
 
-    // --- GETTERS E SETTERS DOS CAMPOS ---
+    // --- GETTERS E SETTERS ---
 
     public Integer getIdMovimentacao() { return idMovimentacao; }
     public void setIdMovimentacao(Integer idMovimentacao) { this.idMovimentacao = idMovimentacao; }
@@ -121,12 +136,7 @@ public class MovimentacaoEstoque {
     public LocalDate getDataEntrada() { return dataEntrada; }
     public void setDataEntrada(LocalDate dataEntrada) { this.dataEntrada = dataEntrada; }
 
-    public LocalDate getDataSaida() { return dataSaida; }
-    public void setDataSaida(LocalDate dataSaida) { this.dataSaida = dataSaida; }
-
-    public LocalDate getDataCompra() { return dataCompra; }
-    public void setDataCompra(LocalDate dataCompra) { this.dataCompra = dataCompra; }
-
+   
     public LocalDate getDataCadastro() { return dataCadastro; }
     public void setDataCadastro(LocalDate dataCadastro) { this.dataCadastro = dataCadastro; }
 
@@ -154,7 +164,7 @@ public class MovimentacaoEstoque {
     public String getObs() { return obs; }
     public void setObs(String obs) { this.obs = obs; }
 
-    // --- MÉTODOS DE COMPATIBILIDADE (O QUE O SERVICE E CONTROLLER CHAMAM) ---
+    // --- MÉTODOS DE COMPATIBILIDADE ---
 
     public Integer getIdUsuario() {
         return (this.usuario != null) ? this.usuario.getIdUsuario() : null;
@@ -170,7 +180,6 @@ public class MovimentacaoEstoque {
     public void setIdFornecedor(Integer idFornecedor) {
         if (idFornecedor != null) {
             if (this.fornecedor == null) this.fornecedor = new Fornecedor();
-            // Na sua classe Fornecedor o campo é 'id', então o setter é 'setId'
             this.fornecedor.setId(idFornecedor);
         }
     }
@@ -178,7 +187,6 @@ public class MovimentacaoEstoque {
     public void setIdCliente(Integer idCliente) {
         if (idCliente != null) {
             if (this.cliente == null) this.cliente = new Cliente();
-            // Na sua classe Cliente o campo é 'id', então o setter é 'setId'
             this.cliente.setId(idCliente);
         }
     }
@@ -186,7 +194,6 @@ public class MovimentacaoEstoque {
     public void setIdApiario(Integer idApiario) {
         if (idApiario != null) {
             if (this.apiario == null) this.apiario = new Apiario();
-            // Verifique se na classe Apiario o setter é setIdApiario ou setId
             this.apiario.setIdApiario(idApiario);
         }
     }

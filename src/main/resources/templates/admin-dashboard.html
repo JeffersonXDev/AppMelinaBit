@@ -1,71 +1,78 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<title>Admin - AppMelinaBit</title>
-	<link rel="stylesheet" th:href="@{/css/global.css}">
-	<link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
+    <meta charset="UTF-8">
+    <title>Admin - AppMelinaBit</title>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
+    
 </head>
 <body class="allow-scroll">
 <div class="manager-wrapper">
-	<div class="manager-box">
+    <div class="manager-box">
 
-		<header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-			<h2 style="margin: 0; font-size: 1.5em;">User Manager</h2>
-			<form th:action="@{/logout}" method="post">
-				<a th:href="@{/login}" class="manager-btn-back">Sair</a>
-			</form>
-		</header>
+        <header class="header-admin">
+            <h2>Administração</h2>
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <button class="manager-btn-sair" type="submit">Sair</button>
+            </form>
+        </header>
+        
+        <div th:if="${mensagem}" class="alert-message">
+            <span th:text="${mensagem}"></span>
+        </div>
 
-		<div class="manager-stats-row">
-			<div class="manager-card">
-				<label>Base de Usuários</label>
-				<span th:text="${totalUsuarios}">0</span>
-			</div>
-			<div class="manager-card">
-				<label>Receita Consolidada</label>
-				<span style="color: #28a745; font-weight: bold;"
-					  th:text="${faturamentoTotal != null ? #numbers.formatCurrency(faturamentoTotal) : 'R$ 0,00'}">
-             </span>
-			</div>
-		</div>
+        <div class="manager-stats-row">
+            <div class="manager-card">
+                <label>Base de Usuários</label>
+                <span th:text="${totalUsuarios}">0</span>
+            </div>
+            <div class="manager-card">
+                <label>Receita Consolidada</label>
+                <span class="text-money"
+                      th:text="${faturamentoTotal != null ? #numbers.formatCurrency(faturamentoTotal) : 'R$ 0,00'}">
+                </span>
+            </div>
+        </div>
 
-		<div class="manager-table-scroll">
-			<table class="manager-table">
-				<thead>
-				<tr>
-					<th style="width: 30%;">Nome Completo</th>
-					<th style="width: 30%;">E-mail de Acesso</th>
-					<th style="width: 20%;">Valor Pago (R$)</th>
-					<th style="width: 20%;">Ações</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr th:each="user : ${usuarios}">
-					<td th:text="${user.nome}"></td>
-					<td th:text="${user.email}" style="font-size: 0.8em;"></td>
-					<td style="font-weight: bold; color: #28a745;"
-						th:text="${user.valorRecebido != null ? #numbers.formatCurrency(user.valorRecebido) : 'R$ 0,00'}">
-					</td>
-					<td>
-						<div style="display: flex; gap: 5px; justify-content: center;">
-							<form th:action="@{/admin/usuarios/status/{id}(id=${user.idUsuario})}" method="post">
-								<button type="submit" class="manager-btn-action manager-btn-status"
-										th:text="${user.statusConta == 'ATIVO' ? 'Bloquear' : 'Ativar'}"></button>
-							</form>
-							<a th:href="@{/admin/usuarios/excluir/{id}(id=${user.idUsuario})}"
-							   class="manager-btn-action manager-btn-delete"
-							   onclick="return confirm('Excluir acesso?')">Excluir</a>
-						</div>
-					</td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
-		<form th:action="@{/logout}" method="post">
-			<a th:href="@{/login}" class="manager-btn-back">Sair</a>
-		</form>
-	</div>
+        <div class="manager-table-scroll">
+            <table class="manager-table">
+                <thead>
+                <tr>
+                    <th style="width: 30%;">Nome Completo</th>
+                    <th style="width: 30%;">E-mail de Acesso</th>
+                    <th style="width: 20%;">Valor Pago (R$)</th>
+                    <th style="width: 20%;">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${usuarios}">
+                    <td th:text="${user.nome}"></td>
+                    <td th:text="${user.email}" class="text-email"></td>
+                    <td class="text-money"
+                        th:text="${user.valorRecebido != null ? #numbers.formatCurrency(user.valorRecebido) : 'R$ 0,00'}">
+                    </td>
+                    <td>
+                        <div class="actions-container">
+                            <form th:action="@{/admin/status/{id}(id=${user.idUsuario})}" method="post">
+                                <button type="submit" class="manager-btn-action manager-btn-status"
+                                        th:text="${user.statusConta == 'ATIVO' ? 'Bloquear' : 'Ativar'}"></button>
+                            </form>
+
+                            <form th:action="@{/admin/excluir/{id}(id=${user.idUsuario})}" method="post" class="form-inline">
+                                <button type="submit" class="manager-btn-action manager-btn-delete"
+                                        onclick="return confirm('Excluir acesso permanentemente?')">
+                                    Excluir
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
 </div>
 </body>
 </html>

@@ -28,8 +28,8 @@ public class Cliente {
     private String uf;
     private String obs;
 
-    @Column(name = "data_compra")
-    private LocalDate dataCompra; // Data de cadastro ou primeira compra
+    @Column(name = "data_entrada")
+    private LocalDate dataEntrada; // Data de cadastro ou primeira compra
 
     @Column(name = "data_cadastro", updatable = false)
     private LocalDateTime dataCadastro;
@@ -77,8 +77,8 @@ public class Cliente {
     public String getObs() { return obs; }
     public void setObs(String obs) { this.obs = obs; }
 
-    public LocalDate getDataCompra() { return dataCompra; }
-    public void setDataCompra(LocalDate dataCompra) { this.dataCompra = dataCompra; }
+    public LocalDate getDataEntrada() { return dataEntrada; }
+    public void setDataEntrada(LocalDate dataEntrada) { this.dataEntrada = dataEntrada; }
 
     public LocalDateTime getDataCadastro() { return dataCadastro; }
     public void setDataCadastro(LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }

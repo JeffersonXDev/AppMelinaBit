@@ -134,8 +134,8 @@
 					<td th:text="${f.cidade} + '/' + ${f.uf}"></td>
 					<td th:text="${f.dataCadastro != null ? #temporals.format(f.dataCadastro, 'dd/MM/yyyy') : '-'}"></td>
 					<td>
-						<a th:href="@{/gerenciar/gerenciar-fornecedores/editar/{id}(id=${f.id})}"
-						   class="manage-apiary-btn-edit">Editar</a>
+						<a th:href="@{/gerenciar/gerenciar-fornecedores/{id}(id=${f.id})}"
+						   class="manage-apiary-btn-edit">Corrigir</a>
 
 						<a th:href="@{/gerenciar/gerenciar-fornecedores/excluir/{id}(id=${f.id})}"
 						   class="manage-apiary-btn-delete"
