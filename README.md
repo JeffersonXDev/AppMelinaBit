@@ -49,7 +49,7 @@ Simulando um ambiente real de produção.
 
 ## 🖥️ Diagrama de Arquitetura
 
-![Diagrama](diagrama.png)
+![Diagrama](Diagrama.png)
 
 ---
 
