@@ -49,7 +49,7 @@ Simulando um ambiente real de produção.
 
 ## 🏗️ Arquitetura e Estrutura
 
-![Diagrama](Diagrama.png)
+![Estrutura](estrutura.png)
 
 ---
 
