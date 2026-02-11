@@ -1,38 +1,80 @@
-📌 Título
-🐝 MelinaBit – ERP para Gestão de Apiários
+# 🐝 MelinaBit – ERP para Gestão de Apiários
 
-📖 Descrição
+---
 
-O MelinaBit é um ERP desenvolvido em Java 21 com Spring Boot, voltado para a gestão técnica e produtiva de apiários.
-O sistema permite controle de manejo, estoque, vendas, clientes e fornecedores, com foco em rastreabilidade e organização de dados no agronegócio.
+## 📖 Descrição
 
-🏗 Arquitetura
+O **MelinaBit** é um ERP desenvolvido em **Java 21 com Spring Boot**, voltado para a gestão técnica e produtiva de apiários.
 
-Java 21
+O sistema permite controle de:
 
-Spring Boot
+- Manejo técnico das colmeias  
+- Estoque e movimentações  
+- Vendas  
+- Clientes  
+- Fornecedores  
 
-PostgreSQL
+Com foco em **rastreabilidade**, organização de dados e apoio à tomada de decisão no agronegócio.
 
-Docker
+---
 
-AWS (EC2 + RDS)
+## 🏗 Arquitetura e Tecnologias
 
-Spring Security
+- Java 21  
+- Spring Boot  
+- Spring Security  
+- PostgreSQL  
+- Docker  
+- AWS (EC2 + RDS)  
+- Padrão MVC (Model-View-Controller)  
 
-☁ Deploy
+Arquitetura em camadas:
 
-Aplicação containerizada com Docker e implantada na AWS utilizando EC2 e RDS.
+Cliente → Controller → Service → Repository → PostgreSQL
 
-## 🖥️ Diagrama.
-![Diagrama](Diagrama.png)
+---
 
-## 🖥️ Evidências de Deploy (AWS EC2)
+## ☁ Deploy em Nuvem
 
-Aqui estão os registros do sistema rodando em produção:
+A aplicação foi:
 
-### Tela de Login
-![Login](login.png)
+- Containerizada com **Docker**
+- Implantada na **AWS**
+- Executada em instância **EC2**
+- Conectada a banco **PostgreSQL no RDS**
 
-### Instância AWS
-![EC2](ec2.png)
+Simulando um ambiente real de produção.
+
+---
+
+## 🖥️ Diagrama de Arquitetura
+
+![Diagrama](docs/diagrama.png)
+
+---
+
+## 🖥️ Evidências de Deploy (AWS)
+
+### 🔐 Tela de Login
+![Login](docs/login.png)
+
+### ☁ Instância AWS EC2
+![EC2](docs/ec2.png)
+
+---
+
+## 🚀 Funcionalidades
+
+- Cadastro de apiários  
+- Registro de manejo  
+- Controle de estoque  
+- Gestão de clientes e fornecedores  
+- Dashboard administrativo  
+- Controle de acesso por perfil  
+
+---
+
+## 🐳 Execução Local com Docker
+
+```bash
+docker-compose up --build
