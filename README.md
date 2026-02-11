@@ -74,7 +74,11 @@ Simulando um ambiente real de produção.
 
 ---
 
-## 🐳 Execução Local com Docker
+## 🐳 Como rodar localmente (Docker)
 
-```bash
-docker-compose up --build
+Para subir o ambiente completo (Aplicação + Banco PostgreSQL) de forma automática:
+
+1. Certifique-se de ter o Docker instalado.
+2. Na raiz do projeto, execute:
+   ```bash
+   docker-compose up --build
