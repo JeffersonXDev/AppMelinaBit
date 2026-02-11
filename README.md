@@ -18,109 +18,14 @@ Docker
 
 AWS (EC2 + RDS)
 
-
-
 Spring Security
-
-appmelinabit/
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/appmelinabit/
-│   │   │       ├── AppmelinabitApplication.java
-│   │   │       ├── DataLoader.java
-│   │   │       ├── config/
-│   │   │       │   ├── CustomAuthenticationSuccessHandler.java
-│   │   │       │   └── SecurityConfig.java
-│   │   │       ├── controller/
-│   │   │       │   ├── AdminController.java
-│   │   │       │   ├── ApiarioController.java
-│   │   │       │   ├── CadastroController.java
-│   │   │       │   ├── ClienteController.java
-│   │   │       │   ├── DashboardController.java
-│   │   │       │   ├── EsqueceuSenhaController.java
-│   │   │       │   ├── FornecedorController.java
-│   │   │       │   ├── HomeController.java
-│   │   │       │   ├── LoginController.java
-│   │   │       │   ├── ManejoController.java
-│   │   │       │   ├── MovimentacaoEstoqueController.java
-│   │   │       │   ├── SenhaController.java
-│   │   │       │   └── UsuarioController.java
-│   │   │       ├── converter/
-│   │   │       │   └── ApiarioConverter.java
-│   │   │       ├── model/
-│   │   │       │   ├── Apiario.java
-│   │   │       │   ├── Cliente.java
-│   │   │       │   ├── Fornecedor.java
-│   │   │       │   ├── HistoricoCompraFornecedor.java
-│   │   │       │   ├── Manejo.java
-│   │   │       │   ├── MovimentacaoEstoque.java
-│   │   │       │   ├── PasswordResetToken.java
-│   │   │       │   └── Usuario.java
-│   │   │       ├── repository/
-│   │   │       │   ├── ApiarioRepository.java
-│   │   │       │   ├── ClienteRepository.java
-│   │   │       │   ├── FornecedorRepository.java
-│   │   │       │   ├── HistoricoCompraFornecedorRepository.java
-│   │   │       │   ├── ManejoRepository.java
-│   │   │       │   ├── MovimentacaoEstoqueRepository.java
-│   │   │       │   ├── PasswordResetTokenRepository.java
-│   │   │       │   └── UsuarioRepository.java
-│   │   │       └── service/
-│   │   │           ├── ApiarioService.java
-│   │   │           ├── ClienteService.java
-│   │   │           ├── CustomUserDetailsService.java
-│   │   │           ├── EmailService.java
-│   │   │           ├── FornecedorService.java
-│   │   │           ├── HistoricoCompraFornecedorService.java
-│   │   │           ├── ManejoService.java
-│   │   │           ├── MovimentacaoEstoqueService.java
-│   │   │           ├── SenhaService.java
-│   │   │           └── UsuarioService.java
-│   │   └── resources/
-│   │       ├── static/
-│   │       │   ├── css/
-│   │       │   │   ├── cadastro.css
-│   │       │   │   ├── dashbord.css
-│   │       │   │   ├── global.css
-│   │       │   │   ├── login.css
-│   │       │   │   └── style.css
-│   │       │   ├── img/
-│   │       │   │   └── fundo05.jpg
-│   │       │   └── js/
-│   │       │       ├── login.js
-│   │       │       ├── script.js
-│   │       │       ├── script_dashboard.js
-│   │       │       ├── script_manejo.js
-│   │       │       └── script_venda.js
-│   │       ├── templates/
-│   │       │   ├── manejo/
-│   │       │   ├── admin-dashboard.html
-│   │       │   ├── cadastro.html
-│   │       │   ├── cadastro-apiarios.html
-│   │       │   ├── cadastro-clientes.html
-│   │       │   ├── cadastro-compra.html
-│   │       │   ├── cadastro-entrada.html
-│   │       │   ├── cadastro-fornecedores.html
-│   │       │   ├── cadastro-manejo.html
-│   │       │   ├── cadastro-venda.html
-│   │       │   ├── esqueceu-senha.html
-│   │       │   ├── login.html
-│   │       │   ├── redefinir-senha.html
-│   │       │   ├── sucesso-redefinicao.html
-│   │       │   └── user-dashboard.html
-│   │       └── application.properties
-│   └── test/
-│       └── java/
-│           └── appmelinabit/
-│               └── AppmelinabitApplicationTests.java
-├── Dockerfile
-├── pom.xml
-└── README.md
 
 ☁ Deploy
 
 Aplicação containerizada com Docker e implantada na AWS utilizando EC2 e RDS.
+
+## 🖥️ Diagrama.
+![Diagrama](Diagrama.png)
 
 ## 🖥️ Evidências de Deploy (AWS EC2)
 
