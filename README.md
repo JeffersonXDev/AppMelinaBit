@@ -68,7 +68,7 @@ Simulando um ambiente real de produção.
 - Cadastro de apiários  
 - Registro de manejo  
 - Controle de estoque  
-- Gestão de clientes e fornecedores  
+- Gestão de clientes, vendas e fornecedores  
 - Dashboard administrativo  
 - Controle de acesso por perfil  
 
