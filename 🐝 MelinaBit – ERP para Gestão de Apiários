@@ -18,6 +18,8 @@ Docker
 
 AWS (EC2 + RDS)
 
+
+
 Spring Security
 
 appmelinabit/
@@ -119,3 +121,11 @@ appmelinabit/
 ☁ Deploy
 
 Aplicação containerizada com Docker e implantada na AWS utilizando EC2 e RDS.
+
+### 🖥️ Evidências do Projeto
+
+**Tela de Login:**
+
+
+**Instância AWS EC2 (Rodando):**
+
