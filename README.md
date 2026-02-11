@@ -49,17 +49,17 @@ Simulando um ambiente real de produção.
 
 ## 🖥️ Diagrama de Arquitetura
 
-![Diagrama](docs/diagrama.png)
+![Diagrama](diagrama.png)
 
 ---
 
 ## 🖥️ Evidências de Deploy (AWS)
 
 ### 🔐 Tela de Login
-![Login](docs/login.png)
+![Login](login.png)
 
 ### ☁ Instância AWS EC2
-![EC2](docs/ec2.png)
+![EC2](ec2.png)
 
 ---
 
