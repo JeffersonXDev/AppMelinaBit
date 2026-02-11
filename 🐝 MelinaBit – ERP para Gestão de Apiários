@@ -122,10 +122,12 @@ appmelinabit/
 
 Aplicação containerizada com Docker e implantada na AWS utilizando EC2 e RDS.
 
-### 🖥️ Evidências do Projeto
+## 🖥️ Evidências de Deploy (AWS EC2)
 
-**Tela de Login:**
+Aqui estão os registros do sistema rodando em produção:
 
+### Tela de Login
+![Login](login.png)
 
-**Instância AWS EC2 (Rodando):**
-
+### Instância AWS
+![EC2](ec2.png)
