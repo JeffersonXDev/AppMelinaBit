@@ -2,6 +2,7 @@ package com.appmelinabit;
 
 import com.appmelinabit.model.Usuario;
 import com.appmelinabit.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Value; // Importante adicionar este import
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,33 +12,38 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class AppmelinabitApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AppmelinabitApplication.class, args);
-	}
+    // O Spring vai injetar o valor da variável ADMIN_PASS aqui
+    @Value("${ADMIN_PASS}")
+    private String adminPassword;
 
-	@Bean
-	CommandLineRunner init(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
-	    return args -> {
-	        String emailAdmin = "melinabit.suporte@gmail.com";
+    public static void main(String[] args) {
+        SpringApplication.run(AppmelinabitApplication.class, args);
+    }
 
-	        // Busca apenas para verificar existência
-	        boolean existeAdmin = usuarioRepository.findByEmail(emailAdmin).isPresent();
+    @Bean
+    CommandLineRunner init(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+        return args -> {
+            String emailAdmin = "melinabit.suporte@gmail.com";
 
-	        if (!existeAdmin) {
-	            Usuario admin = new Usuario();
-	            admin.setNome("Admin MelinaBit");
-	            admin.setEmail(emailAdmin);
-	            admin.setSenha(passwordEncoder.encode("Melina@2025"));
-	            admin.setNivel("ROLE_ADMIN");
-	            admin.setStatusConta("Ativo");
-	            admin.setDataCadastro(java.time.LocalDateTime.now());
-	            
-	            usuarioRepository.save(admin);
-	            System.out.println(">>> [INFO] Admin não encontrado. Criado com sucesso em 'usuarios'.");
-	        } else {
-	            // Se cair aqui, ele não toca em nada no banco
-	            System.out.println(">>> [INFO] Admin já presente na tabela 'usuarios'. Nenhuma ação necessária.");
-	        }
-	    };
-	}
+            boolean existeAdmin = usuarioRepository.findByEmail(emailAdmin).isPresent();
+
+            if (!existeAdmin) {
+                Usuario admin = new Usuario();
+                admin.setNome("Admin MelinaBit");
+                admin.setEmail(emailAdmin);
+                
+                // USANDO A VARIÁVEL:
+                admin.setSenha(passwordEncoder.encode(adminPassword));
+                
+                admin.setNivel("ROLE_ADMIN");
+                admin.setStatusConta("Ativo");
+                admin.setDataCadastro(java.time.LocalDateTime.now());
+                
+                usuarioRepository.save(admin);
+                System.out.println(">>> [INFO] Admin criado com sucesso via variável de ambiente.");
+            } else {
+                System.out.println(">>> [INFO] Admin já presente. Nenhuma ação necessária.");
+            }
+        };
+    }
 }
