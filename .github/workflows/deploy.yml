@@ -1,0 +1,25 @@
+name: Deploy Automatico MelinaBit
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted  # <--- Isso chama o seu runner que está "Listening"
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Build da Imagem Docker
+        run: |
+          docker build -t appmelinabit-app-melinabit:latest .
+
+      - name: Importar para o K3s
+        run: |
+          sudo k3s ctr images import <(sudo docker save appmelinabit-app-melinabit:latest) || true
+
+      - name: Aplicar no Kubernetes
+        run: |
+          kubectl apply -f melinabit-k8s.yaml
+          kubectl rollout restart deployment melinabit-app

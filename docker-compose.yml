@@ -1,0 +1,63 @@
+services:
+  db-melinabit:
+    image: postgres:15-alpine
+    container_name: postgres_db_melinabit
+    restart: always
+    environment:
+      - POSTGRES_DB=melinabit_db
+      - POSTGRES_USER=AppMelinabit
+      - POSTGRES_PASSWORD=Jeffbl1980
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_melinabit:/var/lib/postgresql/data
+    networks:
+      - melina-network
+
+  app-melinabit:
+    build: .
+    container_name: melinabit_app
+    restart: on-failure
+    depends_on:
+      - db-melinabit
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-melinabit:5432/melinabit_db
+      - SPRING_DATASOURCE_USERNAME=AppMelinabit
+      - SPRING_DATASOURCE_PASSWORD=Jeffbl1980
+      - ADMIN_PASS=Jeffbl1980
+    ports:
+      - "8080:8080"
+    networks:
+      - melina-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ~/git/repository/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    networks:
+      - melina-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - melina-network
+
+networks:
+  melina-network:
+    driver: bridge
+
+volumes:
+  pgdata_melinabit:
+  prometheus_data:
+  grafana_data:
